@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "625101516440",
+    "project_id": "makar-99ca0",
+    "storage_bucket": "makar-99ca0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:625101516440:android:8c991d1b04d7fa76e96aed",
+        "android_client_info": {
+          "package_name": "com.example.makar"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUD9RbEUIeDZDH_L4xOlr-zfLz2KkEysw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
