@@ -64,10 +64,9 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if(currentUser != null){
-            reload();
+            //reload();
         }
     }
 
@@ -82,23 +81,13 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("login", "signInWithEmail:success");
                             Toast.makeText(LoginActivity.this, "성공적으로 로그인하였습니다", Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
                         } else {
-                            // If sign in fails, display a message to the user.
                             Log.w("login", "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
                         }
                     }
                 });
-    }
-
-
-    private void reload() { }
-
-    private void updateUI(FirebaseUser user) {
-
     }
 
 
