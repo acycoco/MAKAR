@@ -40,11 +40,9 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (email.equals("") || password.equals("")){
                     Toast.makeText(LoginActivity.this, "빈 칸을 채워주세요", Toast.LENGTH_SHORT).show();
-                }else{
+                }else {
                     signIn(email, password);
                 }
-
-
             }
         });
 
@@ -54,11 +52,8 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                 //회원가입 뷰로 넘어감
-
-
             }
         });
-
     }
 
     @Override

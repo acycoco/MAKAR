@@ -3,6 +3,7 @@ package com.example.makar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -16,6 +17,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.regex.Matcher;
@@ -160,9 +162,21 @@ public class SignupActivity extends AppCompatActivity {
                             //회원가입 성공 후 로그인뷰로 이동
                             startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                         } else {
-                            Log.w("signup", "Signup:failure", task.getException());
-                            Toast.makeText(SignupActivity.this, "회원가입에 실패했습니다",
-                                    Toast.LENGTH_SHORT).show();
+                            //회원가입 실패
+
+                            //이미 존재하는 이메일 주소를 기입했을 경우
+                            if (task.getException() instanceof FirebaseAuthException) {
+                                FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                                Log.e("signup", "errorcode : " + e.getErrorCode());
+                                if ("ERROR_EMAIL_ALREADY_IN_USE".equals(e.getErrorCode())) {
+                                    Log.d("signup", "existing email address");
+                                    Toast.makeText(SignupActivity.this, "이미 가입된 이메일 주소입니다.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Log.w("signup", "Signup:failure", task.getException());
+                                Toast.makeText(SignupActivity.this, "회원가입에 실패했습니다",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
