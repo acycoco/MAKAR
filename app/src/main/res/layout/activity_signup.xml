@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.appcompat.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="회원가입"
+        >
+
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_gravity="start"
+        android:src="@android:drawable/ic_back_arrow" />
+
+
+    </androidx.appcompat.widget.Toolbar>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="120dp"
+        android:paddingBottom="10dp"
+
+        >
+
+        <!--email-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="이메일"
+            android:textColor="@color/gray"
+            ></TextView>
+        <EditText
+            android:id="@+id/signupEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="이메일을 입력해주세요"
+            android:inputType="textEmailAddress"
+            android:maxLines="1">
+
+        </EditText>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            ></Space>
+
+        <!--비밀번호-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호"
+            android:textColor="@color/gray"
+            ></TextView>
+        <EditText
+            android:id="@+id/signupPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="8자 이상의 비밀번호를 입력해주세요"
+            android:inputType="textPassword"
+            android:maxLength="15"
+            android:maxLines="1">
+        </EditText>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            ></Space>
+
+        <!--비밀번호 확인-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 확인"
+            android:textColor="@color/gray"
+            ></TextView>
+        <EditText
+            android:id="@+id/signupPasswordCheck"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="비밀번호를 한 번 더 입력해주세요"
+            android:inputType="textPassword"
+            android:maxLength="15"
+            android:maxLines="1"
+            >
+        </EditText>
+        <Space
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            ></Space>
+
+        <!--signupBtn-->
+        <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="가입하기"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:backgroundTint="@color/maincolor"
+
+            >
+        </Button>
+        </LinearLayout>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
