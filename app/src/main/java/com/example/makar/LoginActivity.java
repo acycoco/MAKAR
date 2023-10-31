@@ -38,8 +38,10 @@ public class LoginActivity extends AppCompatActivity {
                 email = binding.email.getText().toString();
                 password = binding.password.getText().toString();
 
-                if (email.equals("") || password.equals("")){
-                    Toast.makeText(LoginActivity.this, "빈 칸을 채워주세요", Toast.LENGTH_SHORT).show();
+                if (email.equals("")) {
+                    Toast.makeText(LoginActivity.this, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
+                } else if (password.equals("")) {
+                    Toast.makeText(LoginActivity.this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
                 }else {
                     signIn(email, password);
                 }
