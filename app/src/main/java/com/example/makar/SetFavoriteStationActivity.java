@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
 
@@ -20,6 +21,10 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+
+                Toast.makeText(SetFavoriteStationActivity.this, "자주 가는 역이 등록되었습니다", Toast.LENGTH_SHORT).show();
+                finish();
+                //NonRouteMainActivity로 돌아감
             }
         });
 

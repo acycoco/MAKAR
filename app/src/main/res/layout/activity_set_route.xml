@@ -42,6 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             ></SearchView>
+        <!--SerchBar로 해야하는지, EditText로 해야하는지 상의 필요-->
         <!--SerchView custom 필요-->
     </LinearLayout>
 <Button
