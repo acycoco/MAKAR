@@ -3,6 +3,10 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <string name="email_hint">이메일</string>
+    <string name="password_hint">비밀번호</string>
+    <string name="login_button">로그인</string>
+    <string name="signup_button">회원가입 ></string>
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
