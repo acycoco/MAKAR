@@ -20,46 +20,45 @@
                android:layout_height="wrap_content"
                android:text="막차까지 %d분 남았어요!"
                android:textStyle="bold"
-               android:textSize="23sp"></TextView>
+               android:textSize="23sp"/>
+
            <Space
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:layout_weight="1"
-               ></Space>
+               android:layout_weight="1"/>
+
            <Button
                android:id="@+id/timetableBtn"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="시간표"
-               ></Button>
+               android:text="시간표"/>
            <!--버튼 커스텀 필요-->
            </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"></Space>
+            android:layout_height="10dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="출발역 -> 도착역"
-            android:backgroundTint="@color/lightgray"
-            android:textColor="@color/gray"
-            ></Button>
+            android:backgroundTint="@color/light_gray"
+            android:textColor="@color/gray"/>
         <!--텍스트 커스텀 필요-->
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"></Space>
+            android:layout_height="30dp"/>
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:src="@drawable/logo"></ImageView>
+            android:src="@drawable/app_logo"/>
         <!--지하철 이미지 넣을 위치-->
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp"></Space>
+            android:layout_height="20dp"/>
 
         <Button
             android:id="@+id/changeRouteBtn"
@@ -67,23 +66,18 @@
             android:layout_height="wrap_content"
             android:text="경로 변경하기"
             android:backgroundTint="@color/gray"
-            android:textColor="@color/black"
-            ></Button>
+            android:textColor="@color/black"/>
         <!--테두리는 drawable file으로 커스텀 필요-->
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"></Space>
+            android:layout_height="10dp"/>
 
         <Button
             android:id="@+id/setAlarmBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="막차 알림 설정하기"
-            android:backgroundTint="@color/maincolor"
-            ></Button>
-
-
+            android:backgroundTint="@color/main_color"/>
     </LinearLayout>
-
 </ScrollView>

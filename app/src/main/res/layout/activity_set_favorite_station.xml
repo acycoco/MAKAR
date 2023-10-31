@@ -11,35 +11,36 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="집"></TextView>
+        android:text="집"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="집 주변 지하철 역을 등록해주세요"
-    ></EditText>
+        android:hint="집 주변 지하철 역을 등록해주세요"/>
 
     <Space
         android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        ></Space>
+        android:layout_height="30dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="학교"></TextView>
+        android:text="학교"/>
+
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="학교 주변 지하철 역을 등록해주세요"
-        ></EditText>
+        android:hint="학교 주변 지하철 역을 등록해주세요"/>
+
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"></Space>
+        android:layout_weight="1"/>
+
     <Button
         android:id="@+id/setFavoriteStationBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/maincolor"
-        android:text="등록하기"></Button>
+        android:backgroundTint="@color/main_color"
+        android:text="등록하기"/>
 </LinearLayout>

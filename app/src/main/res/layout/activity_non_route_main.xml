@@ -17,44 +17,43 @@
             android:layout_height="wrap_content"
             android:text="경로를 설정해주세요"
             android:textSize="23sp"
-            android:textStyle="bold"
-            ></TextView>
+            android:textStyle="bold"/>
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"></Space>
+            android:layout_height="10dp"/>
 
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="출발역 -> 도착역"
-            android:backgroundTint="@color/lightgray"
-            android:textColor="@color/gray"
-            ></Button>
+            android:backgroundTint="@color/light_gray"
+            android:textColor="@color/gray"/>
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"></Space>
+            android:layout_height="30dp"/>
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:src="@drawable/logo"></ImageView>
+            android:src="@drawable/app_logo"/>
         <!--지하철 이미지 넣을 위치-->
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp"></Space>
+            android:layout_height="20dp"/>
 
         <Button
             android:id="@+id/setRouteBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="경로 설정하기"
-            android:backgroundTint="@color/maincolor"
-            ></Button>
+            android:backgroundTint="@color/main_color"/>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="30dp"></Space>
+            android:layout_height="30dp"/>
 
         <!--즐겨찾는 경로-->
         <androidx.recyclerview.widget.RecyclerView
@@ -66,13 +65,13 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="20dp"></Space>
+            android:layout_height="20dp"/>
 
         <!--최근 경샤-->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:itemCount="5"></androidx.recyclerview.widget.RecyclerView>
+            tools:itemCount="5"/>
         </LinearLayout>
 
 </ScrollView>
