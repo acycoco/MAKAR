@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:paddingTop="60dp"
+        android:paddingBottom="10dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="경로를 설정해주세요"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            ></TextView>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"></Space>
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="출발역 -> 도착역"
+            android:backgroundTint="@color/lightgray"
+            android:textColor="@color/gray"
+            ></Button>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"></Space>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:src="@drawable/logo"></ImageView>
+        <!--지하철 이미지 넣을 위치-->
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"></Space>
+
+        <Button
+            android:id="@+id/setRouteBtn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="경로 설정하기"
+            android:backgroundTint="@color/maincolor"
+            ></Button>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="30dp"></Space>
+
+        <!--즐겨찾는 경로-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="5"
+            >
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp"></Space>
+
+        <!--최근 경샤-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:itemCount="5"></androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+
+</ScrollView>
