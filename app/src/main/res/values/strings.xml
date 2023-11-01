@@ -3,10 +3,24 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
+    <!-- 로그인 -->
     <string name="email_hint">이메일</string>
     <string name="password_hint">비밀번호</string>
     <string name="login_button">로그인</string>
     <string name="signup_button">회원가입 ></string>
+    <string name="email_empty_toast">이메일을 입력해주세요</string>
+    <string name="password_empty_toast">비밀번호를 입력해주세요</string>
+    <string name="login_success_toast">성공적으로 로그인하였습니다</string>
+    <string name="login_failure_toast">로그인에 실패하였습니다</string>
+    <!-- 회원가입 -->
+    <string name="email_text">이메일</string>
+    <string name="password_text">비밀번호</string>
+    <string name="password_check_text">비밀번호 확인</string>
+    <string name="email_signup_hint">이메일을 입력해주세요</string>
+    <string name="password_signup_hint">8자 이상의 비밀번호를 입력해주세요</string>
+    <string name="password_check_signup_hint">비밀번호 확인</string>
+    <string name="signup_confirm_button">가입하기</string>
+
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="welcome">"Welcome !"</string>
