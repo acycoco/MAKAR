@@ -32,16 +32,16 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         //로그인 버튼 리스너
-        binding.loginbtn.setOnClickListener(new View.OnClickListener() {
+        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 email = binding.email.getText().toString();
                 password = binding.password.getText().toString();
 
                 if (email.equals("")) {
-                    Toast.makeText(LoginActivity.this, "이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.email_empty_toast, Toast.LENGTH_SHORT).show();
                 } else if (password.equals("")) {
-                    Toast.makeText(LoginActivity.this, "비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.password_empty_toast, Toast.LENGTH_SHORT).show();
                 }else {
                     signIn(email, password);
                 }
@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //회원가입 버튼 리스너
-        binding.signupbtn.setOnClickListener(new View.OnClickListener() {
+        binding.signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
@@ -76,11 +76,11 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d("login", "signInWithEmail:success");
-                            Toast.makeText(LoginActivity.this, "성공적으로 로그인하였습니다", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                         } else {
                             Log.w("login", "signInWithEmail:failure", task.getException());
-                            Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다",
+                            Toast.makeText(LoginActivity.this, R.string.login_failure_toast,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
