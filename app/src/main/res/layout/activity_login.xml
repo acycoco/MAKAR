@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/app_logo" />
+        android:src="@drawable/app_logo"/>
 
     <EditText
         android:id="@+id/email"
@@ -20,7 +20,7 @@
         android:background="@drawable/login_edittext"
         android:hint="@string/email_hint"
         android:inputType="textEmailAddress"
-        android:textSize="16dp" />
+        android:textSize="16dp"/>
 
     <EditText
         android:id="@+id/password"
@@ -30,10 +30,10 @@
         android:background="@drawable/login_edittext"
         android:hint="@string/password_hint"
         android:inputType="textPassword"
-        android:textSize="16dp" />
+        android:textSize="16dp"/>
 
     <android.widget.Button
-        android:id="@+id/loginbtn"
+        android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="47dp"
         android:background="@drawable/custom_button"
@@ -41,15 +41,15 @@
         android:textColor="@color/white"
         android:textSize="15dp"
         android:layout_marginBottom="5dp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <Button
-        android:id="@+id/signupbtn"
+        android:id="@+id/signup_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:backgroundTint="@android:color/transparent"
         android:text="@string/signup_button"
-        android:textColor="@color/gray" />
+        android:textColor="@color/gray"/>
 
 </LinearLayout>
