@@ -5,6 +5,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    FirebaseUser currentUser;
     private String email;
     private String password;
 
@@ -30,6 +32,25 @@ public class LoginActivity extends AppCompatActivity {
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        //자동로그인
+        if(currentUser != null){
+            String uid = currentUser.getUid();
+            // UID를 사용하여 Firebase에 다시 로그인
+            mAuth.signInWithEmailAndPassword(uid, password)
+                     .addOnCompleteListener(task -> {
+                         if (task.isSuccessful()) {
+                             // 자동 로그인 성공
+                             //NonRouteMainActivity로 넘어감
+                            successLogin();
+                         } else {
+                             // 자동 로그인 실패
+                             // 오류 처리
+                         }
+                     });
+        }
+
 
         //로그인 버튼 리스너
         binding.loginBtn.setOnClickListener(new View.OnClickListener() {
@@ -58,15 +79,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
-            //reload();
-        }
-    }
-
 
     //기존 사용자 로그인
     private void signIn(String email, String password) {
@@ -78,6 +90,15 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("login", "signInWithEmail:success");
                             Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
+                            String uid = user.getUid();
+
+                            // UID를 SharedPreferences에 저장
+                            SharedPreferences preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString("uid", uid);
+                            editor.apply();
+
+                            successLogin();
                         } else {
                             Log.w("login", "signInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, R.string.login_failure_toast,
@@ -85,6 +106,11 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    void successLogin(){
+        Intent intent = new Intent(LoginActivity.this, NonRouteMainActivity.class);
+        startActivity(intent);
     }
 
 
