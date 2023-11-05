@@ -27,4 +27,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
+
+    <!--자주 가는 역 등록-->
+    <string name="set_favorite_station_success">자주 가는 역이 등록되었습니다</string>
+
+    <!--막차 알림-->
+    <string name="set_alarm_success">막차 알림이 설정되었습니다</string>
+
+
 </resources>
