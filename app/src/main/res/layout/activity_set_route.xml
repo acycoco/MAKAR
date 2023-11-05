@@ -42,10 +42,18 @@
                 android:layout_marginEnd="10dp"
                 android:text="출발역" />
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_departure"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-            <!--SerchView custom 필요-->
+                android:layout_height="100dp"
+                android:focusable="true"
+                android:padding="20dp"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="1"
+                app:queryHint="출발역을 입력하세요" />
         </LinearLayout>
 
         <LinearLayout
@@ -59,12 +67,18 @@
                 android:layout_marginEnd="10dp"
                 android:text="도착역" />
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_destination"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <!--SerchBar로 해야하는지, EditText로 해야하는지 상의 필요-->
-            <!--SerchView custom 필요-->
+                android:layout_height="100dp"
+                android:focusable="true"
+                android:padding="20dp"
+                app:iconifiedByDefault="false"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_weight="1"
+                app:queryHint="도착역을 입력하세요" />
         </LinearLayout>
 
         <Button
