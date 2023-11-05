@@ -1,6 +1,7 @@
 package com.example.makar;
 
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +22,10 @@ public class NonRouteMainActivity extends AppCompatActivity {
         binding.setRouteBtn.setOnClickListener(view -> {
             startActivity(new Intent(NonRouteMainActivity.this, SetRouteActivity.class));
         });
+
+//        setSupportActionBar(binding.toolbar);
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setDisplayShowTitleEnabled(true);
 
         //자주 가는 역 설정 Dialog
         setFavoriteStation();
