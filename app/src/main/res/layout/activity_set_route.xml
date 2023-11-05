@@ -16,11 +16,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="출발역"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"/>
 
         <SearchView
             android:layout_width="match_parent"
@@ -34,11 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="도착역"
-            android:layout_gravity="center"/>
-
-        <Space
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"/>
+            android:layout_gravity="center"
+            android:layout_marginEnd="10dp"/>
 
         <SearchView
             android:layout_width="match_parent"
@@ -52,22 +46,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:text="경로찾기"
-    android:backgroundTint="@color/main_color"/>
+    android:backgroundTint="@color/main_color"
+    android:layout_marginBottom="30dp"/>
 
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
 
     <!--즐겨찾는 경로-->
     <androidx.recyclerview.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:itemCount="5"/>
-
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="20dp"/>
+        tools:itemCount="5"
+        android:layout_marginBottom="20dp"/>
 
     <!--최근 경로-->
     <androidx.recyclerview.widget.RecyclerView

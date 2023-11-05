@@ -31,7 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/signupEmail"
@@ -39,18 +40,18 @@
             android:layout_height="wrap_content"
             android:hint="@string/email_signup_hint"
             android:inputType="textEmailAddress"
-            android:maxLines="1"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
+            android:textSize="16sp"
+            android:maxLines="1"
+            android:layout_marginBottom="30dp"
+            />
 
         <!--비밀번호-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/signupPassword"
@@ -58,19 +59,19 @@
             android:layout_height="wrap_content"
             android:hint="@string/password_signup_hint"
             android:inputType="textPassword"
+            android:textSize="16sp"
             android:maxLength="15"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:layout_marginBottom="30dp"/>
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
 
         <!--비밀번호 확인-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password_check_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/signupPasswordCheck"
@@ -78,6 +79,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/password_check_signup_hint"
             android:inputType="textPassword"
+            android:textSize="16sp"
             android:maxLength="15"
             android:maxLines="1"/>
 

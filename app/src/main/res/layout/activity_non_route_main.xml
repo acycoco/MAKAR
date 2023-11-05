@@ -15,57 +15,53 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="경로를 설정해주세요"
+            android:text="@string/path_text"
             android:textSize="23sp"
             android:textStyle="bold"/>
 
-        <Space
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="출발역 -> 도착역"
-            android:backgroundTint="@color/light_gray"
-            android:textColor="@color/gray"/>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp"/>
+            android:layout_height="45dp"
+            android:text="@string/path_root_text"
+            android:textColor="@color/gray"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:gravity="center"
+            android:background="@drawable/custom_main_textview"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="30dp"
+            />
 
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:src="@drawable/app_logo"/>
+            android:src="@drawable/app_logo"
+            android:layout_marginBottom="20dp"/>
         <!--지하철 이미지 넣을 위치-->
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
 
-        <Button
+        <android.widget.Button
             android:id="@+id/setRouteBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="경로 설정하기"
-            android:backgroundTint="@color/main_color"/>
+            android:text="@string/set_path_text"
+            android:background="@drawable/custom_button"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_marginBottom="50dp"
+            android:textStyle="bold"/>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="30dp"/>
 
         <!--즐겨찾는 경로-->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp"
             tools:itemCount="5"
             >
         </androidx.recyclerview.widget.RecyclerView>
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+
 
         <!--최근 경샤-->
         <androidx.recyclerview.widget.RecyclerView
