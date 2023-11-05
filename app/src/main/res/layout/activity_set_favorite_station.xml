@@ -4,43 +4,45 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp"
     android:paddingTop="60dp"
+    android:paddingRight="20dp"
     android:paddingBottom="10dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
         android:text="@string/home_text"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/home_station_hint"
-        android:textSize="16sp"
         android:layout_marginBottom="35dp"
-        android:inputType="text"/>
+        android:background="@drawable/custom_edit_text_favorite"
+        android:hint="@string/home_station_hint"
+        android:inputType="text"
+        android:textSize="16sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/school_text"
-        android:textStyle="bold"
-        android:textSize="16sp"/>
+        android:textSize="16sp"
+        android:textStyle="bold" />
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_edit_text_favorite"
         android:hint="@string/school_station_hint"
-        android:textSize="16sp"
-        android:inputType="text"/>
+        android:inputType="text"
+        android:textSize="16sp" />
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
     <android.widget.Button
         android:id="@+id/setFavoriteStationBtn"
@@ -50,5 +52,5 @@
         android:text="@string/set_favorite_station_confirm_button"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:textStyle="bold"/>
+        android:textStyle="bold" />
 </LinearLayout>
