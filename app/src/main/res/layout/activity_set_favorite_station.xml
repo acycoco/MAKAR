@@ -11,36 +11,44 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="집"/>
+        android:textStyle="bold"
+        android:text="@string/home_text"
+        android:textSize="16sp"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="집 주변 지하철 역을 등록해주세요"/>
-
-    <Space
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"/>
+        android:hint="@string/home_station_hint"
+        android:textSize="16sp"
+        android:layout_marginBottom="35dp"
+        android:inputType="text"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="학교"/>
+        android:text="@string/school_text"
+        android:textStyle="bold"
+        android:textSize="16sp"/>
 
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="학교 주변 지하철 역을 등록해주세요"/>
+        android:hint="@string/school_station_hint"
+        android:textSize="16sp"
+        android:inputType="text"/>
 
     <Space
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"/>
 
-    <Button
+    <android.widget.Button
         android:id="@+id/setFavoriteStationBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/main_color"
-        android:text="등록하기"/>
+        android:background="@drawable/custom_button"
+        android:text="@string/set_favorite_station_confirm_button"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"/>
 </LinearLayout>

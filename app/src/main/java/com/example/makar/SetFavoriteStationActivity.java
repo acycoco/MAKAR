@@ -17,7 +17,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         binding.setFavoriteStationBtn.setOnClickListener(view -> {
-                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_success, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                 finish();
                 //NonRouteMainActivity로 돌아감
         });

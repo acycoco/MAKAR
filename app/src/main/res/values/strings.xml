@@ -29,10 +29,23 @@
     <string name="login_failed">"Login failed"</string>
 
     <!--자주 가는 역 등록-->
-    <string name="set_favorite_station_success">자주 가는 역이 등록되었습니다</string>
+    <string name="home_text">집</string>
+    <string name="school_text">학교</string>
+    <string name="home_station_hint">집 주변 지하철 역을 등록해주세요</string>
+    <string name="school_station_hint">학교 주변 지하철 역을 등록해주세요</string>
+    <string name="set_favorite_station_confirm_button">등록하기</string>
+    <string name="set_favorite_station_toast">자주 가는 역이 등록되었습니다</string>
 
     <!--막차 알림-->
     <string name="set_alarm_success">막차 알림이 설정되었습니다</string>
+
+    <!--메인화면 -->
+    <string name="path_text">경로를 설정해주세요</string>
+    <string name="path_root_text">출발역 -> 도착역</string>
+    <string name="set_path_text">경로 설정하기</string>
+
+    <string name="modify_path_text">경로 변경하기</string>
+    <string name="set_alarm_text">막차 알림 설정하기</string>
 
 
 </resources>
