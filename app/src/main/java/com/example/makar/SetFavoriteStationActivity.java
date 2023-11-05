@@ -1,5 +1,6 @@
 package com.example.makar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -14,6 +15,11 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         ActivitySetFavoriteStationBinding binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        setSupportActionBar(binding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         binding.setFavoriteStationBtn.setOnClickListener(view -> {
