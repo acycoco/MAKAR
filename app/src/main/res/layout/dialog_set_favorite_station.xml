@@ -3,7 +3,9 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="20dp">
+    android:layout_marginStart="40dp"
+    android:layout_marginEnd="40dp"
+    android:layout_marginBottom="20dp">
 
     <TextView
         android:layout_width="match_parent"
@@ -12,32 +14,32 @@
         android:text="자주 가는 역을\n 등록하시겠어요?"
         android:textAlignment="center"
         android:textStyle="bold"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:lines="2"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_marginTop="17dp">
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp">
         <android.widget.Button
             android:id="@+id/set_favorite_station_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:background = "@drawable/custom_button"
             android:text="등록"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:layout_marginEnd="15dp" />
 
         <android.widget.Button
             android:id="@+id/close_set_favorite_station_btn"
-            android:layout_width="wrap_content"
+            android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_white"
             android:text="닫기"
             android:textStyle="bold"
-            android:textSize="13sp"
+            android:textSize="16sp"
             android:textColor="@color/main_color" />
     </LinearLayout>
 
