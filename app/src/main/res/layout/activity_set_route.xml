@@ -22,8 +22,7 @@
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -73,8 +72,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
-            android:backgroundTint="@color/main_color"
-            android:text="경로찾기" />
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_button_main"
+            android:text="경로찾기"
+            android:textColor="@color/white"
+            android:textSize="15sp"
+            android:textStyle="bold"/>
 
 
         <!--즐겨찾는 경로-->
