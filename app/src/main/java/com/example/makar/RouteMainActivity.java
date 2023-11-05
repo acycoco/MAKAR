@@ -19,7 +19,7 @@ public class RouteMainActivity extends AppCompatActivity {
         ActivityRouteMainBinding binding = ActivityRouteMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar3);
+        setSupportActionBar(binding.toolbarRouteMain);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
 

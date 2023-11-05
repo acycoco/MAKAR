@@ -16,7 +16,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         ActivitySetFavoriteStationBinding binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setSupportActionBar(binding.toolbar);
+        setSupportActionBar(binding.toolbarSetFavoriteStation);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

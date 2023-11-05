@@ -24,7 +24,7 @@ public class NonRouteMainActivity extends AppCompatActivity {
             startActivity(new Intent(NonRouteMainActivity.this, SetRouteActivity.class));
         });
 
-        setSupportActionBar(binding.toolbar2);
+        setSupportActionBar(binding.toolbarNonRouteMain);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayShowCustomEnabled(true);

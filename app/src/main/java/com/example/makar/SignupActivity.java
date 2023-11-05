@@ -43,7 +43,7 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        setSupportActionBar(signupBinding.toolbar);
+        setSupportActionBar(signupBinding.toolbarSignup);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled (true);

@@ -31,23 +31,23 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="13dp">
+
         <android.widget.Button
             android:id="@+id/cancel_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_white"
             android:text="취소"
-            android:textColor="@color/main_color"
+            android:textColor="@color/black"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:layout_marginEnd="15dp"
-            />
+            android:layout_marginEnd="15dp"/>
 
         <android.widget.Button
             android:id="@+id/set_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
-            android:background="@drawable/custom_button"
+            android:background="@drawable/custom_button_main"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="16sp"

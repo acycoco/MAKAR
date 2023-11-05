@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_3"
+        android:id="@+id/toolbar_route_main"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/main_color"
@@ -13,7 +13,7 @@
         app:titleTextAppearance="@style/ToolbarTitle">
 
         <TextView
-            android:id="@+id/toolbar_title_3"
+            android:id="@+id/toolbar_route_main_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
@@ -124,7 +124,6 @@
                 android:textColor="@color/black"
                 android:textSize="15sp"
                 android:textStyle="bold" />
-            <!--테두리는 drawable file으로 커스텀 필요-->
 
             <Space
                 android:layout_width="match_parent"
