@@ -22,7 +22,8 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content"/>
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/start_station_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
         <!--SerchView custom 필요-->
@@ -40,7 +41,8 @@
             android:layout_width="10dp"
             android:layout_height="wrap_content"/>
 
-        <SearchView
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/end_station_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
