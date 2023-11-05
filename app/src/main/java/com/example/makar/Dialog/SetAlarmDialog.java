@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+
+import com.example.makar.Listener.OnDataReceivedListener;
 import com.example.makar.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
@@ -63,11 +65,11 @@ public class SetAlarmDialog extends Dialog {
               SetAlarmTimeDialog setAlarmTimeDialog = new SetAlarmTimeDialog(context);
               setAlarmTimeDialog.show();
 
-              setAlarmTimeDialog.setOnDataReceivedListener(new SetAlarmTimeDialog.OnDataReceivedListener() {
+              setAlarmTimeDialog.setOnDataReceivedListener(new OnDataReceivedListener() {
                   @Override
                   public void onDataReceived(String data) {
                       alarmTime = data;
-                      //timepicker으로 정한 시간에 맞춰 alarmTime 변경
+                      //picker로 정한 시간에 맞춰 alarmTime 변경
                       setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
                   }
               });
