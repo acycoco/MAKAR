@@ -49,20 +49,20 @@ public class NonRouteMainActivity extends AppCompatActivity {
     //해당 함수 언제 실행할지 상의필요
     private void setFavoriteStation(){
 
-        setFavoriteStationDialog = new AlertDialog.Builder(this)
-                .setTitle("자주 가는 역을 등록하시겠어요?")
-                .setPositiveButton("설정하기", dialogListener)
-                .setNegativeButton("닫기", null)
-                .create();
-
-//        /**Custom Dialog**/
-//        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-//        View dialogView = inflater.inflate(R.layout.dialog_set_favorite_station, null);
 //        setFavoriteStationDialog = new AlertDialog.Builder(this)
-//                .setView(dialogView)
-//                        .create();
-//        //positiveBtn, negativeBtn Listener 다는 구조 상의 필요
-//
+//                .setTitle("자주 가는 역을 등록하시겠어요?")
+//                .setPositiveButton("설정하기", dialogListener)
+//                .setNegativeButton("닫기", null)
+//                .create();
+
+        /**Custom Dialog**/
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View dialogView = inflater.inflate(R.layout.dialog_set_favorite_station, null);
+        setFavoriteStationDialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                        .create();
+        //positiveBtn, negativeBtn Listener 다는 구조 상의 필요
+
 
         setFavoriteStationDialog.show();
     }
