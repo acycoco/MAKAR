@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/main_color"
-        app:menu="@menu/menu_toolbar"
-        app:titleTextAppearance="@style/ToolbarTitle">
+        app:menu="@menu/menu_toolbar">
 
         <TextView
             android:id="@+id/toolbar_title_2"
@@ -85,7 +84,7 @@
                 tools:itemCount="5"></androidx.recyclerview.widget.RecyclerView>
 
 
-            <!--최근 경샤-->
+            <!--최근 경로-->
             <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
