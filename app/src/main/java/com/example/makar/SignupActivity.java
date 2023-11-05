@@ -1,16 +1,19 @@
 package com.example.makar;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
+import android.widget.Toolbar;
 
 import com.example.makar.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -40,6 +43,11 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        setSupportActionBar(signupBinding.toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setHomeActionContentDescription(R.drawable.left_arrow);
 
         //email Listener
         signupBinding.signupEmail.addTextChangedListener(new TextWatcher() {
@@ -78,8 +86,6 @@ public class SignupActivity extends AppCompatActivity {
                 }
             }
         });
-
-
 
         //PasswordCheck Listener
         signupBinding.signupPasswordCheck.addTextChangedListener(new TextWatcher() {
@@ -146,7 +152,16 @@ public class SignupActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
 
     //신규 사용자 가입
     private void createAccount(String email, String password) {

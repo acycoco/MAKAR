@@ -5,16 +5,22 @@
     android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="회원가입">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/main_color"
+        app:menu="@menu/menu_toolbar"
+        app:titleTextAppearance="@style/ToolbarTitle">
 
-        <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="start"/>
-
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="회원가입"
+            android:layout_gravity="center"
+            android:textColor="@color/white"
+            android:textSize="19sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -22,7 +28,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:paddingTop="120dp"
+        android:paddingTop="80dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp">
 

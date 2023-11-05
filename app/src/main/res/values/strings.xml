@@ -13,6 +13,7 @@
     <string name="login_success_toast">성공적으로 로그인하였습니다</string>
     <string name="login_failure_toast">로그인에 실패하였습니다</string>
     <!-- 회원가입 -->
+    <string name="tool_bar_signup">회원가입</string>
     <string name="email_text">이메일</string>
     <string name="password_text">비밀번호</string>
     <string name="password_check_text">비밀번호 확인</string>
@@ -20,6 +21,9 @@
     <string name="password_signup_hint">8자 이상의 비밀번호를 입력해주세요</string>
     <string name="password_check_signup_hint">비밀번호 확인</string>
     <string name="signup_confirm_button">가입하기</string>
+    <string name="signup_email_error">올바른 이메일 주소를 입력하세요.</string>
+    <string name="signup_password_error">8자 이상 입력해주세요</string>
+    <string name="signup_password_check_error">비밀번호 확인 실패</string>
 
     <string name="action_sign_in">Sign in or register</string>
     <string name="action_sign_in_short">Sign in</string>
