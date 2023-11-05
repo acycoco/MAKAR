@@ -19,7 +19,9 @@ public class SetFavoriteStationDialog extends Dialog {
     public SetFavoriteStationDialog(@NonNull Context context) {
         super(context);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
         setContentView(R.layout.dialog_set_favorite_station);
+
 
         positiveBtn = findViewById(R.id.set_favorite_station_btn);
         negativeBtn = findViewById(R.id.close_set_favorite_station_btn);
