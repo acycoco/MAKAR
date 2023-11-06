@@ -2,13 +2,14 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_set_favorite_station"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/main_color"
+        android:background="@color/white"
         app:menu="@menu/menu_toolbar"
         app:titleTextAppearance="@style/ToolbarTitle">
 
@@ -18,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="자주 가는 역 등록"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="19sp"
             android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
