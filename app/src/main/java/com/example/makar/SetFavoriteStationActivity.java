@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
@@ -27,6 +28,17 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 finish();
                 //NonRouteMainActivity로 돌아감
         });
+    }
 
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }
