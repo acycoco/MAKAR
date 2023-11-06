@@ -1,10 +1,12 @@
 package com.example.makar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 
@@ -30,13 +32,17 @@ public class SetRouteActivity extends AppCompatActivity {
         ActivitySetRouteBinding binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.toolbarSetRoute);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        binding.startStationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -82,7 +88,7 @@ public class SetRouteActivity extends AppCompatActivity {
         });
 
 
-        binding.endStationSearch.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -128,11 +134,19 @@ public class SetRouteActivity extends AppCompatActivity {
 
 
         //경로 찾기 버튼 클릭 리스너
-        binding.searchRouteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        binding.searchRouteBtn.setOnClickListener(view -> {
         });
+    }
+
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

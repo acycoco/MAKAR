@@ -1,6 +1,6 @@
 package com.example.makar;
 
-import androidx.activity.result.ActivityResultLauncher;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.makar.databinding.ActivityLoginBinding;
@@ -58,9 +57,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //로그인 버튼 리스너
-        binding.loginBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.loginBtn.setOnClickListener(view -> {
                 email = binding.email.getText().toString();
                 password = binding.password.getText().toString();
 
@@ -71,16 +68,12 @@ public class LoginActivity extends AppCompatActivity {
                 }else {
                     signIn(email, password);
                 }
-            }
         });
 
         //회원가입 버튼 리스너
-        binding.signupBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        binding.signupBtn.setOnClickListener(view -> {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                 //회원가입 뷰로 넘어감
-            }
         });
     }
 

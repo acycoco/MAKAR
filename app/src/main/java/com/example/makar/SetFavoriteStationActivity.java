@@ -1,9 +1,10 @@
 package com.example.makar;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
@@ -16,17 +17,28 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         ActivitySetFavoriteStationBinding binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setSupportActionBar(binding.toolbarSetFavoriteStation);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
         //자주 가는 역 등록하기 버튼 클릭 리스너
-        binding.setFavoriteStationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Toast.makeText(SetFavoriteStationActivity.this, "자주 가는 역이 등록되었습니다", Toast.LENGTH_SHORT).show();
+        binding.setFavoriteStationBtn.setOnClickListener(view -> {
+                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                 finish();
                 //NonRouteMainActivity로 돌아감
-            }
         });
+    }
 
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

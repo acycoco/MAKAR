@@ -2,19 +2,26 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_signup"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:title="회원가입">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:menu="@menu/menu_toolbar"
+        app:titleTextAppearance="@style/ToolbarTitle">
 
-        <ImageView
-            android:id="@+id/back_button"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="start"/>
-
+        <TextView
+            android:id="@+id/toolbar_signup_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="회원가입"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            android:textStyle="bold" />
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -22,7 +29,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:paddingLeft="20dp"
-        android:paddingTop="120dp"
+        android:paddingTop="80dp"
         android:paddingRight="20dp"
         android:paddingBottom="10dp">
 
@@ -31,46 +38,46 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/email_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signupEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
             android:hint="@string/email_signup_hint"
             android:inputType="textEmailAddress"
-            android:maxLines="1"/>
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
+            android:maxLines="1"
+            android:textSize="16sp" />
 
         <!--비밀번호-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signupPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="30dp"
             android:hint="@string/password_signup_hint"
             android:inputType="textPassword"
             android:maxLength="15"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="16sp" />
 
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"/>
 
         <!--비밀번호 확인-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/password_check_text"
-            android:textColor="@color/gray"/>
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/signupPasswordCheck"
@@ -79,12 +86,13 @@
             android:hint="@string/password_check_signup_hint"
             android:inputType="textPassword"
             android:maxLength="15"
-            android:maxLines="1"/>
+            android:maxLines="1"
+            android:textSize="16sp" />
 
         <Space
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="1"/>
+            android:layout_weight="1" />
 
         <!--signupBtn-->
         <android.widget.Button
@@ -97,6 +105,6 @@
             android:text="@string/signup_confirm_button"
             android:textColor="@color/white"
             android:textSize="16dp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
