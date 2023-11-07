@@ -6,20 +6,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
-
-import com.example.makar.Listener.OnDataReceivedListener;
+import com.example.makar.MainActivity;
 import com.example.makar.R;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class SetAlarmDialog extends Dialog {
-    Context context;
-    Button positiveBtn;
-    Button negativeBtn;
-    Button setAlarmTimeBtn;
-    static String alarmTime = "10"; //값 저장 후 불러와야 함
+    private Context context;
+    private Button positiveBtn, negativeBtn;
+    static Button setAlarmTimeBtn;
+    static String alarmTime = MainActivity.alarmTime;
 
     public SetAlarmDialog(@NonNull Context context) {
         super(context);
@@ -36,9 +33,12 @@ public class SetAlarmDialog extends Dialog {
         positiveBtn = findViewById(R.id.set_alarm_btn);
         negativeBtn = findViewById(R.id.cancel_alarm_btn);
         setAlarmTimeBtn = findViewById(R.id.set_alarm_time_btn);
+        //MainActivity에서 받아온 alarmTime으로 텍스트 설정
+        setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
 
         positiveBtn.setOnClickListener(view -> {
             //막차 알림 설정
+            sendDataToMainActivity(alarmTime);
             dismiss();
             Toast.makeText(context, R.string.set_alarm_success, Toast.LENGTH_SHORT).show();
             Log.d("alarm", "SetAlarm : SUCCESS");
@@ -49,9 +49,7 @@ public class SetAlarmDialog extends Dialog {
             showTimePickerDialog();
         });
 
-        negativeBtn.setOnClickListener(view -> {
-            dismiss();
-        });
+        negativeBtn.setOnClickListener(view -> dismiss());
 
     }
 
@@ -64,14 +62,9 @@ public class SetAlarmDialog extends Dialog {
 
               SetAlarmTimeDialog setAlarmTimeDialog = new SetAlarmTimeDialog(context);
               setAlarmTimeDialog.show();
+    }
 
-              setAlarmTimeDialog.setOnDataReceivedListener(new OnDataReceivedListener() {
-                  @Override
-                  public void onDataReceived(String data) {
-                      alarmTime = data;
-                      //picker로 정한 시간에 맞춰 alarmTime 변경
-                      setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
-                  }
-              });
+    public void sendDataToMainActivity(String data) {
+        MainActivity.alarmTime = data;
     }
 }

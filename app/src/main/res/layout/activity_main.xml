@@ -1,18 +1,167 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/white">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_route_main"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        app:menu="@menu/menu_toolbar"
+        app:titleTextAppearance="@style/ToolbarTitle">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <TextView
+            android:id="@+id/toolbar_route_main_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="MAKAR"
+            android:textColor="@color/black"
+            android:textSize="19sp"
+            android:textStyle="bold" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingTop="60dp"
+            android:paddingRight="20dp"
+            android:paddingBottom="15dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/main_title_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="막차까지 %d분 남았어요!"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <android.widget.Button
+                    android:id="@+id/timetableBtn"
+                    android:visibility="visible"
+                    android:layout_width="43dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/custom_button_timetable"
+                    android:text="시간표"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <android.widget.Button
+                android:id="@+id/main_route_view"
+                android:layout_marginTop="17dp"
+                android:layout_width="match_parent"
+                android:layout_height="43dp"
+                android:background="@drawable/custom_button_gray"
+                android:text="출발역  ->  도착역"
+                android:textColor="@color/text_color"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:layout_marginTop="40dp"
+                android:src="@drawable/makar_main" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:gravity="right">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight="3" />
+
+                <TextView
+                    android:id="@+id/main_destination_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="고속터미널"
+                    android:textAlignment="center"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="30dp"
+                    android:layout_weight="10" />
+            </LinearLayout>
+
+            <android.widget.Button
+                android:id="@+id/changeRouteBtn"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/custom_button_white"
+                android:text="경로 변경하기"
+                android:textColor="@color/black"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <android.widget.Button
+                android:id="@+id/setAlarmBtn"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/custom_button_main"
+                android:text="막차 알림 설정하기"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <android.widget.Button
+                android:visibility="visible"
+                android:id="@+id/setRouteBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_button_main"
+                android:text="@string/set_path_text"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+
+            <!--즐겨찾는 경로-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/favorite_route_text"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                tools:itemCount="5"></androidx.recyclerview.widget.RecyclerView>
+
+            <!--최근 경로-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recent_route_text"
+                android:visibility="visible"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                tools:itemCount="5" />
+        </LinearLayout>
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

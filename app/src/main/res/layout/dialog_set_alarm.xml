@@ -23,7 +23,7 @@
         android:layout_height="40dp"
         android:text="10분 전 알림"
         android:layout_gravity="center"
-        android:backgroundTint="@android:color/transparent"
+        android:background="@android:color/transparent"
         android:textColor="@color/gray"
         android:textSize="15sp"/>
 

@@ -19,10 +19,7 @@
             android:name=".SetRouteActivity"
             android:exported="true" />
         <activity
-            android:name=".RouteMainActivity"
-            android:exported="true" />
-        <activity
-            android:name=".NonRouteMainActivity"
+            android:name=".MainActivity"
             android:exported="true" />
         <activity
             android:name=".SignupActivity"

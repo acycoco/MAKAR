@@ -88,8 +88,7 @@ public class LoginActivity extends AppCompatActivity {
 
     void updateUI(FirebaseUser user) {
         if (user != null) {
-            //경로 설정 유무에 따라 이동할 Activity 분류해야 함
-            Intent intent = new Intent(LoginActivity.this, NonRouteMainActivity.class);
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("USER_PROFILE", "email: " + user.getEmail() + "\n" + "uid: " + user.getUid());
             startActivity(intent);
         }
