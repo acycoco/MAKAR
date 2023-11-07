@@ -1,4 +1,4 @@
-package com.example.makar;
+package com.example.makar.Data;
 
 import android.content.Context;
 import android.util.Log;
