@@ -4,19 +4,20 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.example.makar.Dialog.SetAlarmDialog;
-import com.example.makar.databinding.ActivityRouteMainBinding;
+import com.example.makar.databinding.ActivityMainBinding;
 
-public class RouteMainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity {
     SetAlarmDialog setAlarmDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityRouteMainBinding binding = ActivityRouteMainBinding.inflate(getLayoutInflater());
+        ActivityMainBinding binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbarRouteMain);
