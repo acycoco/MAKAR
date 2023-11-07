@@ -41,7 +41,7 @@ public class SignupActivity extends AppCompatActivity {
         ActivitySignupBinding signupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(signupBinding.getRoot());
 
-        mAuth = FirebaseAuth.getInstance();
+        initFirebaseAuth();
 
         setSupportActionBar(signupBinding.toolbarSignup);
         ActionBar actionBar = getSupportActionBar();
@@ -114,7 +114,6 @@ public class SignupActivity extends AppCompatActivity {
 
 
 
-
         //signupBtn Listener
         signupBinding.signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,17 +125,14 @@ public class SignupActivity extends AppCompatActivity {
                 if(signupEmail.equals("") || !isValidEmail(signupEmail, emailPattern)){
                     //이메일 입력 공란
                     Toast.makeText(SignupActivity.this, "올바른 이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
-
                 }
                 else if(signupPassword.equals("") || signupPassword.length() < 8){
                     //비밀번호 입력 공란 || 텍스트 글자 수 8자 미만
                     Toast.makeText(SignupActivity.this, "8자 이상 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-
                 }
                 else if(signupPasswordCheck.equals("") || signupPasswordCheck.length() < 8){
                     //비밀번호 확인 공란 || 텍스트 글자 수 8자 미만
                     Toast.makeText(SignupActivity.this, "비밀번호 확인란을 채워주세요", Toast.LENGTH_SHORT).show();
-
                 }
                 else if(!signupPassword.equals(signupPassword)){
                     //비밀번호 확인 실패
@@ -145,11 +141,14 @@ public class SignupActivity extends AppCompatActivity {
                 else{
                     //회원가입
                     createAccount(signupEmail, signupPassword);
-
                 }
             }
         });
+    }
 
+    private void initFirebaseAuth() {
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
     }
 
     // toolbar
@@ -176,10 +175,9 @@ public class SignupActivity extends AppCompatActivity {
                             Toast.makeText(SignupActivity.this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show();
 
                             //회원가입 성공 후 로그인뷰로 이동
-                            startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                            updateUI(user);
                         } else {
                             //회원가입 실패
-
                             //이미 존재하는 이메일 주소를 기입했을 경우
                             if (task.getException() instanceof FirebaseAuthException) {
                                 FirebaseAuthException e = (FirebaseAuthException) task.getException();
@@ -206,5 +204,11 @@ public class SignupActivity extends AppCompatActivity {
         return matcher.matches();
     }
 
+    private void updateUI(FirebaseUser user) {
+        if (user != null) {
+            Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+    }
 
 }

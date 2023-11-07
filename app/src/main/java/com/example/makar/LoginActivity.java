@@ -19,10 +19,8 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
-    FirebaseUser currentUser;
     private String email;
     private String password;
-    SharedPreferences preferences;
 
 
     @Override
@@ -31,30 +29,7 @@ public class LoginActivity extends AppCompatActivity {
         ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Initialize Firebase Auth
-        mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
-
-        //자동로그인
-        if(currentUser != null){
-            String uid = currentUser.getUid();
-            preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-            email = preferences.getString("email", null);
-            password = preferences.getString("password", null);
-            if(email != null & password!=null) {
-                //email, password를 preference에서 얻어와서 로그인
-                mAuth.signInWithEmailAndPassword(email, password)
-                        .addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                // 자동 로그인 성공
-                                //NonRouteMainActivity로 넘어감
-                                Log.d("login", "Auto-Login:Success");
-                                successLogin();
-                            }
-                        });
-            }
-        }
-
+        initFirebaseAuth();
 
         //로그인 버튼 리스너
         binding.loginBtn.setOnClickListener(view -> {
@@ -77,6 +52,19 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    private void initFirebaseAuth() {
+        mAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            //자동 로그인
+            updateUI(currentUser);
+        }
+    }
 
     //기존 사용자 로그인
     private void signIn(String email, String password) {
@@ -88,17 +76,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("login", "SignInWithEmail:success");
                             Toast.makeText(LoginActivity.this, R.string.login_success_toast, Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
-                            String uid = user.getUid();
-
-                            // UID, email, password를 SharedPreferences에 저장
-                            preferences = getSharedPreferences("MyPrefs", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("uid", uid);
-                            editor.putString("email", email);
-                            editor.putString("password", password);
-                            editor.apply();
-
-                            successLogin();
+                            updateUI(user);
                         } else {
                             Log.w("login", "SignInWithEmail:failure", task.getException());
                             Toast.makeText(LoginActivity.this, R.string.login_failure_toast,
@@ -108,11 +86,12 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    void successLogin(){
-        //경로 설정 유무에 따라 이동할 Activity 분류해야 함
-        Intent intent = new Intent(LoginActivity.this, NonRouteMainActivity.class);
-        startActivity(intent);
+    void updateUI(FirebaseUser user) {
+        if (user != null) {
+            //경로 설정 유무에 따라 이동할 Activity 분류해야 함
+            Intent intent = new Intent(LoginActivity.this, NonRouteMainActivity.class);
+            intent.putExtra("USER_PROFILE", "email: " + user.getEmail() + "\n" + "uid: " + user.getUid());
+            startActivity(intent);
+        }
+        }
     }
-
-
-}
