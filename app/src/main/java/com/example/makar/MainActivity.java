@@ -1,20 +1,20 @@
 package com.example.makar;
-
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
-
+import android.widget.Toast;
 import com.example.makar.Dialog.SetAlarmDialog;
 import com.example.makar.Dialog.SetFavoriteStationDialog;
 import com.example.makar.databinding.ActivityMainBinding;
 
+
 public class MainActivity extends AppCompatActivity {
 
     private Boolean isRouteSet = false;
+    public static String alarmTime = "10"; //설정한 알람 시간
     SetAlarmDialog setAlarmDialog;
     ActivityMainBinding binding;
 
@@ -35,21 +35,21 @@ public class MainActivity extends AppCompatActivity {
 
         //막차 알림 설정 버튼 클릭 리스너
         binding.setAlarmBtn.setOnClickListener(view ->{
-            setAlarmDialog = new SetAlarmDialog(this);
-            setAlarmDialog.show();
+            //현재 alarmTime을 다이얼로그에 넘김
+            setAlarm();
+            Toast.makeText(MainActivity.this, "설정된 알림 시간 : "+alarmTime, Toast.LENGTH_SHORT).show();
         });
 
         //경로 변경하기 버튼 클릭 리스너
         binding.changeRouteBtn.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, SetRouteActivity.class));
         });
-
 
 
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너
         binding.setRouteBtn.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, SetRouteActivity.class));
-            //result 받아서 막차 시간 set
 
             //막차 set 유무 따라
             isRouteSet = true;
@@ -98,5 +98,10 @@ public class MainActivity extends AppCompatActivity {
     private void setFavoriteStation(){
         SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
         setFavoriteStationDialog.show();
+    }
+
+    private void setAlarm(){
+        setAlarmDialog = new SetAlarmDialog(this);
+        setAlarmDialog.show();
     }
 }

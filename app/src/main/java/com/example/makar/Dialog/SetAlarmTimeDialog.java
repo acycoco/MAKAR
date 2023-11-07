@@ -6,21 +6,17 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
-
-import com.example.makar.Listener.OnDataReceivedListener;
+import com.example.makar.MainActivity;
 import com.example.makar.R;
 
 public class SetAlarmTimeDialog extends Dialog {
     Context context;
     NumberPicker alarmTimePicker;
-    String[] timeArr = {"10", "20", "30", "40", "50", "60"};
+    private String[] timeArr = {"10", "20", "30", "40", "50", "60"};
 
-    Button positiveBtn;
-    Button negativeBtn;
-    String alarmTime = timeArr[0];
-    private OnDataReceivedListener listener;
+    private Button positiveBtn, negativeBtn;
+    private String alarmTime = MainActivity.alarmTime;
 
 
     public SetAlarmTimeDialog(@NonNull Context context) {
@@ -39,6 +35,7 @@ public class SetAlarmTimeDialog extends Dialog {
         alarmTimePicker.setDisplayedValues(timeArr);
         alarmTimePicker.setMinValue(0);
         alarmTimePicker.setMaxValue(5);
+        //alarmTimePicker.setValue(Integer.parseInt(alarmTime));
 
         positiveBtn = findViewById(R.id.set_alarm_time_btn);
         negativeBtn = findViewById(R.id.close_alarm_time_btn);
@@ -63,14 +60,10 @@ public class SetAlarmTimeDialog extends Dialog {
         });
     }
 
-    public void setOnDataReceivedListener(OnDataReceivedListener listener) {
-        this.listener = listener;
-    }
-
     public void sendDataToFirstDialog(String data) {
-        if (listener != null) {
-            listener.onDataReceived(data);
-        }
+       MainActivity.alarmTime = alarmTime;
+       SetAlarmDialog.alarmTime = alarmTime;
+       SetAlarmDialog.setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
     }
 
 
