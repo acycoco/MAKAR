@@ -26,7 +26,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         binding.setFavoriteStationBtn.setOnClickListener(view -> {
                 Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                 finish();
-                //NonRouteMainActivity로 돌아감
+                //MainActivity로 돌아감
         });
     }
 

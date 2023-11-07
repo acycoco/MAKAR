@@ -45,7 +45,7 @@
                 android:gravity="center">
 
                 <TextView
-                    android:id="@+id/main_text"
+                    android:id="@+id/main_title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="막차까지 %d분 남았어요!"
@@ -68,6 +68,7 @@
             </LinearLayout>
 
             <android.widget.Button
+                android:id="@+id/main_route_view"
                 android:layout_marginTop="17dp"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
@@ -94,7 +95,7 @@
                     android:layout_weight="3" />
 
                 <TextView
-                    android:id="@+id/main_route_text"
+                    android:id="@+id/main_destination_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="고속터미널"
