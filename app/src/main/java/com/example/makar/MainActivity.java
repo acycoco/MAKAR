@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
             //route 설정된 메인화면
             binding.timetableBtn.setVisibility(View.VISIBLE);
             binding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
+            //수정 필요
             binding.mainTitleText.setText("막차까지 %d분 남았습니다"); //막차까지 남은 시간
             binding.mainDestinationText.setText("destination"); //도착지 이름
             binding.changeRouteBtn.setVisibility(View.VISIBLE);
@@ -145,4 +146,72 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+    /**막차 알림 시간 측정**/
+    //수정 필요
+    private Date getCurrentTime(){
+        Date currentTime = new Date();
+        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
+        //String formattedCurrentTime = sdf.format(currentTime);
+        Log.d("daeun", String.valueOf(currentTime));
+        return new Date();
+    }
+
+    //수정 필요
+    private boolean checkNotificationTime(Date currentTime){
+        //현재 시간과 막차 시간 - 알림 시간 비교
+        Log.d("daeun", "checkNotiTime()");
+        if(currentTime.before(Calendar.getInstance().getTime())) //Date끼리
+            return true;
+        else return false;
+    }
+
+
+    /**막차 알림 Notification**/
+    //하차 알림
+    private void showNotification(String channelId) {
+        createNotificationChannel(channelId);
+        createNotification();
+        setRouteUnset();
+    }
+
+    private void setRouteUnset() {
+        //조건 추가 필요
+        //막차시간이 종료되면
+        isRouteSet = false;
+        //경로 제거 필요
+        //noti 띄우고 바로 routeUnset할건지 지정한 막차 시간이 되어서야 routeUnset할건지 상의 필요
+        //startActivity(new Intent(this, MainActivity.class));
+    }
+
+    //Show Notification
+    private void createNotificationChannel(String id) {
+        String channelId = id;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String name = "MAKAR";
+            String descriptionText = "MAKAR Nofitication";
+
+            NotificationChannel channel = new NotificationChannel(channelId, name, NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setDescription(descriptionText);
+            channel.enableVibration(true);
+            channel.enableLights(true);
+            channel.setLightColor(R.color.main_color);
+
+            notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.createNotificationChannel(channel);
+
+            builder = new NotificationCompat.Builder(this, channelId);
+        } else {
+            builder = new NotificationCompat.Builder(this);
+        }
+    }
+
+    private void createNotification(){
+        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setWhen(System.currentTimeMillis());
+        builder.setContentTitle("막차 시간 알림");
+        builder.setContentText("막차까지 %d분 남았습니다");
+        builder.setAutoCancel(true);
+
+        notificationManager.notify(222, builder.build());
+    }
 }
