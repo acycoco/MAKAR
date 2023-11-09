@@ -17,6 +17,9 @@ import android.widget.Toast;
 import com.example.makar.Dialog.SetAlarmDialog;
 import com.example.makar.Dialog.SetFavoriteStationDialog;
 import com.example.makar.databinding.ActivityMainBinding;
+
+import java.sql.Time;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,7 +27,10 @@ import java.util.Locale;
 
 
 public class MainActivity extends AppCompatActivity {
-    public static Boolean isRouteSet = false;
+    String makarTimeString = "2023-11-09 18:31:30"; //임시 막차 시간
+    String getOffTimeString = "2023-11-09 18:31:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
+    public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
+    public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
     private ActivityMainBinding binding;
     private NotificationCompat.Builder builder;
@@ -66,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
 
             //막차 set 유무 따라
             isRouteSet = true;
+            isGetOffSet = true;
             startNotification();
         });
     }
@@ -78,17 +85,25 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if(isRouteSet){
-                    if(checkNotificationTime(getCurrentTime())) {
+                    if(checkNotificationTime(getCurrentTime(), makarTimeString)) {
                         //현재 시간이 (막차시간 - alarmTime)이면 notification show
-                        showNotification("1");
+                        showNotification("1", "MAKAR 막차 알림", "막차까지 %d분 남았습니다");
                         setRouteUnset();
                     }
-                    handler.postDelayed(this, 10000); // 10초마다 체크
+                }
+                else if(isGetOffSet){
+                    if(checkNotificationTime(getCurrentTime(), getOffTimeString)) {
+                        //현재 시간이 하차 시간이면 notification show
+                        showNotification("1", "MAKAR 하차 알림", "하차까지 %d분 남았습니다"); //text 수정 필요
+                        isGetOffSet = false;
+                    }
                 }
                 //notification 이후 경로 설정 해제, runnable remove
                 else{
                     handler.removeCallbacks(this);
+                    Log.d("makar", "remove runnable");
                 }
+                handler.postDelayed(this, 10000); // 10초마다 체크
             }
         };
         handler.post(runnable);
@@ -150,28 +165,36 @@ public class MainActivity extends AppCompatActivity {
     //수정 필요
     private Date getCurrentTime(){
         Date currentTime = new Date();
-        //SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
-        //String formattedCurrentTime = sdf.format(currentTime);
-        Log.d("daeun", String.valueOf(currentTime));
-        return new Date();
+        Log.d("makar", "currentTime : "+String.valueOf(currentTime));
+        return currentTime;
     }
 
     //수정 필요
-    private boolean checkNotificationTime(Date currentTime){
+    private boolean checkNotificationTime(Date currentTime, String TimeString){
         //현재 시간과 막차 시간 - 알림 시간 비교
-        Log.d("daeun", "checkNotiTime()");
-        if(currentTime.before(Calendar.getInstance().getTime())) //Date끼리
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date specifiedDateTime;
+        try {
+            specifiedDateTime = sdf.parse(TimeString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        if(currentTime.after(specifiedDateTime)) {
+            //지정된 시간을 지나면 Notification 활성화
+            //specifiedDateTime : 막차 시간 - 알림 시간 custom
             return true;
+        }
         else return false;
     }
 
 
     /**막차 알림 Notification**/
     //하차 알림
-    private void showNotification(String channelId) {
+    private void showNotification(String channelId, String title, String text) {
         createNotificationChannel(channelId);
-        createNotification();
+        createNotification(title, text);
         setRouteUnset();
+        Log.d("makar", "Show Notification");
     }
 
     private void setRouteUnset() {
@@ -205,11 +228,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void createNotification(){
+    private void createNotification(String title, String text){
         builder.setSmallIcon(R.mipmap.ic_launcher);
         builder.setWhen(System.currentTimeMillis());
-        builder.setContentTitle("막차 시간 알림");
-        builder.setContentText("막차까지 %d분 남았습니다");
+        builder.setContentTitle(title);
+        builder.setContentText(text);
         builder.setAutoCancel(true);
 
         notificationManager.notify(222, builder.build());
