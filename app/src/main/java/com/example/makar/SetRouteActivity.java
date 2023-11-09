@@ -8,8 +8,8 @@ import androidx.appcompat.widget.SearchView;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.util.Log;
-import android.view.View;
 
+import com.example.makar.Data.Station;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;

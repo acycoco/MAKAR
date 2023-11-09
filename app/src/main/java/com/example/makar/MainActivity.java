@@ -1,27 +1,37 @@
 package com.example.makar;
+import static com.example.makar.NotificationHelper.showNotification;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Toast;
 import com.example.makar.Dialog.SetAlarmDialog;
 import com.example.makar.Dialog.SetFavoriteStationDialog;
 import com.example.makar.databinding.ActivityMainBinding;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity {
-
-    private Boolean isRouteSet = false;
+    String makarTimeString = "2023-11-09 18:31:30"; //임시 막차 시간
+    String getOffTimeString = "2023-11-09 18:31:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
+    public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
+    public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
-    SetAlarmDialog setAlarmDialog;
-    ActivityMainBinding binding;
+    private ActivityMainBinding binding;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         binding = ActivityMainBinding.inflate(getLayoutInflater());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         setSupportActionBar(binding.toolbarRouteMain);
@@ -53,7 +63,42 @@ public class MainActivity extends AppCompatActivity {
 
             //막차 set 유무 따라
             isRouteSet = true;
+            isGetOffSet = true;
+            startNotification();
         });
+    }
+
+    /**비동기_막차알림 실행 **/
+    private void startNotification(){
+        Runnable runnable;
+        Handler handler = new Handler();
+        runnable = new Runnable() { //비동기
+            @Override
+            public void run() {
+                if(isRouteSet){
+                    if(checkNotificationTime(getCurrentTime(), makarTimeString)) {
+                        //현재 시간이 (막차시간 - alarmTime)이면 notification show
+                        showNotification("MAKAR 막차 알림", "막차까지 %d분 남았습니다", MainActivity.this);
+                        setRouteUnset();
+                    }
+                }
+                else if(isGetOffSet){
+                    if(checkNotificationTime(getCurrentTime(), getOffTimeString)) {
+                        //현재 시간이 하차 시간이면 notification show
+                        showNotification("MAKAR 하차 알림", "하차까지 %d분 남았습니다", MainActivity.this); //text 수정 필요
+                        setRouteUnset();
+                        isGetOffSet = false;
+                    }
+                }
+                //notification 이후 경로 설정 해제, runnable remove
+                else{
+                    handler.removeCallbacks(this);
+                    Log.d("makar", "remove runnable");
+                }
+                handler.postDelayed(this, 10000); // 10초마다 체크
+            }
+        };
+        handler.post(runnable);
     }
 
     @Override
@@ -63,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
             //route 설정된 메인화면
             binding.timetableBtn.setVisibility(View.VISIBLE);
             binding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
+            //수정 필요
             binding.mainTitleText.setText("막차까지 %d분 남았습니다"); //막차까지 남은 시간
             binding.mainDestinationText.setText("destination"); //도착지 이름
             binding.changeRouteBtn.setVisibility(View.VISIBLE);
@@ -74,7 +120,6 @@ public class MainActivity extends AppCompatActivity {
         else {
             //route 미설정 화면
             setFavoriteStation();
-
             binding.timetableBtn.setVisibility(View.GONE);
             binding.mainDestinationText.setText("출발역  ->  도착역");
             binding.mainTitleText.setText("경로를 설정해주세요");
@@ -100,8 +145,46 @@ public class MainActivity extends AppCompatActivity {
         setFavoriteStationDialog.show();
     }
 
+    //막차 알림 설정 다이얼로그
     private void setAlarm(){
-        setAlarmDialog = new SetAlarmDialog(this);
+        SetAlarmDialog setAlarmDialog = new SetAlarmDialog(this);
         setAlarmDialog.show();
+    }
+
+
+
+    /**막차 알림 시간 측정**/
+    //수정 필요
+    private Date getCurrentTime(){
+        Date currentTime = new Date();
+        Log.d("makar", "currentTime : "+String.valueOf(currentTime));
+        return currentTime;
+    }
+
+    //수정 필요
+    private boolean checkNotificationTime(Date currentTime, String TimeString){
+        //현재 시간과 막차 시간 - 알림 시간 비교
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date specifiedDateTime;
+        try {
+            specifiedDateTime = sdf.parse(TimeString);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+        if(currentTime.after(specifiedDateTime)) {
+            //지정된 시간을 지나면 Notification 활성화
+            //specifiedDateTime : 막차 시간 - 알림 시간 custom
+            return true;
+        }
+        else return false;
+    }
+
+    private void setRouteUnset() {
+        //조건 추가 필요
+        //막차시간이 종료되면
+        isRouteSet = false;
+        //경로 제거 필요
+        //noti 띄우고 바로 routeUnset할건지 지정한 막차 시간이 되어서야 routeUnset할건지 상의 필요
+        //startActivity(new Intent(this, MainActivity.class));
     }
 }

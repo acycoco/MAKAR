@@ -1,4 +1,4 @@
-package com.example.makar;
+package com.example.makar.Data;
 
 public class Station {
     private String stationName;
