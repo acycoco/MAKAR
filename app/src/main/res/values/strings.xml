@@ -50,6 +50,7 @@
 
     <string name="modify_path_text">경로 변경하기</string>
     <string name="set_alarm_text">막차 알림 설정하기</string>
+    <string name="main_title_text">막차까지 %d분 남았어요!</string>
 
 
 </resources>
