@@ -29,8 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     long leftTime; //막차까지 남은 시간
-    String makarTimeString = "2023-11-09 22:57:00"; //임시 막차 시간
-    String getOffTimeString = "2023-11-09 22:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
+    String makarTimeString = "2023-11-10 01:58:30"; //임시 막차 시간
+    String getOffTimeString = "2023-11-10 01:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
@@ -46,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(binding.toolbarRouteMain);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
+
+
+        /**==마이페이지==**/
+        //툴바 마이페이지 클릭 리스너
+        binding.toolbarRouteMain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
 
         /**==경로 설정 Main==**/
         //시간표 버튼 클릭 리스너
@@ -73,7 +84,6 @@ public class MainActivity extends AppCompatActivity {
             //onStart에서 경로 설정 유무에 따라 아래 코드 실행
             isRouteSet = true;
             isGetOffSet = true;
-            startNotification();
         });
     }
 
@@ -126,12 +136,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        startNotification();
         if (isRouteSet) {
             //route 설정된 메인화면
             binding.timetableBtn.setVisibility(View.VISIBLE);
             binding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
             //수정 필요
-            binding.mainTitleText.setText("막차까지 %d분 남았습니다"); //막차까지 남은 시간
+            binding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
             binding.mainDestinationText.setText("destination"); //도착지 이름
             binding.changeRouteBtn.setVisibility(View.VISIBLE);
             binding.setAlarmBtn.setVisibility(View.VISIBLE);
