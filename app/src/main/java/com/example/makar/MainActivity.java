@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
         /**==경로 설정 Main==**/
         //시간표 버튼 클릭 리스너
         binding.timetableBtn.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, TimeTableActivity.class));
         });
 
         //막차 알림 설정 버튼 클릭 리스너
