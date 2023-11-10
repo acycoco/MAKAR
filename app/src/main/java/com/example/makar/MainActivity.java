@@ -34,52 +34,47 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
-    private ActivityMainBinding binding;
+    ActivityMainBinding mainBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(mainBinding.getRoot());
 
-        setSupportActionBar(binding.toolbarRouteMain);
+        setSupportActionBar(mainBinding.toolbarMain.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
 
+        mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
 
-        /**==마이페이지==**/
-        //툴바 마이페이지 클릭 리스너
-        binding.toolbarRouteMain.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
+        mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
+            startActivity(new Intent(MainActivity.this, MyPageActivity.class));
         });
-
 
         /**==경로 설정 Main==**/
         //시간표 버튼 클릭 리스너
-        binding.timetableBtn.setOnClickListener(view -> {
+        mainBinding.timetableBtn.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, TimeTableActivity.class));
         });
 
         //막차 알림 설정 버튼 클릭 리스너
-        binding.setAlarmBtn.setOnClickListener(view -> {
+        mainBinding.setAlarmBtn.setOnClickListener(view -> {
             //현재 alarmTime을 다이얼로그에 넘김
             setAlarm();
             Toast.makeText(MainActivity.this, "설정된 알림 시간 : " + alarmTime, Toast.LENGTH_SHORT).show();
         });
 
         //경로 변경하기 버튼 클릭 리스너
-        binding.changeRouteBtn.setOnClickListener(view -> {
+        mainBinding.changeRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
         });
 
 
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너
-        binding.setRouteBtn.setOnClickListener(view -> {
+        mainBinding.setRouteBtn.setOnClickListener(view -> {
             startActivity(new Intent(MainActivity.this, SetRouteActivity.class));
 
             //onStart에서 경로 설정 유무에 따라 아래 코드 실행
@@ -140,36 +135,29 @@ public class MainActivity extends AppCompatActivity {
         startNotification();
         if (isRouteSet) {
             //route 설정된 메인화면
-            binding.timetableBtn.setVisibility(View.VISIBLE);
-            binding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
+            mainBinding.timetableBtn.setVisibility(View.VISIBLE);
+            mainBinding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
             //수정 필요
-            binding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
-            binding.mainDestinationText.setText("destination"); //도착지 이름
-            binding.changeRouteBtn.setVisibility(View.VISIBLE);
-            binding.setAlarmBtn.setVisibility(View.VISIBLE);
-            binding.setRouteBtn.setVisibility(View.GONE);
-            binding.favoriteRouteText.setVisibility(View.GONE);
-            binding.recentRouteText.setVisibility(View.GONE);
+            mainBinding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
+            mainBinding.mainDestinationText.setText("destination"); //도착지 이름
+            mainBinding.changeRouteBtn.setVisibility(View.VISIBLE);
+            mainBinding.setAlarmBtn.setVisibility(View.VISIBLE);
+            mainBinding.setRouteBtn.setVisibility(View.GONE);
+            mainBinding.favoriteRouteText.setVisibility(View.GONE);
+            mainBinding.recentRouteText.setVisibility(View.GONE);
         } else {
             //route 미설정 화면
             setFavoriteStation();
-            binding.timetableBtn.setVisibility(View.GONE);
-            binding.mainDestinationText.setText("출발역  ->  도착역");
-            binding.mainTitleText.setText("경로를 설정해주세요");
-            binding.mainDestinationText.setText("MAKAR");
-            binding.changeRouteBtn.setVisibility(View.GONE);
-            binding.setAlarmBtn.setVisibility(View.GONE);
-            binding.setRouteBtn.setVisibility(View.VISIBLE);
-            binding.favoriteRouteText.setVisibility(View.VISIBLE);
-            binding.recentRouteText.setVisibility(View.VISIBLE);
+            mainBinding.timetableBtn.setVisibility(View.GONE);
+            mainBinding.mainDestinationText.setText("출발역  ->  도착역");
+            mainBinding.mainTitleText.setText("경로를 설정해주세요");
+            mainBinding.mainDestinationText.setText("MAKAR");
+            mainBinding.changeRouteBtn.setVisibility(View.GONE);
+            mainBinding.setAlarmBtn.setVisibility(View.GONE);
+            mainBinding.setRouteBtn.setVisibility(View.VISIBLE);
+            mainBinding.favoriteRouteText.setVisibility(View.VISIBLE);
+            mainBinding.recentRouteText.setVisibility(View.VISIBLE);
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_toolbar, menu);
-
-        return true;
     }
 
     //자주 가는 역 설정 다이얼로그
@@ -195,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                     6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //string index 직접 접근해서 색 변경
 
-        binding.mainTitleText.setText(spannableString);
+        mainBinding.mainTitleText.setText(spannableString);
     }
 
 
