@@ -8,6 +8,7 @@ import androidx.appcompat.widget.SearchView;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.util.Log;
+import android.view.View;
 
 import com.example.makar.Data.Station;
 import com.example.makar.databinding.ActivitySetRouteBinding;
@@ -22,6 +23,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 public class SetRouteActivity extends AppCompatActivity {
 
+    ActivitySetRouteBinding setRouteBinding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,20 +32,24 @@ public class SetRouteActivity extends AppCompatActivity {
         //TODO 앱이 시작화면에 초기화하는 코드 -> 나중에 옮겨야됨 (확실히 필요한지는 모르겠음)
 //        FirebaseApp.initializeApp(this);
 
-        ActivitySetRouteBinding binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+        setRouteBinding = ActivitySetRouteBinding.inflate(getLayoutInflater());
+        setContentView(setRouteBinding.getRoot());
 
-        setSupportActionBar(binding.toolbarSetRoute);
+        setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled (true);
+
+        setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
+        setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
+        setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        binding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        setRouteBinding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -88,7 +95,7 @@ public class SetRouteActivity extends AppCompatActivity {
         });
 
 
-        binding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        setRouteBinding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -134,7 +141,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
 
         //경로 찾기 버튼 클릭 리스너
-        binding.searchRouteBtn.setOnClickListener(view -> {
+        setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
         });
     }
 

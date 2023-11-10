@@ -32,25 +32,30 @@ public class SignupActivity extends AppCompatActivity {
     String signupPassword;
     String signupPasswordCheck;
     String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}";
-
+    ActivitySignupBinding signUpBinding;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivitySignupBinding signupBinding = ActivitySignupBinding.inflate(getLayoutInflater());
-        setContentView(signupBinding.getRoot());
+        signUpBinding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(signUpBinding.getRoot());
 
         initFirebaseAuth();
 
-        setSupportActionBar(signupBinding.toolbarSignup);
+        setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled (true);
-        actionBar.setHomeActionContentDescription(R.drawable.left_arrow);
+
+        signUpBinding.toolbarSignUp.toolbarText.setText("회원가입");
+        signUpBinding.toolbarSignUp.toolbarImage.setVisibility(View.GONE);
+        signUpBinding.toolbarSignUp.toolbarButton.setVisibility(View.GONE);
+
+        initFirebaseAuth();
 
         //email Listener
-        signupBinding.signupEmail.addTextChangedListener(new TextWatcher() {
+        signUpBinding.signupEmail.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
@@ -58,56 +63,56 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 //이메일 유효성 검사
-                signupEmail = signupBinding.signupEmail.getText().toString();
+                signupEmail = signUpBinding.signupEmail.getText().toString();
                 if(isValidEmail(signupEmail, emailPattern)){
                     //오류 해제
-                    signupBinding.signupEmail.setError(null);
+                    signUpBinding.signupEmail.setError(null);
                 }
                 else{
                     //format error 발생
-                    signupBinding.signupEmail.setError("올바른 이메일 주소를 입력하세요.");
+                    signUpBinding.signupEmail.setError("올바른 이메일 주소를 입력하세요.");
                 }
             }
         });
 
 
         //Password Listener
-        signupBinding.signupPassword.addTextChangedListener(new TextWatcher() {
+        signUpBinding.signupPassword.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                signupPassword = signupBinding.signupPassword.getText().toString();
+                signupPassword = signUpBinding.signupPassword.getText().toString();
                 if(signupPassword.length() < 8){
                     //최소 글자 수
-                    signupBinding.signupPassword.setError("8자 이상 입력해주세요");
+                    signUpBinding.signupPassword.setError("8자 이상 입력해주세요");
                 }
             }
         });
 
         //PasswordCheck Listener
-        signupBinding.signupPasswordCheck.addTextChangedListener(new TextWatcher() {
+        signUpBinding.signupPasswordCheck.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
             @Override
             public void afterTextChanged(Editable s) {
-                signupPassword = signupBinding.signupPassword.getText().toString();
-                signupPasswordCheck = signupBinding.signupPasswordCheck.getText().toString();
+                signupPassword = signUpBinding.signupPassword.getText().toString();
+                signupPasswordCheck = signUpBinding.signupPasswordCheck.getText().toString();
 
                 if (signupPasswordCheck.length() < 8) {
                     //최소 글자 수
-                    signupBinding.signupPasswordCheck.setError("8자 이상 입력해주세요");
+                    signUpBinding.signupPasswordCheck.setError("8자 이상 입력해주세요");
                 } else if (!(signupPassword.equals(signupPasswordCheck))) {
                     //비밀번호 확인 실패
-                    signupBinding.signupPasswordCheck.setError("비밀번호 확인 실패");
+                    signUpBinding.signupPasswordCheck.setError("비밀번호 확인 실패");
                 } else if (signupPassword.equals(signupPasswordCheck)) {
                     //비밀번호 확인 성공
                     //error 해제
-                    signupBinding.signupPasswordCheck.setError(null);
+                    signUpBinding.signupPasswordCheck.setError(null);
                 }
             }
         });
@@ -115,12 +120,12 @@ public class SignupActivity extends AppCompatActivity {
 
 
         //signupBtn Listener
-        signupBinding.signupBtn.setOnClickListener(new View.OnClickListener() {
+        signUpBinding.signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signupEmail = signupBinding.signupEmail.getText().toString();
-                signupPassword = signupBinding.signupPassword.getText().toString();
-                signupPasswordCheck = signupBinding.signupPasswordCheck.getText().toString();
+                signupEmail = signUpBinding.signupEmail.getText().toString();
+                signupPassword = signUpBinding.signupPassword.getText().toString();
+                signupPasswordCheck = signUpBinding.signupPasswordCheck.getText().toString();
 
                 if(signupEmail.equals("") || !isValidEmail(signupEmail, emailPattern)){
                     //이메일 입력 공란

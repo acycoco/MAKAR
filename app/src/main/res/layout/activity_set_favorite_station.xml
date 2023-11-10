@@ -1,28 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
+    <include
         android:id="@+id/toolbar_set_favorite_station"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/white"
-        app:menu="@menu/menu_toolbar"
-        app:titleTextAppearance="@style/ToolbarTitle">
-
-        <TextView
-            android:id="@+id/toolbar_set_favorite_station_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="자주 가는 역 등록"
-            android:textColor="@color/black"
-            android:textSize="19sp"
-            android:textStyle="bold" />
-    </androidx.appcompat.widget.Toolbar>
+        layout="@layout/custom_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,17 +51,18 @@
 
         <Space
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
         <android.widget.Button
             android:id="@+id/setFavoriteStationBtn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
             android:background="@drawable/custom_button"
             android:text="@string/set_favorite_station_confirm_button"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</LinearLayout>
