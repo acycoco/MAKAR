@@ -5,13 +5,16 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import android.widget.Toolbar;
 
@@ -42,6 +45,17 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(signUpBinding.getRoot());
 
         initFirebaseAuth();
+
+        View rootView = findViewById(android.R.id.content);
+
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트가 발생시 키보드를 숨기기
+                hideKeyboard();
+                return false;
+            }
+        });
 
         setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
         ActionBar actionBar = getSupportActionBar();
@@ -156,6 +170,14 @@ public class SignupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
     // toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

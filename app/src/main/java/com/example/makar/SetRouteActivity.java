@@ -5,10 +5,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.makar.Data.Station;
 import com.example.makar.databinding.ActivitySetRouteBinding;
@@ -44,6 +47,17 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
         setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
 
+        View rootView = findViewById(android.R.id.content);
+
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트가 발생시 키보드를 숨기기
+                hideKeyboard();
+                return false;
+            }
+        });
+        
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
@@ -143,6 +157,15 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
         });
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
     // toolbar
