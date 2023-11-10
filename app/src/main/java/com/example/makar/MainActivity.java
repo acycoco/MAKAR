@@ -28,9 +28,10 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
-    long leftTime; //막차까지 남은 시간
-    String makarTimeString = "2023-11-10 01:58:30"; //임시 막차 시간
-    String getOffTimeString = "2023-11-10 01:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
+    String destination = "destination"; //임시 도착지 이름
+    int leftTime; //막차까지 남은 시간
+    String makarTimeString = "2023-11-13 14:36:30"; //임시 막차 시간
+    String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
@@ -100,12 +101,12 @@ public class MainActivity extends AppCompatActivity {
                         setRouteUnset();
                     } else {
                         //경로는 설정되어있으나 시간 미달
-                        if(leftTime == Long.parseLong(alarmTime)){
+                        if(leftTime == Integer.parseInt(alarmTime)){
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 "+leftTime+"분 남았습니다", MainActivity.this);
                         }
                             //남은 시간 계산
-                            long timeDifferenceMinutes = TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                            int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
                             Log.d("makar", "LeftTime : " + timeDifferenceMinutes);
                             //title text 변경
                             changeMainTitleText(timeDifferenceMinutes);
@@ -133,31 +134,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         startNotification();
-        if (isRouteSet) {
-            //route 설정된 메인화면
-            mainBinding.timetableBtn.setVisibility(View.VISIBLE);
-            mainBinding.mainDestinationText.setText("source  ->  destination"); //출발지, 도착지
-            //수정 필요
-            mainBinding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
-            mainBinding.mainDestinationText.setText("destination"); //도착지 이름
-            mainBinding.changeRouteBtn.setVisibility(View.VISIBLE);
-            mainBinding.setAlarmBtn.setVisibility(View.VISIBLE);
-            mainBinding.setRouteBtn.setVisibility(View.GONE);
-            mainBinding.favoriteRouteText.setVisibility(View.GONE);
-            mainBinding.recentRouteText.setVisibility(View.GONE);
-        } else {
-            //route 미설정 화면
+        if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, destination))
             setFavoriteStation();
-            mainBinding.timetableBtn.setVisibility(View.GONE);
-            mainBinding.mainDestinationText.setText("출발역  ->  도착역");
-            mainBinding.mainTitleText.setText("경로를 설정해주세요");
-            mainBinding.mainDestinationText.setText("MAKAR");
-            mainBinding.changeRouteBtn.setVisibility(View.GONE);
-            mainBinding.setAlarmBtn.setVisibility(View.GONE);
-            mainBinding.setRouteBtn.setVisibility(View.VISIBLE);
-            mainBinding.favoriteRouteText.setVisibility(View.VISIBLE);
-            mainBinding.recentRouteText.setVisibility(View.VISIBLE);
-        }
+        //경로 설정 유무에 따라 view component change
     }
 
     //자주 가는 역 설정 다이얼로그
@@ -173,16 +152,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //메인 타이틀 텍스트 동적 변경
-    private void changeMainTitleText(long minute) {
+    private void changeMainTitleText(int minute) {
+        int length = String.valueOf(minute).length();
+        Log.d("daeun", String.valueOf(length));
+
         // 문자열 중 %d 부분에 빨간색 스타일 적용
         String formattedText = String.format(getString(R.string.main_title_text), minute);
         SpannableString spannableString = new SpannableString(formattedText);
 
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.RED);
         spannableString.setSpan(foregroundColorSpan, 5,
-                    6, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                   5 + length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //string index 직접 접근해서 색 변경
-
         mainBinding.mainTitleText.setText(spannableString);
     }
 
@@ -191,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
      * 막차 알림 시간 측정
      **/
     //수정 필요
-    private long checkNotificationTime(String TimeString) {
+    private int checkNotificationTime(String TimeString) {
         Date currentTime = new Date();
         Log.d("makar", "currentTime : " + String.valueOf(currentTime));
 
@@ -203,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        return specifiedDateTime.getTime() - currentTime.getTime();
+        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
     }
 
