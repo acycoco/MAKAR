@@ -16,6 +16,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".SearchDepartureActivity"
+            android:exported="true" />
+        <activity
             android:name=".OpenSourceLicenseActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true" />

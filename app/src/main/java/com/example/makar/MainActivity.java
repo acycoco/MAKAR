@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 public class MainActivity extends AppCompatActivity {
     String destination = "destination"; //임시 도착지 이름
     int leftTime; //막차까지 남은 시간
-    String makarTimeString = "2023-11-13 14:36:30"; //임시 막차 시간
+    String makarTimeString = "2023-11-17 14:36:30"; //임시 막차 시간
     String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public Boolean isGetOffSet = false; //하차 알림을 위한 플래그

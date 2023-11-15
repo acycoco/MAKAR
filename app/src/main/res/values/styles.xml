@@ -10,4 +10,10 @@
     </style>
     <style name="AppTheme.Actionbar" parent="Widget.AppCompat.Toolbar.Button.Navigation">
     </style>
+    <style name="CustomSearchView" parent="Widget.AppCompat.SearchView">
+        <item name="searchIcon">@drawable/ic_search</item>
+        <item name="iconifiedByDefault">false</item>
+        <item name="queryBackground">@android:color/transparent</item>
+        <item name="android:textSize">18sp</item>
+    </style>
 </resources>

@@ -49,13 +49,13 @@ public class DataConverter {
                             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
-                                    Log.d("MARKAR", station.getStationName() + " " + station.getLineNum() + "가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                    Log.d("MAKAR", station.getStationName() + " " + station.getLineNum() + "가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.e("MARKAR", "Firestore에 station 데이터 추가 중 오류 발생: " + e.getMessage());
+                                    Log.e("MAKAR", "Firestore에 station 데이터 추가 중 오류 발생: " + e.getMessage());
                                 }
                             });
                 }

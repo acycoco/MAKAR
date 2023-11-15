@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.util.Log;
@@ -63,96 +64,99 @@ public class SetRouteActivity extends AppCompatActivity {
 //        databaseConverter.readExcelFileAndSave();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        setRouteBinding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
+//        setRouteBinding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                if (!newText.isEmpty()) {
+//                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
+//
+//                    //newText로 시작하는 모든 역 검색
+//                    Query query = collectionRef.orderBy("stationName")
+//                            .startAt(newText)
+//                            .endAt(newText + "\uf8ff");
+//
+//                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                StringBuilder result = new StringBuilder();
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//                                    Station station = document.toObject(Station.class);
+//
+//                                    //TODO 받은 station(검색결과)을 화면에 어떻게 띄울지
+//                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
+//                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
+//                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
+//                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
+//                                }
+//
+//                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
+//                            } else {
+//                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
+//                            }
+//                        }
+//
+//                    });
+//                }
+//                return true;
+//
+//            }
+//        });
 
-            @Override
-            public boolean onQueryTextChange(String newText) {
 
-                if (!newText.isEmpty()) {
-                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
+//        setRouteBinding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                if (!newText.isEmpty()) {
+//                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
+//
+//                    //newText로 시작하는 모든 역 검색
+//                    Query query = collectionRef.orderBy("stationName")
+//                            .startAt(newText)
+//                            .endAt(newText + "\uf8ff");
+//
+//                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                        @Override
+//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                            if (task.isSuccessful()) {
+//                                StringBuilder result = new StringBuilder();
+//                                for (QueryDocumentSnapshot document : task.getResult()) {
+//                                    Station station = document.toObject(Station.class);
+//
+//                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
+//                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
+//                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
+//                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
+//                                }
+//
+//                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
+//                            } else {
+//                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
+//                            }
+//                        }
+//
+//                    });
+//                }
+//                return true;
+//
+//            }
+//        });
 
-                    //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("stationName")
-                            .startAt(newText)
-                            .endAt(newText + "\uf8ff");
-
-                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                StringBuilder result = new StringBuilder();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Station station = document.toObject(Station.class);
-
-                                    //TODO 받은 station(검색결과)을 화면에 어떻게 띄울지
-                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
-                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
-                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
-                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
-                                }
-
-                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
-                            } else {
-                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
-                            }
-                        }
-
-                    });
-                }
-                return true;
-
-            }
+        setRouteBinding.searchDepartureButton.setOnClickListener(view -> {
+            startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
         });
-
-
-        setRouteBinding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                if (!newText.isEmpty()) {
-                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
-
-                    //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("stationName")
-                            .startAt(newText)
-                            .endAt(newText + "\uf8ff");
-
-                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                StringBuilder result = new StringBuilder();
-                                for (QueryDocumentSnapshot document : task.getResult()) {
-                                    Station station = document.toObject(Station.class);
-
-                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
-                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
-                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
-                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
-                                }
-
-                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
-                            } else {
-                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
-                            }
-                        }
-
-                    });
-                }
-                return true;
-
-            }
-        });
-
 
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
