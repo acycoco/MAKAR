@@ -38,21 +38,22 @@
                     android:textStyle="bold" />
 
                 <Space
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <android.widget.Button
+                <Button
                     android:id="@+id/timetableBtn"
                     android:layout_width="43dp"
                     android:layout_height="25dp"
                     android:background="@drawable/custom_button_timetable"
                     android:text="시간표"
                     android:textSize="10sp"
-                    android:visibility="visible" />
+                    android:visibility="visible"
+                    tools:ignore="SmallSp" />
             </LinearLayout>
 
-            <android.widget.Button
+            <Button
                 android:id="@+id/main_route_view"
                 android:layout_width="match_parent"
                 android:layout_height="43dp"
@@ -94,7 +95,7 @@
                     android:layout_weight="10" />
             </LinearLayout>
 
-            <android.widget.Button
+            <Button
                 android:id="@+id/changeRouteBtn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -106,7 +107,7 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-            <android.widget.Button
+            <Button
                 android:id="@+id/setAlarmBtn"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
@@ -118,7 +119,7 @@
                 android:textStyle="bold"
                 android:visibility="gone" />
 
-            <android.widget.Button
+            <Button
                 android:id="@+id/setRouteBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

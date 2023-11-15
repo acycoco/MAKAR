@@ -19,7 +19,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginBottom="20dp">
 
-        <android.widget.Button
+        <Button
             android:id="@+id/close_alarm_time_btn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
@@ -30,7 +30,7 @@
             android:textSize="16sp"
             android:textStyle="bold" />
 
-        <android.widget.Button
+        <Button
             android:id="@+id/set_alarm_time_btn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"

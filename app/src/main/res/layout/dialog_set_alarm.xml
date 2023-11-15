@@ -32,7 +32,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="13dp">
 
-        <android.widget.Button
+        <Button
             android:id="@+id/cancel_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
@@ -43,7 +43,7 @@
             android:textSize="16sp"
             android:layout_marginEnd="15dp"/>
 
-        <android.widget.Button
+        <Button
             android:id="@+id/set_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"

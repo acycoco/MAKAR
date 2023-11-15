@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_button_main"
         android:text="@string/start_button"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="15sp"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"

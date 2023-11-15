@@ -2,13 +2,151 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <include
         android:id="@+id/toolbar_my_page"
         layout="@layout/custom_toolbar" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content"
+        android:descendantFocusability="beforeDescendants">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- 내 정보 -->
+            <TextView
+                android:id="@+id/my_info_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/my_info_header_text"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/get_off_setting_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/get_off_setting_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/favorite_station_setting_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/favorite_station_setting_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/favorite_route_setting_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/favorite_route_setting_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <!-- 앱 정보 -->
+            <TextView
+                android:id="@+id/app_info_header_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="22dp"
+                android:paddingTop="30dp"
+                android:paddingBottom="15dp"
+                android:text="@string/app_info_header_text"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/terms_of_service_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:paddingTop="15dp"
+                android:text="@string/terms_of_service_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/privacy_policy_text_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/privacy_policy_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <Button
+                android:id="@+id/open_source_usage_information_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:drawableEnd="@drawable/ic_right_arrow"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/open_source_license_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+
+            <!-- 계정 관리 -->
+            <TextView
+                android:id="@+id/account_manage_header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="22dp"
+                android:paddingTop="30dp"
+                android:paddingBottom="15dp"
+                android:text="@string/account_manage_header_text"
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/logout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:paddingHorizontal="22dp"
+                android:paddingVertical="15dp"
+                android:text="@string/logout_text"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
