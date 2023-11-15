@@ -14,7 +14,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="15dp">
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="15dp">
 
         <androidx.appcompat.widget.SearchView
             android:id="@+id/search_view_departure"
@@ -24,16 +25,11 @@
             android:background="@drawable/custom_search_view"
             app:queryHint="출발역을 입력하세요." />
 
-        <ScrollView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="10dp">
+        <ListView
+            android:layout_marginVertical="15sp"
+            android:id="@+id/search_departure_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
-            <ListView
-                android:id="@+id/search_departure_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </ScrollView>
     </LinearLayout>
 </LinearLayout>

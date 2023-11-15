@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/line_image_view"
+        android:layout_width="25dp"
+        android:layout_gravity="center_vertical"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_line7"/>
+
+    <TextView
+        android:id="@+id/line_text_view"
+        android:textSize="17sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="10dp"
+        android:textColor="@color/black"
+        android:text="숭실대입구" />
+</LinearLayout>
