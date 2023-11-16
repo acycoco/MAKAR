@@ -39,32 +39,6 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/custom_linearlayout_border"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="7dp"
-                    android:paddingVertical="5dp">
-
-                    <ImageView
-                        android:id="@+id/current_location_imageView"
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:layout_marginEnd="4dp"
-                        android:src="@drawable/ic_current_location" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="2dp"
-                        android:drawablePadding="9dp"
-                        android:text="내 위치"
-                        android:textColor="@color/dark_gray"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="10dp"
                     android:background="@drawable/custom_linearlayout_border"
                     android:gravity="center_vertical"
