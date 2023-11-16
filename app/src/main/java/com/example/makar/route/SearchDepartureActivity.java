@@ -49,6 +49,12 @@ public class SearchDepartureActivity extends AppCompatActivity {
         searchDepartureBinding.toolbarSearchDeparture.toolbarImage.setVisibility(View.GONE);
         searchDepartureBinding.toolbarSearchDeparture.toolbarButton.setVisibility(View.GONE);
 
+        SearchView searchView = searchDepartureBinding.searchViewDeparture;
+        searchView.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+
         View rootView = findViewById(android.R.id.content);
 
         rootView.setOnTouchListener(new View.OnTouchListener() {
