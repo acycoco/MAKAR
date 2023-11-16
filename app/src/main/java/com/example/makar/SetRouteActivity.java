@@ -158,6 +158,10 @@ public class SetRouteActivity extends AppCompatActivity {
             startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
         });
 
+        setRouteBinding.searchDestinationButton.setOnClickListener(view -> {
+            startActivity(new Intent(SetRouteActivity.this, SearchDestinationActivity.class));
+        });
+
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
         });
