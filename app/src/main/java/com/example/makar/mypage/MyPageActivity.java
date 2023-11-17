@@ -69,7 +69,6 @@ public class MyPageActivity extends AppCompatActivity {
 
     private void updateUI(Class contextClass) {
         startActivity(new Intent(MyPageActivity.this, contextClass));
-        finish();
     }
 
     @Override

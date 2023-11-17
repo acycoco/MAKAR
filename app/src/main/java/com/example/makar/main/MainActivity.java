@@ -138,14 +138,14 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this, 10000); // 10초마다 체크
             }
         };
-        handler.post(runnable);
+        handler.post(runnable);정
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         startNotification();
-        if(!MainActivityChangeView.changeView(mainBinding, leftTime, source, destination))
+        if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
             setFavoriteStation();
         //경로 설정 유무에 따라 view component change
     }
@@ -216,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(Class contextClass) {
         startActivity(new Intent(MainActivity.this, contextClass));
-        finish();
     }
 
 //    private void checkRouteSet(){
