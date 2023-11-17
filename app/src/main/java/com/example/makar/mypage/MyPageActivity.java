@@ -9,6 +9,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.example.makar.databinding.ActivityMyPageBinding;
+import com.example.makar.mypage.dialog.LogoutDialog;
+import com.example.makar.mypage.dialog.SetGetOffAlarmDialog;
 
 public class MyPageActivity extends AppCompatActivity {
 
@@ -30,33 +32,44 @@ public class MyPageActivity extends AppCompatActivity {
         myPageBinding.toolbarMyPage.toolbarButton.setVisibility(View.GONE);
 
         myPageBinding.getOffSettingButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, SetGetOffActivity.class));
+            setGetOffAlarm();
         });
 
         myPageBinding.favoriteStationSettingButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, SetFavoriteStationActivity.class));
+            updateUI(SetFavoriteRouteActivity.class);
         });
 
         myPageBinding.favoriteRouteSettingButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, SetFavoriteRouteActivity.class));
+            updateUI(SetFavoriteRouteActivity.class);
         });
 
         myPageBinding.termsOfServiceButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, TermsOfServiceActivity.class));
+            updateUI(TermsOfServiceActivity.class);
         });
 
         myPageBinding.privacyPolicyTextButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, PrivatePolicyActivity.class));
+            updateUI(PrivatePolicyActivity.class);
         });
 
         myPageBinding.openSourceUsageInformationButton.setOnClickListener(view -> {
-            startActivity(new Intent(MyPageActivity.this, OpenSourceLicenseActivity.class));
+            updateUI(OpenSourceLicenseActivity.class);
         });
 
         myPageBinding.logoutButton.setOnClickListener(view -> {
             LogoutDialog logoutDialog = new LogoutDialog(this);
             logoutDialog.show();
         });
+    }
+
+    //하차 알림 설정 다이얼로그
+    private void setGetOffAlarm() {
+        SetGetOffAlarmDialog setGetOffAlarmDialog = new SetGetOffAlarmDialog(this);
+        setGetOffAlarmDialog.show();
+    }
+
+    private void updateUI(Class contextClass) {
+        startActivity(new Intent(MyPageActivity.this, contextClass));
+        finish();
     }
 
     @Override

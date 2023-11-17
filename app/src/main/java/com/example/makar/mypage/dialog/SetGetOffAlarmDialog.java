@@ -51,6 +51,7 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
         setAlarmTimeBtn.setOnClickListener(view -> {
             //막차 알림 시간 설정
             showTimePickerDialog();
+            dismiss();
         });
 
         negativeBtn.setOnClickListener(view -> dismiss());

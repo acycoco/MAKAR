@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         //막차 알림 설정 버튼 클릭 리스너
         mainBinding.setAlarmBtn.setOnClickListener(view -> {
             //현재 alarmTime을 다이얼로그에 넘김
-            setAlarm();
+            setMakarAlarm();
         });
 
         //경로 변경하기 버튼 클릭 리스너
@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //막차 알림 설정 다이얼로그
-    private void setAlarm() {
+    private void setMakarAlarm() {
         SetMakarAlarmDialog setMakarAlarmDialog = new SetMakarAlarmDialog(this);
         setMakarAlarmDialog.show();
     }
