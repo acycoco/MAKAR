@@ -6,7 +6,7 @@
     android:paddingHorizontal="30dp">
 
     <NumberPicker
-        android:id="@+id/alarm_makar_time_picker"
+        android:id="@+id/makar_alarm_time_picker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"

@@ -17,7 +17,7 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String alarmTime = MainActivity.alarmTime;
+    static String makarAlarmTime = MainActivity.makarAlarmTime;
 
     public SetMakarAlarmDialog(@NonNull Context context) {
         super(context);
@@ -31,15 +31,15 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
         getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
         setContentView(R.layout.dialog_set_makar_alarm);
 
-        positiveBtn = findViewById(R.id.set_alarm_btn);
-        negativeBtn = findViewById(R.id.cancel_alarm_btn);
-        setAlarmTimeBtn = findViewById(R.id.set_alarm_time_btn);
+        positiveBtn = findViewById(R.id.set_makar_alarm_btn);
+        negativeBtn = findViewById(R.id.cancel_makar_alarm_btn);
+        setAlarmTimeBtn = findViewById(R.id.set_makar_alarm_time_btn);
         //MainActivity에서 받아온 alarmTime으로 텍스트 설정
-        setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
+        setAlarmTimeBtn.setText(makarAlarmTime+"분 전 알림");
 
         positiveBtn.setOnClickListener(view -> {
             //막차 알림 설정
-            sendDataToMainActivity(alarmTime);
+            sendDataToMainActivity(makarAlarmTime);
             dismiss();
             Toast.makeText(context, R.string.set_alarm_success, Toast.LENGTH_SHORT).show();
             Log.d("alarm", "SetAlarm : SUCCESS");
@@ -60,6 +60,6 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     }
 
     public void sendDataToMainActivity(String data) {
-        MainActivity.alarmTime = data;
+        MainActivity.makarAlarmTime = data;
     }
 }

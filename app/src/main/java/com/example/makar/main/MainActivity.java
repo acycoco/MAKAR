@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
-    public static String alarmTime = "10"; //설정한 막차 알람 시간
+    public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private String userUid;
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         setRouteUnset();
                     } else {
                         //경로는 설정되어있으나 시간 미달
-                        if(leftTime == Integer.parseInt(alarmTime)){
+                        if(leftTime == Integer.parseInt(makarAlarmTime)){
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 "+leftTime+"분 남았습니다", MainActivity.this);
                         }
