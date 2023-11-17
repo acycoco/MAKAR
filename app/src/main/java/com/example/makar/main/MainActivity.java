@@ -30,15 +30,17 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
-    String destination = "destination"; //임시 도착지 이름
-    int leftTime; //막차까지 남은 시간
-    String makarTimeString = "2023-11-17 14:36:30"; //임시 막차 시간
-    String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간 (막차시간 + 차 탑승 시간 - 하차 알림 시간)
+    private String destination = "destination"; //임시 도착지 이름
+    private String source = "source"; //임시 출발지 이름
+    private int leftTime; //막차까지 남은 시간
+    private String makarTimeString = "2023-11-19 14:36:30"; //임시 막차 시간
+    private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
-    public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
-    public static String alarmTime = "10"; //설정한 알람 시간
-    ActivityMainBinding mainBinding;
-    String userUid;
+    private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
+    public static String alarmTime = "10"; //설정한 막차 알람 시간
+    public static String getOffAlarmTime = "10"; //하차 알림 시간
+    private ActivityMainBinding mainBinding;
+    private String userUid;
 
 
     @Override
@@ -51,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
         userUid = getUserUid();
         //db 접근에 이용
 
+        //경로 설정 유무 체크
+        //checkRouteSet();
+
+        //set toolbar
         setSupportActionBar(mainBinding.toolbarMain.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.setRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
 
-            //onStart에서 경로 설정 유무에 따라 아래 코드 실행
+            //임시 경로 설정 플래그 수정
             isRouteSet = true;
             isGetOffSet = true;
         });
@@ -140,15 +146,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         startNotification();
-        if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, destination))
+        if(!MainActivityChangeView.changeView(mainBinding, leftTime, source, destination))
             setFavoriteStation();
         //경로 설정 유무에 따라 view component change
     }
 
     //자주 가는 역 설정 다이얼로그
     private void setFavoriteStation() {
-        SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
-        setFavoriteStationDialog.show();
+        //자주가는 역 설정X, 경로 설정X 일 때, 자주 가는 역 설정 다이얼로그 띄움
+        //if(/**자주가는 역 설정 안되어있을 시 **/) {
+            SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
+            setFavoriteStationDialog.show();
+        //}
     }
 
     //막차 알림 설정 다이얼로그
@@ -197,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
     private void setRouteUnset() {
         //조건 추가 필요
         isRouteSet = false;
-        //경로 제거 필요
+        //db에서 경로 제거 필요
         updateUI(MainActivity.class);
     }
 
@@ -210,4 +219,16 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, contextClass));
         finish();
     }
+
+//    private void checkRouteSet(){
+//        if(/**db에 경로 설정이 되어 있으면**/){
+//            isRouteSet = true;
+//            isGetOffSet = true;
+//            //makarTimeString = ""; //막차 시간 설정
+//            //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
+//            //source = ""; //출발지 설정
+//            //destination = ""; //도착지 설정
+//            /**출발지, 도착지 설정을 setRouteActivity에서 한 번에 초기화 할지, MainActivity에서 db에 접근해서 따로 초기화 할지 상의 필요**/
+//        }
+//    }
 }

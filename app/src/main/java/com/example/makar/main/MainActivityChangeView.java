@@ -3,12 +3,12 @@ import android.view.View;
 import com.example.makar.databinding.ActivityMainBinding;
 
 public class MainActivityChangeView {
-    static boolean changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String destination){
+    static boolean isRouteSet = MainActivity.isRouteSet;
+    static boolean changeView(ActivityMainBinding mainBinding, long leftTime, String source, String destination){
         if (isRouteSet) {
             //route 설정된 메인화면
             mainBinding.timetableBtn.setVisibility(View.VISIBLE);
-            mainBinding.mainDestinationText.setText("source"+ "  ->  "+  destination); //출발지, 도착지
-            //수정 필요
+            mainBinding.mainDestinationText.setText(source+ "  ->  "+  destination); //출발지, 도착지
             mainBinding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
             mainBinding.mainDestinationText.setText(destination); //도착지 이름
             mainBinding.changeRouteBtn.setVisibility(View.VISIBLE);

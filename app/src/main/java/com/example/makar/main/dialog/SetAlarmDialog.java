@@ -53,12 +53,6 @@ public class SetAlarmDialog extends Dialog {
     }
 
     public void showTimePickerDialog() {
-//        BottomSheetDialog setAlarmTimeDialog = new BottomSheetDialog(context);
-//              View dialogView = getLayoutInflater().inflate(R.layout.dialog_set_alarm_time, null);
-//              setAlarmTimeDialog.setContentView(dialogView);
-//              setAlarmTimeDialog.create();
-//              setAlarmTimeDialog.show();
-
               SetAlarmTimeDialog setAlarmTimeDialog = new SetAlarmTimeDialog(context);
               setAlarmTimeDialog.show();
     }
