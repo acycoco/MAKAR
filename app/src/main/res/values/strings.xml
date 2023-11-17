@@ -49,6 +49,9 @@
     <!-- 막차 알림-->
     <string name="set_alarm_success">막차 알림이 설정되었습니다</string>
 
+    <!--하차 알림-->
+    <string name="set_getoff_alarm_success">하차 알림이 설정되었습니다</string>
+
     <!-- 메인화면 -->
     <string name="path_text">경로를 설정해주세요</string>
     <string name="path_root_text">출발역 -> 도착역</string>

@@ -11,12 +11,11 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.makar.main.dialog.SetAlarmDialog;
+import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
 import com.example.makar.route.SetRouteActivity;
@@ -37,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
-    public static String alarmTime = "10"; //설정한 막차 알람 시간
+    public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private String userUid;
@@ -76,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         //막차 알림 설정 버튼 클릭 리스너
         mainBinding.setAlarmBtn.setOnClickListener(view -> {
             //현재 alarmTime을 다이얼로그에 넘김
-            setAlarm();
+            setMakarAlarm();
         });
 
         //경로 변경하기 버튼 클릭 리스너
@@ -113,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                         setRouteUnset();
                     } else {
                         //경로는 설정되어있으나 시간 미달
-                        if(leftTime == Integer.parseInt(alarmTime)){
+                        if(leftTime == Integer.parseInt(makarAlarmTime)){
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 "+leftTime+"분 남았습니다", MainActivity.this);
                         }
@@ -139,14 +138,14 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this, 10000); // 10초마다 체크
             }
         };
-        handler.post(runnable);
+        handler.post(runnable);정
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         startNotification();
-        if(!MainActivityChangeView.changeView(mainBinding, leftTime, source, destination))
+        if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
             setFavoriteStation();
         //경로 설정 유무에 따라 view component change
     }
@@ -161,9 +160,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //막차 알림 설정 다이얼로그
-    private void setAlarm() {
-        SetAlarmDialog setAlarmDialog = new SetAlarmDialog(this);
-        setAlarmDialog.show();
+    private void setMakarAlarm() {
+        SetMakarAlarmDialog setMakarAlarmDialog = new SetMakarAlarmDialog(this);
+        setMakarAlarmDialog.show();
     }
 
     //메인 타이틀 텍스트 동적 변경
@@ -217,7 +216,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateUI(Class contextClass) {
         startActivity(new Intent(MainActivity.this, contextClass));
-        finish();
     }
 
 //    private void checkRouteSet(){

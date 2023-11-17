@@ -18,7 +18,7 @@
         />
 
     <Button
-        android:id="@+id/set_alarm_time_btn"
+        android:id="@+id/set_makar_alarm_time_btn"
         android:layout_width="wrap_content"
         android:layout_height="40dp"
         android:text="10분 전 알림"
@@ -33,7 +33,7 @@
         android:layout_marginTop="13dp">
 
         <Button
-            android:id="@+id/cancel_alarm_btn"
+            android:id="@+id/cancel_makar_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_white"
@@ -44,7 +44,7 @@
             android:layout_marginEnd="15dp"/>
 
         <Button
-            android:id="@+id/set_alarm_btn"
+            android:id="@+id/set_makar_alarm_btn"
             android:layout_width="115dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_main"

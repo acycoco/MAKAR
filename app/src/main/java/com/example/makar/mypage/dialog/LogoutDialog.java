@@ -1,4 +1,4 @@
-package com.example.makar.mypage;
+package com.example.makar.mypage.dialog;
 
 import android.app.Dialog;
 import android.content.Context;

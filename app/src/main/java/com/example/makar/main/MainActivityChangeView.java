@@ -3,8 +3,7 @@ import android.view.View;
 import com.example.makar.databinding.ActivityMainBinding;
 
 public class MainActivityChangeView {
-    static boolean isRouteSet = MainActivity.isRouteSet;
-    static boolean changeView(ActivityMainBinding mainBinding, long leftTime, String source, String destination){
+    static boolean changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String source, String destination){
         if (isRouteSet) {
             //route 설정된 메인화면
             mainBinding.timetableBtn.setVisibility(View.VISIBLE);
