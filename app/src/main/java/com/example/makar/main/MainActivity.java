@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String alarmTime = "10"; //설정한 알람 시간
     ActivityMainBinding mainBinding;
+    String userUid;
 
 
     @Override
@@ -46,6 +47,10 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
 
+        //현재 사용자의 uid get
+        userUid = getUserUid();
+        //db 접근에 이용
+
         setSupportActionBar(mainBinding.toolbarMain.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
@@ -53,13 +58,13 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, MyPageActivity.class));
+            updateUI(MyPageActivity.class);
         });
 
         /**==경로 설정 Main==**/
         //시간표 버튼 클릭 리스너
         mainBinding.timetableBtn.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, TimeTableActivity.class));
+            updateUI(TimeTableActivity.class);
         });
 
         //막차 알림 설정 버튼 클릭 리스너
@@ -77,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너
         mainBinding.setRouteBtn.setOnClickListener(view -> {
-            startActivity(new Intent(MainActivity.this, SetRouteActivity.class));
+            updateUI(SetRouteActivity.class);
 
             //onStart에서 경로 설정 유무에 따라 아래 코드 실행
             isRouteSet = true;
@@ -196,7 +201,13 @@ public class MainActivity extends AppCompatActivity {
         updateUI(MainActivity.class);
     }
 
+    private String getUserUid(){
+        Intent intent = getIntent();
+        return intent.getStringExtra("uid");
+    }
+
     private void updateUI(Class contextClass) {
         startActivity(new Intent(MainActivity.this, contextClass));
+        finish();
     }
 }

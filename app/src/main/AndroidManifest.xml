@@ -55,7 +55,7 @@
             android:name=".main.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".onboarding.fragment.SignupActivity"
+            android:name=".onboarding.SignupActivity"
             android:exported="true" />
         <activity
             android:name=".onboarding.LoginActivity"

@@ -1,4 +1,4 @@
-package com.example.makar.onboarding.fragment;
+package com.example.makar.onboarding;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -17,7 +17,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.makar.databinding.ActivitySignupBinding;
-import com.example.makar.onboarding.LoginActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -234,6 +233,7 @@ public class SignupActivity extends AppCompatActivity {
         if (user != null) {
             Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
             startActivity(intent);
+            finish();
         }
     }
 

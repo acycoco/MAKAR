@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.example.makar.main.MainActivity;
 import com.example.makar.R;
 import com.example.makar.databinding.ActivityLoginBinding;
-import com.example.makar.onboarding.fragment.SignupActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -66,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         binding.signupBtn.setOnClickListener(view -> {
                 startActivity(new Intent(LoginActivity.this, SignupActivity.class));
                 //회원가입 뷰로 넘어감
+                finish();
         });
     }
 
@@ -114,8 +114,9 @@ public class LoginActivity extends AppCompatActivity {
     void updateUI(FirebaseUser user) {
         if (user != null) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("USER_PROFILE", "email: " + user.getEmail() + "\n" + "uid: " + user.getUid());
+            intent.putExtra("uid", user.getUid());
             startActivity(intent);
+            finish();
         }
         }
     }
