@@ -11,12 +11,11 @@ import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.makar.main.dialog.SetAlarmDialog;
+import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
 import com.example.makar.route.SetRouteActivity;
@@ -162,8 +161,8 @@ public class MainActivity extends AppCompatActivity {
 
     //막차 알림 설정 다이얼로그
     private void setAlarm() {
-        SetAlarmDialog setAlarmDialog = new SetAlarmDialog(this);
-        setAlarmDialog.show();
+        SetMakarAlarmDialog setMakarAlarmDialog = new SetMakarAlarmDialog(this);
+        setMakarAlarmDialog.show();
     }
 
     //메인 타이틀 텍스트 동적 변경

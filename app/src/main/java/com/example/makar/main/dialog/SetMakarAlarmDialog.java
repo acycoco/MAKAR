@@ -8,16 +8,18 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+
+import com.example.makar.data.SetAlarmDialog;
 import com.example.makar.main.MainActivity;
 import com.example.makar.R;
 
-public class SetAlarmDialog extends Dialog {
+public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
     static String alarmTime = MainActivity.alarmTime;
 
-    public SetAlarmDialog(@NonNull Context context) {
+    public SetMakarAlarmDialog(@NonNull Context context) {
         super(context);
         this.context = context;
     }
@@ -27,7 +29,7 @@ public class SetAlarmDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
-        setContentView(R.layout.dialog_set_alarm);
+        setContentView(R.layout.dialog_set_makar_alarm);
 
         positiveBtn = findViewById(R.id.set_alarm_btn);
         negativeBtn = findViewById(R.id.cancel_alarm_btn);
@@ -53,8 +55,8 @@ public class SetAlarmDialog extends Dialog {
     }
 
     public void showTimePickerDialog() {
-              SetAlarmTimeDialog setAlarmTimeDialog = new SetAlarmTimeDialog(context);
-              setAlarmTimeDialog.show();
+              SetMakarAlarmTimeDialog setMakarAlarmTimeDialog = new SetMakarAlarmTimeDialog(context);
+              setMakarAlarmTimeDialog.show();
     }
 
     public void sendDataToMainActivity(String data) {

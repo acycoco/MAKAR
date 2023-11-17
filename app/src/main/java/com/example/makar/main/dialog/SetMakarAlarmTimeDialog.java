@@ -7,10 +7,12 @@ import android.widget.Button;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+
+import com.example.makar.data.SetAlarmTimeDialog;
 import com.example.makar.main.MainActivity;
 import com.example.makar.R;
 
-public class SetAlarmTimeDialog extends Dialog {
+public class SetMakarAlarmTimeDialog extends Dialog  implements SetAlarmTimeDialog {
     Context context;
     NumberPicker alarmTimePicker;
     private String[] timeArr = {"10", "20", "30", "40", "50", "60"};
@@ -19,7 +21,7 @@ public class SetAlarmTimeDialog extends Dialog {
     private String alarmTime = MainActivity.alarmTime;
 
 
-    public SetAlarmTimeDialog(@NonNull Context context) {
+    public SetMakarAlarmTimeDialog(@NonNull Context context) {
         super(context);
         this.context = context;
     }
@@ -29,7 +31,7 @@ public class SetAlarmTimeDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
-        setContentView(R.layout.dialog_set_alarm_time);
+        setContentView(R.layout.dialog_set_makar_alarm_time);
 
         alarmTimePicker = findViewById(R.id.alarm_time_picker);
         alarmTimePicker.setDisplayedValues(timeArr);
@@ -62,8 +64,8 @@ public class SetAlarmTimeDialog extends Dialog {
 
     public void sendDataToFirstDialog(String data) {
        MainActivity.alarmTime = alarmTime;
-       SetAlarmDialog.alarmTime = alarmTime;
-       SetAlarmDialog.setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
+       SetMakarAlarmDialog.alarmTime = alarmTime;
+       SetMakarAlarmDialog.setAlarmTimeBtn.setText(alarmTime+"분 전 알림");
     }
 
 
