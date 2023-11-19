@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar_search_home"
+        android:id="@+id/toolbar_search_home2"
         layout="@layout/custom_toolbar" />
 
     <LinearLayout
@@ -18,17 +18,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:paddingHorizontal="15dp"
-            android:paddingTop="10dp"
-            android:orientation="horizontal">
+            android:paddingTop="10dp">
 
-        <androidx.appcompat.widget.SearchView
-            android:id="@+id/search_view_home"
-            style="@style/CustomSearchView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@drawable/custom_search_view"
-            app:queryHint="집 주변 지하철 역을 검색하세요." />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/search_view_home2"
+                style="@style/CustomSearchView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/custom_search_view"
+                app:queryHint="집 주변 지하철 역을 검색하세요." />
         </LinearLayout>
 
         <View
@@ -38,9 +38,8 @@
             android:background="@color/light_gray2" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_home_recycler_view"
+            android:id="@+id/search_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
-
     </LinearLayout>
 </LinearLayout>

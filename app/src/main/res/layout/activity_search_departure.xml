@@ -143,13 +143,10 @@
             android:layout_marginTop="13dp"
             android:background="@color/light_gray2" />
 
-        <ListView
-            android:id="@+id/search_departure_list_view"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/search_departure_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@color/light_gray"
-            android:dividerHeight="0.5dp"
-            android:paddingHorizontal="15dp" />
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 </LinearLayout>

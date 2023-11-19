@@ -4,20 +4,18 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.example.makar.R;
-import com.example.makar.data.CustomAdapter;
+import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchSchoolBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -64,21 +62,11 @@ public class SearchSchoolActivity extends AppCompatActivity {
             }
         });
 
-        ListView listView = searchSchoolBinding.searchSchoolListView;
+        RecyclerView recyclerView = searchSchoolBinding.searchSchoolRecyclerView;
         List<Station> resultList = new ArrayList<>();
-        CustomAdapter adapter = new CustomAdapter(this, resultList);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-
-                Intent intent = new Intent(SearchSchoolActivity.this, SetFavoriteStationActivity.class);
-                intent.putExtra("station_near_school", selectedItem);
-                startActivity(intent);
-            }
-        });
+        SearchAdapter adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

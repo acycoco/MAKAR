@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +15,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.example.makar.data.CustomAdapter;
+import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchHomeBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -59,28 +59,16 @@ public class SearchHomeActivity extends AppCompatActivity {
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
                 hideKeyboard();
                 return false;
             }
         });
 
-        ListView listView = searchHomeBinding.searchHomeListView;
+        RecyclerView recyclerView = searchHomeBinding.searchHomeRecyclerView;
         List<Station> resultList = new ArrayList<>();
-        CustomAdapter adapter = new CustomAdapter(this, resultList);
-        listView.setAdapter(adapter);
-
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-
-                Intent intent = new Intent(SearchHomeActivity.this, SetFavoriteStationActivity.class);
-                intent.putExtra("station_near_home", selectedItem);
-                Log.d("MAKARS", selectedItem);
-                startActivity(intent);
-            }
-        });
+        SearchAdapter adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

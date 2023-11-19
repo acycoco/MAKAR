@@ -4,6 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,11 +14,9 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
 
-import com.example.makar.data.CustomAdapter;
+import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
-import com.example.makar.R;
 import com.example.makar.databinding.ActivitySearchDepartureBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -68,10 +68,11 @@ public class SearchDepartureActivity extends AppCompatActivity {
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
 
-        ListView listView = searchDepartureBinding.searchDepartureListView;
+        RecyclerView recyclerView = searchDepartureBinding.searchDepartureRecyclerView;
         List<Station> resultList = new ArrayList<>();
-        CustomAdapter adapter = new CustomAdapter(this, resultList);
-        listView.setAdapter(adapter);
+        SearchAdapter adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         searchDepartureBinding.searchViewDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
