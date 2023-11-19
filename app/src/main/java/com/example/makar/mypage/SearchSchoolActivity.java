@@ -1,4 +1,4 @@
-package com.example.makar.route;
+package com.example.makar.mypage;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -6,18 +6,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.example.makar.R;
 import com.example.makar.data.CustomAdapter;
 import com.example.makar.data.Station;
-import com.example.makar.R;
-import com.example.makar.databinding.ActivitySearchDestinationBinding;
+import com.example.makar.databinding.ActivitySearchSchoolBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -29,52 +31,58 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchDestinationActivity extends AppCompatActivity {
-    ActivitySearchDestinationBinding searchDestinationBinding;
+public class SearchSchoolActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchDestinationBinding = ActivitySearchDestinationBinding.inflate(getLayoutInflater());
-        setContentView(searchDestinationBinding.getRoot());
+        ActivitySearchSchoolBinding searchSchoolBinding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
+        setContentView(searchSchoolBinding.getRoot());
 
-        setSupportActionBar(searchDestinationBinding.toolbarSearchDestination.getRoot());
+        setSupportActionBar(searchSchoolBinding.toolbarSearchSchool.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
 
-        searchDestinationBinding.toolbarSearchDestination.toolbarText.setText("도착역 입력");
-        searchDestinationBinding.toolbarSearchDestination.toolbarImage.setVisibility(View.GONE);
-        searchDestinationBinding.toolbarSearchDestination.toolbarButton.setVisibility(View.GONE);
+        searchSchoolBinding.toolbarSearchSchool.toolbarText.setText("역 검색");
+        searchSchoolBinding.toolbarSearchSchool.toolbarImage.setVisibility(View.GONE);
+        searchSchoolBinding.toolbarSearchSchool.toolbarButton.setVisibility(View.GONE);
 
-        SearchView searchView = searchDestinationBinding.searchViewDestination;
+        SearchView searchView = searchSchoolBinding.searchViewSchool;
         searchView.requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
 
         View rootView = findViewById(android.R.id.content);
-
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
                 hideKeyboard();
                 return false;
             }
         });
 
-//        DataConverter databaseConverter = new DataConverter(this);
-//        databaseConverter.readExcelFileAndSave();
-
-        ListView listView = searchDestinationBinding.searchDestinationListView;
+        ListView listView = searchSchoolBinding.searchSchoolListView;
         List<Station> resultList = new ArrayList<>();
         CustomAdapter adapter = new CustomAdapter(this, resultList);
         listView.setAdapter(adapter);
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+
+                Intent intent = new Intent(SearchSchoolActivity.this, SetFavoriteStationActivity.class);
+                intent.putExtra("station_near_school", selectedItem);
+                startActivity(intent);
+            }
+        });
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        searchDestinationBinding.searchViewDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+        searchSchoolBinding.searchViewSchool.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -84,7 +92,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             public boolean onQueryTextChange(String newText) {
 
                 if (!newText.isEmpty()) {
-                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
+                    CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
                     Query query = collectionRef.orderBy("stationName")

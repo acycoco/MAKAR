@@ -35,7 +35,6 @@ public class SearchDepartureActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search_departure);
 
         searchDepartureBinding = ActivitySearchDepartureBinding.inflate(getLayoutInflater());
         setContentView(searchDepartureBinding.getRoot());
@@ -69,7 +68,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
 
-        ListView listView = findViewById(R.id.search_departure_list_view);
+        ListView listView = searchDepartureBinding.searchDepartureListView;
         List<Station> resultList = new ArrayList<>();
         CustomAdapter adapter = new CustomAdapter(this, resultList);
         listView.setAdapter(adapter);

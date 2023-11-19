@@ -16,7 +16,6 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_set_favorite_route);
 
         setFavoriteRouteBinding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
         setContentView(setFavoriteRouteBinding.getRoot());

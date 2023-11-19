@@ -4,6 +4,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -32,6 +33,21 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 등록");
         setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarImage.setVisibility(View.GONE);
         setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarButton.setVisibility(View.GONE);
+
+        setFavoriteStationBinding.homeSearchButton.setOnClickListener(view -> {
+            startActivity(new Intent(this, SearchHomeActivity.class));
+        });
+
+        setFavoriteStationBinding.schoolSearchButton.setOnClickListener(view -> {
+            startActivity(new Intent(this, SearchSchoolActivity.class));
+        });
+
+        Intent intent = getIntent();
+        String stationNearHome = intent.getStringExtra("station_near_home");
+        String stationNearSchool = intent.getStringExtra("station_near_school");
+
+        setFavoriteStationBinding.editTextHome.setText(stationNearHome);
+        setFavoriteStationBinding.editTextSchool.setText(stationNearSchool);
 
         View rootView = findViewById(android.R.id.content);
 

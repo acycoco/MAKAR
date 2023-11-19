@@ -18,7 +18,6 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_open_source_license);
 
         openSourceLicenseBinding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
         setContentView(openSourceLicenseBinding.getRoot());

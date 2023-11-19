@@ -17,7 +17,6 @@ public class TermsOfServiceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_private_policy);
 
         termsOfServiceBinding = ActivityTermsOfServiceBinding.inflate(getLayoutInflater());
         setContentView(termsOfServiceBinding.getRoot());

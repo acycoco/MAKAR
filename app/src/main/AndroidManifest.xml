@@ -16,6 +16,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".mypage.SearchSchoolActivity"
+            android:exported="true" />
+        <activity
+            android:name=".mypage.SearchHomeActivity"
+            android:exported="true" />
+        <activity
             android:name=".route.SearchDestinationActivity"
             android:exported="true" />
         <activity
@@ -35,9 +41,6 @@
             android:exported="true" />
         <activity
             android:name=".mypage.SetFavoriteRouteActivity"
-            android:exported="true" />
-        <activity
-            android:name=".mypage.SetGetOffActivity"
             android:exported="true" />
         <activity
             android:name=".main.TimeTableActivity"

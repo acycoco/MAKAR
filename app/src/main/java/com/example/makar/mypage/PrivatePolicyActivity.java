@@ -17,7 +17,6 @@ public class PrivatePolicyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_private_policy);
 
         privatePolicyBinding = ActivityPrivatePolicyBinding.inflate(getLayoutInflater());
         setContentView(privatePolicyBinding.getRoot());
