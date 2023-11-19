@@ -6,13 +6,27 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-
+import com.example.makar.BuildConfig;
+import com.example.makar.data.Route;
+import com.example.makar.data.RouteItem;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -54,95 +68,6 @@ public class SetRouteActivity extends AppCompatActivity {
 //        databaseConverter.readExcelFileAndSave();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        setRouteBinding.searchDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                if (!newText.isEmpty()) {
-//                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
-//
-//                    //newText로 시작하는 모든 역 검색
-//                    Query query = collectionRef.orderBy("stationName")
-//                            .startAt(newText)
-//                            .endAt(newText + "\uf8ff");
-//
-//                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                StringBuilder result = new StringBuilder();
-//                                for (QueryDocumentSnapshot document : task.getResult()) {
-//                                    Station station = document.toObject(Station.class);
-//
-//                                    //TODO 받은 station(검색결과)을 화면에 어떻게 띄울지
-//                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
-//                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
-//                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
-//                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
-//                                }
-//
-//                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
-//                            } else {
-//                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
-//                            }
-//                        }
-//
-//                    });
-//                }
-//                return true;
-//
-//            }
-//        });
-
-
-//        setRouteBinding.searchDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-//            @Override
-//            public boolean onQueryTextSubmit(String query) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean onQueryTextChange(String newText) {
-//
-//                if (!newText.isEmpty()) {
-//                    CollectionReference collectionRef = db.collection("stations"); // 컬렉션 이름에 맞게 변경하세요.
-//
-//                    //newText로 시작하는 모든 역 검색
-//                    Query query = collectionRef.orderBy("stationName")
-//                            .startAt(newText)
-//                            .endAt(newText + "\uf8ff");
-//
-//                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                        @Override
-//                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                            if (task.isSuccessful()) {
-//                                StringBuilder result = new StringBuilder();
-//                                for (QueryDocumentSnapshot document : task.getResult()) {
-//                                    Station station = document.toObject(Station.class);
-//
-//                                    result.append("역 이름: ").append(station.getStationName()).append("\n");
-//                                    result.append("역 코드: ").append(station.getStationCode()).append("\n");
-//                                    result.append("노선 이름: ").append(station.getLineNum()).append("\n");
-//                                    result.append("철도 운영 기관 코드: ").append(station.getRailOpr()).append("\n\n");
-//                                }
-//
-//                                Log.d("MAKAR", "검색 결과:\n" + result.toString());
-//                            } else {
-//                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
-//                            }
-//                        }
-//
-//                    });
-//                }
-//                return true;
-//
-//            }
-//        });
 
         setRouteBinding.searchDepartureButton.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
@@ -154,7 +79,103 @@ public class SetRouteActivity extends AppCompatActivity {
 
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
+            // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
+            new Thread(() -> {
+                try {
+                    String result = searchRoute();
+                    Route route = parseRouteResponse(result);
+                    // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        Log.d("MAKAR", route.toString());
+                        // 결과를 사용하여 UI 업데이트 등의 작업 수행
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
         });
+    }
+
+    private String searchRoute() throws IOException {
+        String apiKey = BuildConfig.ODSAY_API_KEY;
+        if (apiKey == null) {
+            Log.e("makar", "api key null");
+        }
+
+        StringBuilder urlBuilder = new StringBuilder("https://api.odsay.com/v1/api/subwayPath");
+
+        urlBuilder.append("?CID=" + URLEncoder.encode("1000", "UTF-8"));
+        urlBuilder.append("&SID=" + URLEncoder.encode("201", "UTF-8"));
+        urlBuilder.append("&EID=" + URLEncoder.encode("222", "UTF-8"));
+        urlBuilder.append("&Sopt=" + URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&apiKey=" + URLEncoder.encode(apiKey, "UTF-8"));
+//        String urlInfo = "https://api.odsay.com/v1/api/searchPubTransPathT?SX=126.9027279&SY=37.5349277&EX=126.9145430&EY=37.5499421&apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
+
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            return sb.toString();
+        } finally {
+            conn.disconnect();
+        }
+    }
+
+
+    private Route parseRouteResponse(String jsonResponse) {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+
+            int totalTravelTime = jsonNode.path("result").path("globalTravelTime").asInt();
+
+            Route route = new Route(totalTravelTime);
+
+            //경로 받아오기
+            JsonNode driveInfoSetNode = jsonNode.path("result").path("driveInfoSet");
+            if (!driveInfoSetNode.isMissingNode()) {
+                JsonNode driveInfoArray = driveInfoSetNode.path("driveInfo");
+
+                for (JsonNode driveInfo : driveInfoArray) {
+                    int lineId = driveInfo.path("laneID").asInt(); //호선 ID
+                    String laneName = driveInfo.path("laneName").asText(); //호선명
+                    String startName = driveInfo.path("startName").asText(); //시작역
+                    int wayCode = driveInfo.path("wayCode").asInt(); //방면 1:상행 2:하행
+
+                    route.addRouteItem(new RouteItem(lineId, startName, wayCode));
+                }
+
+                //여기에 도착역을 추가해주는 게 좋은지?
+            }
+
+            //환승정보 받아오기
+            JsonNode exChangeInfoSetNode = jsonNode.path("result").path("exChangeInfoSet");
+            if (!exChangeInfoSetNode.isMissingNode()) {
+                JsonNode exChangeInfoArray = exChangeInfoSetNode.path("exChangeInfo");
+
+                for (JsonNode exChangeInfo : exChangeInfoArray) {
+                    int exWalkTime = exChangeInfo.path("exWalkTime").asInt(); //환승 소요시간 (초)
+
+                    route.addExWalkTime(exWalkTime);
+                }
+            }
+            System.out.println(route);
+            return route;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
     private void hideKeyboard() {

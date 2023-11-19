@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.postDelayed(this, 10000); // 10초마다 체크
             }
         };
-        handler.post(runnable);정
+        handler.post(runnable);
     }
 
     @Override
