@@ -6,14 +6,14 @@
     android:padding="10dp">
 
     <ImageView
-        android:id="@+id/line_image_view2"
+        android:id="@+id/line_image_view"
         android:layout_width="25dp"
         android:layout_height="25dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_line7" />
 
     <TextView
-        android:id="@+id/line_text_view2"
+        android:id="@+id/line_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
