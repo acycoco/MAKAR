@@ -2,16 +2,22 @@ package com.example.makar.data;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
 import com.example.makar.databinding.SearchRecyclerViewItemBinding;
+import com.example.makar.route.OnItemClickListener;
 
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
+
+    private OnItemClickListener listener;
     private List<Station> items;
     private Context context;
 
@@ -19,6 +25,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         this.context = context;
         this.items = items;
     }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
@@ -70,6 +81,14 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public ViewHolder(SearchRecyclerViewItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+
+            binding.lineTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String text = ((TextView) v).getText().toString();
+                    listener.onItemClick(text);
+                }
+            });
         }
     }
 }
