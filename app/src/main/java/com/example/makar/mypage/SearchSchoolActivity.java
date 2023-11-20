@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchSchoolBinding;
+import com.example.makar.route.OnItemClickListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -30,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
+
+    static Station schoolStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,6 +108,15 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
                 }
                 return true;
+            }
+        });
+
+        //recyclerView click listener
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Station station) {
+                schoolStation = station;
+                finish();
             }
         });
     }

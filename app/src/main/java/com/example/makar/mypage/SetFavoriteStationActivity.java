@@ -13,9 +13,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.makar.R;
+import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
 
 public class SetFavoriteStationActivity extends AppCompatActivity {
+
+    //임시 즐겨찾는 역
+    public static Station homeStation, schoolStation;
 
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
 
@@ -62,10 +66,19 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
-                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
-                finish();
+            homeStation = SearchHomeActivity.homeStation;
+            schoolStation = SearchSchoolActivity.schoolStation;
+            Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
+            finish();
                 //MainActivity로 돌아감
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //즐겨찾는 역 텍스트 수정
+        setFavoriteStationText();
     }
 
     private void hideKeyboard() {
@@ -87,5 +100,16 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setFavoriteStationText(){
+        if(homeStation != null){
+            setFavoriteStationBinding.editTextHome.setText(homeStation.getStationName());
+        }
+        else{ setFavoriteStationBinding.editTextHome.setText("");}
+        if(schoolStation != null){
+            setFavoriteStationBinding.editTextSchool.setText(schoolStation.getStationName());
+        }
+        else{setFavoriteStationBinding.editTextSchool.setText("");}
     }
 }
