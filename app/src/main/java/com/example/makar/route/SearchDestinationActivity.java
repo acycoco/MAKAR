@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -120,6 +121,27 @@ public class SearchDestinationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Station station) {
                 destinationStation = station;
+                finish();
+            }
+        });
+
+        //즐겨찾는 역 도착지로 설정
+        searchDestinationBinding.homeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.homeStation != null) {
+                    destinationStation = SetFavoriteStationActivity.homeStation;
+                }
+                finish();
+            }
+        });
+
+        searchDestinationBinding.schoolImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.schoolStation != null) {
+                    destinationStation = SetFavoriteStationActivity.schoolStation;
+                }
                 finish();
             }
         });

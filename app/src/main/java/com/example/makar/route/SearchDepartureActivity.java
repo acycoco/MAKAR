@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDepartureBinding;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -119,6 +120,27 @@ public class SearchDepartureActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Station station) {
                 sourceStation = station;
+                finish();
+            }
+        });
+
+        //즐겨찾는 역 출발지로 설정
+        searchDepartureBinding.homeImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.homeStation != null) {
+                    sourceStation = SetFavoriteStationActivity.homeStation;
+                }
+                finish();
+            }
+        });
+
+        searchDepartureBinding.schoolImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.schoolStation != null) {
+                    sourceStation = SetFavoriteStationActivity.schoolStation;
+                }
                 finish();
             }
         });
