@@ -126,7 +126,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
         });
 
         //즐겨찾는 역 도착지로 설정
-        searchDestinationBinding.homeImageView.setOnClickListener(new View.OnClickListener() {
+        searchDestinationBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(SetFavoriteStationActivity.homeStation != null) {
@@ -136,7 +136,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             }
         });
 
-        searchDestinationBinding.schoolImageView.setOnClickListener(new View.OnClickListener() {
+        searchDestinationBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(SetFavoriteStationActivity.schoolStation != null) {
