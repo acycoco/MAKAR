@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private String destination = "destination"; //임시 도착지 이름
     private String source = "source"; //임시 출발지 이름
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-19 14:36:30"; //임시 막차 시간
+    private String makarTimeString = "2023-11-23 14:36:30"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -206,6 +206,8 @@ public class MainActivity extends AppCompatActivity {
         //조건 추가 필요
         isRouteSet = false;
         //db에서 경로 제거 필요
+        SetRouteActivity.sourceBtn.setText("");
+        SetRouteActivity.destinationBtn.setText("");
         updateUI(MainActivity.class);
     }
 

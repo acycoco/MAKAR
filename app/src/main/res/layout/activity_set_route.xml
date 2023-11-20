@@ -35,7 +35,7 @@
                 android:background="@drawable/custom_button_gray"
                 android:drawableStart="@drawable/ic_search"
                 android:paddingHorizontal="10dp"
-                android:text="  출발역을 입력하세요."
+                android:hint="  출발역을 입력하세요."
                 android:textAlignment="textStart"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
@@ -74,7 +74,7 @@
                 android:background="@drawable/custom_button_gray"
                 android:drawableStart="@drawable/ic_search"
                 android:paddingHorizontal="10dp"
-                android:text="  도착역을 입력하세요."
+                android:hint="  도착역을 입력하세요."
                 android:textAlignment="textStart"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />

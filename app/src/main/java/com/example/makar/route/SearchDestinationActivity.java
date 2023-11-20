@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
@@ -110,6 +111,15 @@ public class SearchDestinationActivity extends AppCompatActivity {
 
                 }
                 return true;
+            }
+        });
+
+        //recyclerView click listener
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(String text) {
+                finish();
+                SetRouteActivity.destinationBtn.setText(text);
             }
         });
     }

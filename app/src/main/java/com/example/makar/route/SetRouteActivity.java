@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
 import com.example.makar.data.RouteItem;
@@ -32,6 +34,7 @@ import java.net.URLEncoder;
 public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
+    public static Button sourceBtn, destinationBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +55,9 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
         setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
 
+        sourceBtn = setRouteBinding.searchDepartureButton;
+        destinationBtn = setRouteBinding.searchDestinationButton;
+
         View rootView = findViewById(android.R.id.content);
 
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -69,31 +75,35 @@ public class SetRouteActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        setRouteBinding.searchDepartureButton.setOnClickListener(view -> {
+        sourceBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
         });
 
-        setRouteBinding.searchDestinationButton.setOnClickListener(view -> {
+        destinationBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDestinationActivity.class));
         });
 
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            new Thread(() -> {
-                try {
-                    String result = searchRoute();
-                    Route route = parseRouteResponse(result);
-                    // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        Log.d("MAKAR", route.toString());
-                        // 결과를 사용하여 UI 업데이트 등의 작업 수행
-                    });
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }).start();
+
+            if (!sourceBtn.getText().equals("") && !destinationBtn.getText().equals("")) {
+                new Thread(() -> {
+                    try {
+                        String result = searchRoute();
+                        Route route = parseRouteResponse(result);
+                        // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
+                        new Handler(Looper.getMainLooper()).post(() -> {
+                            Log.d("MAKAR", route.toString());
+                            // 결과를 사용하여 UI 업데이트 등의 작업 수행
+                        });
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }).start();
+            }
         });
+
     }
 
     private String searchRoute() throws IOException {

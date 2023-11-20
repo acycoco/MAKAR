@@ -112,6 +112,15 @@ public class SearchDepartureActivity extends AppCompatActivity {
                 return true;
             }
         });
+
+        //recyclerView click listener
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(String text) {
+                finish();
+                SetRouteActivity.sourceBtn.setText(text);
+            }
+        });
     }
 
     private void hideKeyboard() {
