@@ -208,6 +208,10 @@ public class MainActivity extends AppCompatActivity {
         //db에서 경로 제거 필요
         SetRouteActivity.sourceBtn.setText("");
         SetRouteActivity.destinationBtn.setText("");
+
+        //TODO 임시 출발지, 도착지 초기화 -> 수정 필요
+        SetRouteActivity.sourceStation = null;
+        SetRouteActivity.destinationStation = null;
         updateUI(MainActivity.class);
     }
 

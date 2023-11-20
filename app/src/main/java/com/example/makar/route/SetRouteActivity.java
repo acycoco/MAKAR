@@ -18,6 +18,7 @@ import android.widget.Button;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
 import com.example.makar.data.RouteItem;
+import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -35,6 +36,9 @@ public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
     public static Button sourceBtn, destinationBtn;
+
+    //임시 출발지, 목적지 변수
+    public static Station sourceStation, destinationStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +91,7 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
 
-            if (!sourceBtn.getText().equals("") && !destinationBtn.getText().equals("")) {
+            if (sourceStation != null && destinationStation != null) {
                 new Thread(() -> {
                     try {
                         String result = searchRoute();
@@ -104,6 +108,14 @@ public class SetRouteActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //sourceBtn, destinationBtn text 변경
+        setSerchBarText();
     }
 
     private String searchRoute() throws IOException {
@@ -207,5 +219,16 @@ public class SetRouteActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setSerchBarText(){
+        if(sourceStation != null){
+            sourceBtn.setText(sourceStation.getStationName());
+        }
+        else{ sourceBtn.setText("");}
+        if(destinationStation != null){
+            destinationBtn.setText(destinationStation.getStationName());
+        }
+        else{destinationBtn.setText("");}
     }
 }

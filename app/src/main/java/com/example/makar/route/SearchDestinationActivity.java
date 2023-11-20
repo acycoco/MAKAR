@@ -117,9 +117,9 @@ public class SearchDestinationActivity extends AppCompatActivity {
         //recyclerView click listener
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
-            public void onItemClick(String text) {
+            public void onItemClick(Station station) {
+                SetRouteActivity.destinationStation = station;
                 finish();
-                SetRouteActivity.destinationBtn.setText(text);
             }
         });
     }
