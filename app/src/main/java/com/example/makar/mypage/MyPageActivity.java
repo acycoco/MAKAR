@@ -36,7 +36,7 @@ public class MyPageActivity extends AppCompatActivity {
         });
 
         myPageBinding.favoriteStationSettingButton.setOnClickListener(view -> {
-            updateUI(SetFavoriteRouteActivity.class);
+            updateUI(SetFavoriteStationActivity.class);
         });
 
         myPageBinding.favoriteRouteSettingButton.setOnClickListener(view -> {

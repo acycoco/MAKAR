@@ -6,16 +6,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.makar.R;
+import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
 
 public class SetFavoriteStationActivity extends AppCompatActivity {
+
+    //임시 즐겨찾는 역
+    public static Station homeStation, schoolStation;
 
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
 
@@ -42,13 +48,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             startActivity(new Intent(this, SearchSchoolActivity.class));
         });
 
-        Intent intent = getIntent();
-        String stationNearHome = intent.getStringExtra("station_near_home");
-        String stationNearSchool = intent.getStringExtra("station_near_school");
-
-        setFavoriteStationBinding.editTextHome.setText(stationNearHome);
-        setFavoriteStationBinding.editTextSchool.setText(stationNearSchool);
-
         View rootView = findViewById(android.R.id.content);
 
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -62,10 +61,19 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
-                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
-                finish();
+            homeStation = SearchHomeActivity.homeStation;
+            schoolStation = SearchSchoolActivity.schoolStation;
+            Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
+            finish();
                 //MainActivity로 돌아감
         });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        //즐겨찾는 역 텍스트 수정
+        setFavoriteStationText();
     }
 
     private void hideKeyboard() {
@@ -87,5 +95,23 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setFavoriteStationText(){
+        EditText editTextHome = setFavoriteStationBinding.editTextHome;
+        EditText editTextSchool = setFavoriteStationBinding.editTextSchool;
+
+        if(homeStation != SearchHomeActivity.homeStation && SearchHomeActivity.homeStation != null){
+            editTextHome.setText(SearchHomeActivity.homeStation.getStationName());
+        }else if(homeStation != null && homeStation == SearchHomeActivity.homeStation){
+            editTextHome.setText(homeStation.getStationName());
+        }
+        else{ editTextHome.setText(""); }
+
+        if(schoolStation != SearchSchoolActivity.schoolStation && SearchSchoolActivity.schoolStation != null){
+            editTextSchool.setText(SearchSchoolActivity.schoolStation.getStationName());
+        }else if(schoolStation != null && schoolStation == SearchSchoolActivity.schoolStation){
+            editTextSchool.setText(schoolStation.getStationName());
+        }else{ editTextSchool.setText(""); }
     }
 }

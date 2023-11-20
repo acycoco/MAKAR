@@ -18,6 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDepartureBinding;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,6 +32,7 @@ import java.util.List;
 
 public class SearchDepartureActivity extends AppCompatActivity {
     ActivitySearchDepartureBinding searchDepartureBinding;
+    static Station sourceStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +112,36 @@ public class SearchDepartureActivity extends AppCompatActivity {
 
                 }
                 return true;
+            }
+        });
+
+        //recyclerView click listener
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Station station) {
+                sourceStation = station;
+                finish();
+            }
+        });
+
+        //즐겨찾는 역 출발지로 설정
+        searchDepartureBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.homeStation != null) {
+                    sourceStation = SetFavoriteStationActivity.homeStation;
+                }
+                finish();
+            }
+        });
+
+        searchDepartureBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.schoolStation != null) {
+                    sourceStation = SetFavoriteStationActivity.schoolStation;
+                }
+                finish();
             }
         });
     }

@@ -1,8 +1,5 @@
 package com.example.makar.route;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,12 +11,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import android.widget.Button;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
 import com.example.makar.data.SubRouteItem;
 import com.example.makar.data.RouteSearchResponse;
 import com.example.makar.data.SubRoute;
 import com.example.makar.data.TransferInfo;
+
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -37,6 +39,10 @@ import java.util.List;
 public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
+    public Button sourceBtn, destinationBtn;
+
+    //임시 출발지, 목적지 변수
+    public static Station sourceStation, destinationStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,9 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
         setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
 
+        sourceBtn = setRouteBinding.searchDepartureButton;
+        destinationBtn = setRouteBinding.searchDestinationButton;
+
         View rootView = findViewById(android.R.id.content);
 
         rootView.setOnTouchListener(new View.OnTouchListener() {
@@ -74,17 +83,20 @@ public class SetRouteActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        setRouteBinding.searchDepartureButton.setOnClickListener(view -> {
+        sourceBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
         });
 
-        setRouteBinding.searchDestinationButton.setOnClickListener(view -> {
+        destinationBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDestinationActivity.class));
         });
 
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
+            sourceStation = SearchDepartureActivity.sourceStation;
+            destinationStation = SearchDestinationActivity.destinationStation;
+
             new Thread(() -> {
                 try {
                     String routeJson = searchRoute();
@@ -100,6 +112,15 @@ public class SetRouteActivity extends AppCompatActivity {
                 }
             }).start();
         });
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        //sourceBtn, destinationBtn text 변경
+        setSerchBarText();
     }
 
 
@@ -202,5 +223,19 @@ public class SetRouteActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setSerchBarText() {
+        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation!=null) {
+            sourceBtn.setText(sourceStation.getStationName());
+        }else if(sourceStation != SearchDepartureActivity.sourceStation){
+            sourceBtn.setText(SearchDepartureActivity.sourceStation.getStationName());
+        }else { sourceBtn.setText(""); }
+
+        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation!=null) {
+            destinationBtn.setText(destinationStation.getStationName());
+        } else if(destinationStation != SearchDestinationActivity.destinationStation){
+            destinationBtn.setText(SearchDestinationActivity.destinationStation.getStationName());
+        }else { destinationBtn.setText(""); }
     }
 }

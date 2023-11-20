@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
@@ -29,10 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
-    private String destination = "destination"; //임시 도착지 이름
-    private String source = "source"; //임시 출발지 이름
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-19 14:36:30"; //임시 막차 시간
+    private String makarTimeString = "2023-11-23 14:36:30"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -144,6 +143,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        String source = "source";
+        String destination = "destination";
+
+        //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
+        if(SetRouteActivity.sourceStation != null){source = SetRouteActivity.sourceStation.getStationName();}
+        if(SetRouteActivity.destinationStation != null){destination = SetRouteActivity.destinationStation.getStationName();}
+
         startNotification();
         if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
             setFavoriteStation();
@@ -153,10 +159,11 @@ public class MainActivity extends AppCompatActivity {
     //자주 가는 역 설정 다이얼로그
     private void setFavoriteStation() {
         //자주가는 역 설정X, 경로 설정X 일 때, 자주 가는 역 설정 다이얼로그 띄움
-        //if(/**자주가는 역 설정 안되어있을 시 **/) {
+        //TODO 자주가는 역 변수 수정 필요
+        if(SetFavoriteStationActivity.homeStation == null || SetFavoriteStationActivity.schoolStation == null) {
             SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
             setFavoriteStationDialog.show();
-        //}
+        }
     }
 
     //막차 알림 설정 다이얼로그
@@ -168,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
     //메인 타이틀 텍스트 동적 변경
     private void changeMainTitleText(int minute) {
         int length = String.valueOf(minute).length();
-        Log.d("daeun", String.valueOf(length));
 
         // 문자열 중 %d 부분에 빨간색 스타일 적용
         String formattedText = String.format(getString(R.string.main_title_text), minute);
@@ -206,6 +212,10 @@ public class MainActivity extends AppCompatActivity {
         //조건 추가 필요
         isRouteSet = false;
         //db에서 경로 제거 필요
+
+        //TODO 임시 출발지, 도착지 초기화 -> 수정 필요
+        SetRouteActivity.sourceStation = null;
+        SetRouteActivity.destinationStation = null;
         updateUI(MainActivity.class);
     }
 

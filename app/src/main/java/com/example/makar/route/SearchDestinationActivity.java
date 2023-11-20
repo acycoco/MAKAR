@@ -14,10 +14,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -31,6 +33,7 @@ import java.util.List;
 
 public class SearchDestinationActivity extends AppCompatActivity {
     ActivitySearchDestinationBinding searchDestinationBinding;
+    static Station destinationStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,6 +113,36 @@ public class SearchDestinationActivity extends AppCompatActivity {
 
                 }
                 return true;
+            }
+        });
+
+        //recyclerView click listener
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Station station) {
+                destinationStation = station;
+                finish();
+            }
+        });
+
+        //즐겨찾는 역 도착지로 설정
+        searchDestinationBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.homeStation != null) {
+                    destinationStation = SetFavoriteStationActivity.homeStation;
+                }
+                finish();
+            }
+        });
+
+        searchDestinationBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(SetFavoriteStationActivity.schoolStation != null) {
+                    destinationStation = SetFavoriteStationActivity.schoolStation;
+                }
+                finish();
             }
         });
     }
