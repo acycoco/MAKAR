@@ -1,8 +1,5 @@
 package com.example.makar.route;
 
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +11,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -35,7 +35,7 @@ import java.net.URLEncoder;
 public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
-    public static Button sourceBtn, destinationBtn;
+    public Button sourceBtn, destinationBtn;
 
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
@@ -53,7 +53,7 @@ public class SetRouteActivity extends AppCompatActivity {
         setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
         setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
@@ -90,22 +90,22 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
+            sourceStation = SearchDepartureActivity.sourceStation;
+            destinationStation = SearchDestinationActivity.destinationStation;
 
-            if (sourceStation != null && destinationStation != null) {
-                new Thread(() -> {
-                    try {
-                        String result = searchRoute();
-                        Route route = parseRouteResponse(result);
-                        // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
-                        new Handler(Looper.getMainLooper()).post(() -> {
-                            Log.d("MAKAR", route.toString());
-                            // 결과를 사용하여 UI 업데이트 등의 작업 수행
-                        });
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }).start();
-            }
+            new Thread(() -> {
+                try {
+                    String result = searchRoute();
+                    Route route = parseRouteResponse(result);
+                    // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
+                    new Handler(Looper.getMainLooper()).post(() -> {
+                        Log.d("MAKAR", route.toString());
+                        // 결과를 사용하여 UI 업데이트 등의 작업 수행
+                    });
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }).start();
         });
 
     }
@@ -134,7 +134,7 @@ public class SetRouteActivity extends AppCompatActivity {
 //        String urlInfo = "https://api.odsay.com/v1/api/searchPubTransPathT?SX=126.9027279&SY=37.5349277&EX=126.9145430&EY=37.5499421&apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
 
         URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
 
@@ -221,14 +221,16 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-    private void setSerchBarText(){
-        if(sourceStation != null){
+    private void setSerchBarText() {
+        if (sourceStation != null) {
             sourceBtn.setText(sourceStation.getStationName());
+        } else {
+            sourceBtn.setText("");
         }
-        else{ sourceBtn.setText("");}
-        if(destinationStation != null){
+        if (destinationStation != null) {
             destinationBtn.setText(destinationStation.getStationName());
+        } else {
+            destinationBtn.setText("");
         }
-        else{destinationBtn.setText("");}
     }
 }

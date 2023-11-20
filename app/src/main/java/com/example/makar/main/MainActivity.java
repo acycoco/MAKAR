@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
@@ -153,10 +154,11 @@ public class MainActivity extends AppCompatActivity {
     //자주 가는 역 설정 다이얼로그
     private void setFavoriteStation() {
         //자주가는 역 설정X, 경로 설정X 일 때, 자주 가는 역 설정 다이얼로그 띄움
-        //if(/**자주가는 역 설정 안되어있을 시 **/) {
+        //TODO 자주가는 역 변수 수정 필요
+        if(SetFavoriteStationActivity.homeStation == null || SetFavoriteStationActivity.schoolStation == null) {
             SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
             setFavoriteStationDialog.show();
-        //}
+        }
     }
 
     //막차 알림 설정 다이얼로그
@@ -206,8 +208,6 @@ public class MainActivity extends AppCompatActivity {
         //조건 추가 필요
         isRouteSet = false;
         //db에서 경로 제거 필요
-        SetRouteActivity.sourceBtn.setText("");
-        SetRouteActivity.destinationBtn.setText("");
 
         //TODO 임시 출발지, 도착지 초기화 -> 수정 필요
         SetRouteActivity.sourceStation = null;

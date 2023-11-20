@@ -31,6 +31,7 @@ import java.util.List;
 
 public class SearchDepartureActivity extends AppCompatActivity {
     ActivitySearchDepartureBinding searchDepartureBinding;
+    static Station sourceStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +118,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
-                SetRouteActivity.sourceStation = station;
+                sourceStation = station;
                 finish();
             }
         });
