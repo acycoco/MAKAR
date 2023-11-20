@@ -1,45 +1,30 @@
 package com.example.makar.data;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Route {
 
-    private final int totalTravelTime;
-    private List<RouteItem> routeItems;
-    private List<Integer> exWalkTimes;
+    private final int totalTime;
+    private final int transitCount;
+    private final List<SubRouteItem> subRouteItems;
 
-    public Route(int totalTravelTime) {
-        this.totalTravelTime = totalTravelTime;
-        this.routeItems = new ArrayList<>();
-        this.exWalkTimes = new ArrayList<>();
+    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems) {
+        this.totalTime = totalTime;
+        this.transitCount = transitCount;
+        this.subRouteItems = subRouteItems;
     }
 
-    public Route(int totalTravelTime, List<RouteItem> routeItems, List<Integer> exWalkTimes) {
-        this.totalTravelTime = totalTravelTime;
-        this.routeItems = routeItems;
-        this.exWalkTimes = exWalkTimes;
-    }
-
-    public void addRouteItem(RouteItem routeItem) {
-        routeItems.add(routeItem);
-    }
-
-    public void addExWalkTime(int exWalkTime) {
-        exWalkTimes.add(exWalkTime);
-    }
-
-    public List<RouteItem> getRouteItems() {
-        return Collections.unmodifiableList(routeItems);
+    public List<SubRouteItem> getRouteItems() {
+        return subRouteItems;
     }
 
     @Override
     public String toString() {
         return "Route{" +
-                "totalTravelTime=" + totalTravelTime +
-                ", routeItems=" + routeItems +
-                ", exWalkTimes=" + exWalkTimes +
+                "totalTime=" + totalTime +
+                ", transitCount=" + transitCount +
+                ", subRouteItems=" + subRouteItems +
                 '}';
     }
 }
+

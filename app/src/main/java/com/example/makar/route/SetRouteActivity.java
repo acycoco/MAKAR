@@ -13,11 +13,14 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
-import com.example.makar.data.RouteItem;
+import com.example.makar.data.SubRouteItem;
+import com.example.makar.data.RouteSearchResponse;
+import com.example.makar.data.SubRoute;
+import com.example.makar.data.TransferInfo;
 import com.example.makar.databinding.ActivitySetRouteBinding;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -27,6 +30,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -46,7 +51,7 @@ public class SetRouteActivity extends AppCompatActivity {
         setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
         setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
         setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
@@ -82,11 +87,12 @@ public class SetRouteActivity extends AppCompatActivity {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
             new Thread(() -> {
                 try {
-                    String result = searchRoute();
-                    Route route = parseRouteResponse(result);
+                    String routeJson = searchRoute();
+                    System.out.println(routeJson);
+                    List<Route> routes = parseRouteResponse(routeJson);
                     // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
                     new Handler(Looper.getMainLooper()).post(() -> {
-                        Log.d("MAKAR", route.toString());
+                        Log.d("MAKAR", routes.toString());
                         // 결과를 사용하여 UI 업데이트 등의 작업 수행
                     });
                 } catch (IOException e) {
@@ -96,23 +102,32 @@ public class SetRouteActivity extends AppCompatActivity {
         });
     }
 
+
     private String searchRoute() throws IOException {
         String apiKey = BuildConfig.ODSAY_API_KEY;
         if (apiKey == null) {
-            Log.e("makar", "api key null");
+            Log.e("MAKAR", "api key null");
         }
 
-        StringBuilder urlBuilder = new StringBuilder("https://api.odsay.com/v1/api/subwayPath");
-
-        urlBuilder.append("?CID=" + URLEncoder.encode("1000", "UTF-8"));
-        urlBuilder.append("&SID=" + URLEncoder.encode("201", "UTF-8"));
-        urlBuilder.append("&EID=" + URLEncoder.encode("222", "UTF-8"));
-        urlBuilder.append("&Sopt=" + URLEncoder.encode("1", "UTF-8"));
+        //대중교통 길찾기 api
+        StringBuilder urlBuilder = new StringBuilder("https://api.odsay.com/v1/api/searchPubTransPathT");
+        urlBuilder.append("?SX=" + URLEncoder.encode("126.953991", "UTF-8"));
+        urlBuilder.append("&SY=" + URLEncoder.encode("37.610469", "UTF-8"));
+        urlBuilder.append("&EX=" + URLEncoder.encode("127.128111", "UTF-8"));
+        urlBuilder.append("&EY=" + URLEncoder.encode("37.502162", "UTF-8"));
+//        테스트 값 "x": 126.953991,
+//                "y": 37.495861,
+//                "x": 127.024521,
+//                "y": 37.504464,
+//        urlBuilder.append("?SX=" + URLEncoder.encode("126.9027279", "UTF-8"));
+//        urlBuilder.append("&SY=" + URLEncoder.encode("37.5349277", "UTF-8"));
+//        urlBuilder.append("&EX=" + URLEncoder.encode("126.9145430", "UTF-8"));
+//        urlBuilder.append("&EY=" + URLEncoder.encode("37.5499421", "UTF-8"));
+        urlBuilder.append("&SearchPathType=" + URLEncoder.encode("1", "UTF-8")); //1:지하철
         urlBuilder.append("&apiKey=" + URLEncoder.encode(apiKey, "UTF-8"));
-//        String urlInfo = "https://api.odsay.com/v1/api/searchPubTransPathT?SX=126.9027279&SY=37.5349277&EX=126.9145430&EY=37.5499421&apiKey=" + URLEncoder.encode(apiKey, "UTF-8");
 
         URL url = new URL(urlBuilder.toString());
-        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
         conn.setRequestProperty("Content-type", "application/json");
 
@@ -128,54 +143,44 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-
-    private Route parseRouteResponse(String jsonResponse) {
-
+    private List<Route> parseRouteResponse(String jsonResponse) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
+        RouteSearchResponse result = objectMapper.readValue(jsonResponse, RouteSearchResponse.class);
 
-        try {
-            JsonNode jsonNode = objectMapper.readTree(jsonResponse);
+        List<Route> routes = new ArrayList<>();
+        List<RouteSearchResponse.Path> paths = result.getResult().getPath();
 
-            int totalTravelTime = jsonNode.path("result").path("globalTravelTime").asInt();
+        //검색된 여러 경로 탐색
+        for (RouteSearchResponse.Path path : paths) {
+            RouteSearchResponse.Info pathInfo = path.getInfo();
+            List<SubRouteItem> subRouteItems = new ArrayList<>();
+            List<RouteSearchResponse.SubPath> subPaths = path.getSubPath();
 
-            Route route = new Route(totalTravelTime);
-
-            //경로 받아오기
-            JsonNode driveInfoSetNode = jsonNode.path("result").path("driveInfoSet");
-            if (!driveInfoSetNode.isMissingNode()) {
-                JsonNode driveInfoArray = driveInfoSetNode.path("driveInfo");
-
-                for (JsonNode driveInfo : driveInfoArray) {
-                    int lineId = driveInfo.path("laneID").asInt(); //호선 ID
-                    String laneName = driveInfo.path("laneName").asText(); //호선명
-                    String startName = driveInfo.path("startName").asText(); //시작역
-                    int wayCode = driveInfo.path("wayCode").asInt(); //방면 1:상행 2:하행
-
-                    route.addRouteItem(new RouteItem(lineId, startName, wayCode));
+            //경로의 서브 경로 탐색
+            for (RouteSearchResponse.SubPath subPath : subPaths) {
+                //도보타입일 경우는 skip
+                if (subPath.isWalkType()) {
+                    continue;
                 }
+                RouteSearchResponse.Lane lane = subPath.getLane().get(0);
+                int lineNum = lane.getLineNum();
+                int sectionTime = subPath.getSectionTime();
+                String startStationName = subPath.getStartStationName();
+                String endStationName = subPath.getEndStationName();
+                int startStationCode = subPath.getStartID();
+                int endStationCode = subPath.getEndID();
+                int wayCode = subPath.getWayCode();
+                SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
+                TransferInfo transferInfo = new TransferInfo(); //TODO 환승정보 만들어야됨 마지막인 경우는 null로 생성
 
-                //여기에 도착역을 추가해주는 게 좋은지?
+                //서브 경로 리스트에 추가
+                subRouteItems.add(new SubRouteItem(subRoute, transferInfo));
             }
-
-            //환승정보 받아오기
-            JsonNode exChangeInfoSetNode = jsonNode.path("result").path("exChangeInfoSet");
-            if (!exChangeInfoSetNode.isMissingNode()) {
-                JsonNode exChangeInfoArray = exChangeInfoSetNode.path("exChangeInfo");
-
-                for (JsonNode exChangeInfo : exChangeInfoArray) {
-                    int exWalkTime = exChangeInfo.path("exWalkTime").asInt(); //환승 소요시간 (초)
-
-                    route.addExWalkTime(exWalkTime);
-                }
-            }
-            System.out.println(route);
-            return route;
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            //경로 리스트에 추가
+            Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems);
+            routes.add(route);
         }
-
-        return null;
+        return routes;
     }
 
     private void hideKeyboard() {
