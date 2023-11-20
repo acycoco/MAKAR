@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
-    private String destination = "destination"; //임시 도착지 이름
-    private String source = "source"; //임시 출발지 이름
     private int leftTime; //막차까지 남은 시간
     private String makarTimeString = "2023-11-23 14:36:30"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
@@ -145,6 +143,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        String source = "source";
+        String destination = "destination";
+
+        //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
+        if(SetRouteActivity.sourceStation != null){source = SetRouteActivity.sourceStation.getStationName();}
+        if(SetRouteActivity.destinationStation != null){destination = SetRouteActivity.destinationStation.getStationName();}
+
         startNotification();
         if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
             setFavoriteStation();
@@ -170,7 +175,6 @@ public class MainActivity extends AppCompatActivity {
     //메인 타이틀 텍스트 동적 변경
     private void changeMainTitleText(int minute) {
         int length = String.valueOf(minute).length();
-        Log.d("daeun", String.valueOf(length));
 
         // 문자열 중 %d 부분에 빨간색 스타일 적용
         String formattedText = String.format(getString(R.string.main_title_text), minute);

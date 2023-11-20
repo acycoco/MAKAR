@@ -6,10 +6,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.makar.R;
@@ -45,13 +47,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setFavoriteStationBinding.schoolSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchSchoolActivity.class));
         });
-
-        Intent intent = getIntent();
-        String stationNearHome = intent.getStringExtra("station_near_home");
-        String stationNearSchool = intent.getStringExtra("station_near_school");
-
-        setFavoriteStationBinding.editTextHome.setText(stationNearHome);
-        setFavoriteStationBinding.editTextSchool.setText(stationNearSchool);
 
         View rootView = findViewById(android.R.id.content);
 
@@ -103,13 +98,20 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     }
 
     private void setFavoriteStationText(){
-        if(homeStation != null){
-            setFavoriteStationBinding.editTextHome.setText(homeStation.getStationName());
+        EditText editTextHome = setFavoriteStationBinding.editTextHome;
+        EditText editTextSchool = setFavoriteStationBinding.editTextSchool;
+
+        if(homeStation != SearchHomeActivity.homeStation && SearchHomeActivity.homeStation != null){
+            editTextHome.setText(SearchHomeActivity.homeStation.getStationName());
+        }else if(homeStation != null && homeStation == SearchHomeActivity.homeStation){
+            editTextHome.setText(homeStation.getStationName());
         }
-        else{ setFavoriteStationBinding.editTextHome.setText("");}
-        if(schoolStation != null){
-            setFavoriteStationBinding.editTextSchool.setText(schoolStation.getStationName());
-        }
-        else{setFavoriteStationBinding.editTextSchool.setText("");}
+        else{ editTextHome.setText(""); }
+
+        if(schoolStation != SearchSchoolActivity.schoolStation && SearchSchoolActivity.schoolStation != null){
+            editTextSchool.setText(SearchSchoolActivity.schoolStation.getStationName());
+        }else if(schoolStation != null && schoolStation == SearchSchoolActivity.schoolStation){
+            editTextSchool.setText(schoolStation.getStationName());
+        }else{ editTextSchool.setText(""); }
     }
 }

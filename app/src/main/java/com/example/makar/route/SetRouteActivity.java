@@ -222,15 +222,16 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setSerchBarText() {
-        if (sourceStation != null) {
+        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation!=null) {
             sourceBtn.setText(sourceStation.getStationName());
-        } else {
-            sourceBtn.setText("");
-        }
-        if (destinationStation != null) {
+        }else if(sourceStation != SearchDepartureActivity.sourceStation){
+            sourceBtn.setText(SearchDepartureActivity.sourceStation.getStationName());
+        }else { sourceBtn.setText(""); }
+
+        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation!=null) {
             destinationBtn.setText(destinationStation.getStationName());
-        } else {
-            destinationBtn.setText("");
-        }
+        } else if(destinationStation != SearchDestinationActivity.destinationStation){
+            destinationBtn.setText(SearchDestinationActivity.destinationStation.getStationName());
+        }else { destinationBtn.setText(""); }
     }
 }
