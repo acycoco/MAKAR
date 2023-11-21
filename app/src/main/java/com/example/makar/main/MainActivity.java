@@ -147,8 +147,8 @@ public class MainActivity extends AppCompatActivity {
         String destination = "destination";
 
         //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
-        if(SetRouteActivity.sourceStation != null){source = SetRouteActivity.sourceStation.getStationName();}
-        if(SetRouteActivity.destinationStation != null){destination = SetRouteActivity.destinationStation.getStationName();}
+        if(SetRouteActivity.sourceStation != null){source = SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum();}
+        if(SetRouteActivity.destinationStation != null){destination = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();}
 
         startNotification();
         if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))

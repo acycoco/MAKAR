@@ -1,15 +1,17 @@
 package com.example.makar.main;
+
 import android.view.View;
+
 import com.example.makar.databinding.ActivityMainBinding;
 
 public class MainActivityChangeView {
-    static boolean changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String source, String destination){
+    static boolean changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String source, String destination) {
         if (isRouteSet) {
             //route 설정된 메인화면
             mainBinding.timetableBtn.setVisibility(View.VISIBLE);
-            mainBinding.mainRouteView.setText(source+ "  ->  "+  destination); //출발지, 도착지
-            mainBinding.mainTitleText.setText("막차까지 "+leftTime+"분 남았습니다"); //막차까지 남은 시간
-            mainBinding.mainDestinationText.setText(destination); //도착지 이름
+            mainBinding.mainRouteView.setText(source + "  ->  " + destination); //출발지, 도착지
+            mainBinding.mainTitleText.setText("막차까지 " + leftTime + "분 남았습니다"); //막차까지 남은 시간
+            mainBinding.mainDestinationText.setText(source); //도착지 이름
             mainBinding.changeRouteBtn.setVisibility(View.VISIBLE);
             mainBinding.setAlarmBtn.setVisibility(View.VISIBLE);
             mainBinding.setRouteBtn.setVisibility(View.GONE);
