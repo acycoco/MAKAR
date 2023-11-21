@@ -41,14 +41,10 @@ public class SearchDepartureActivity extends AppCompatActivity {
         searchDepartureBinding = ActivitySearchDepartureBinding.inflate(getLayoutInflater());
         setContentView(searchDepartureBinding.getRoot());
 
-        setSupportActionBar(searchDepartureBinding.toolbarSearchDeparture.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setActionBar();
+        setToolBar();
+        setHideKeyBoard();
 
-        searchDepartureBinding.toolbarSearchDeparture.toolbarText.setText("출발역 입력");
-        searchDepartureBinding.toolbarSearchDeparture.toolbarImage.setVisibility(View.GONE);
-        searchDepartureBinding.toolbarSearchDeparture.toolbarButton.setVisibility(View.GONE);
 
         SearchView searchView = searchDepartureBinding.searchViewDeparture;
         searchView.requestFocus();
@@ -56,16 +52,6 @@ public class SearchDepartureActivity extends AppCompatActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
 
-        View rootView = findViewById(android.R.id.content);
-
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
-                return false;
-            }
-        });
 
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
@@ -146,6 +132,19 @@ public class SearchDepartureActivity extends AppCompatActivity {
         });
     }
 
+
+    private void setHideKeyBoard(){
+        View rootView = findViewById(android.R.id.content);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트가 발생시 키보드를 숨기기
+                hideKeyboard();
+                return false;
+            }
+        });
+    }
+
     private void hideKeyboard() {
         View view = getCurrentFocus();
 
@@ -155,6 +154,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
         }
     }
 
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -165,4 +165,18 @@ public class SearchDepartureActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private void setToolBar(){
+        searchDepartureBinding.toolbarSearchDeparture.toolbarText.setText("출발역 입력");
+        searchDepartureBinding.toolbarSearchDeparture.toolbarImage.setVisibility(View.GONE);
+        searchDepartureBinding.toolbarSearchDeparture.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(searchDepartureBinding.toolbarSearchDeparture.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
 }

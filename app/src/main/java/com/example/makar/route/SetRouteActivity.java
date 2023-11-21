@@ -56,27 +56,13 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding = ActivitySetRouteBinding.inflate(getLayoutInflater());
         setContentView(setRouteBinding.getRoot());
 
-        setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-
-        setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
-        setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
-        setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
+        setActionBar();
+        setToolBar();
+        setHideKeyBoard();
 
         sourceBtn = setRouteBinding.searchDepartureButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
-        View rootView = findViewById(android.R.id.content);
-
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return false;
-            }
-        });
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -119,7 +105,6 @@ public class SetRouteActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-
         //sourceBtn, destinationBtn text 변경
         setSearchBarText();
     }
@@ -205,6 +190,19 @@ public class SetRouteActivity extends AppCompatActivity {
         return routes;
     }
 
+
+    //터치 시 키보드 내리기
+    private void setHideKeyBoard() {
+        View rootView = findViewById(android.R.id.content);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                return false;
+            }
+        });
+    }
+
     private void hideKeyboard() {
         View view = getCurrentFocus();
 
@@ -224,6 +222,19 @@ public class SetRouteActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar() {
+        setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
+        setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
+        setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setSearchBarText() {

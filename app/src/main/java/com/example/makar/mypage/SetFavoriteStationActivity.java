@@ -31,14 +31,13 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setFavoriteStationBinding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(setFavoriteStationBinding.getRoot());
 
-        setSupportActionBar(setFavoriteStationBinding.toolbarSetFavoriteStation.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        setActionBar(); //actionBar 변경
+        setToolBar(); //toolBar 변경
+        setHideKeyBoard();
 
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 등록");
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarImage.setVisibility(View.GONE);
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarButton.setVisibility(View.GONE);
+        //즐겨찾는 역 유무에 따라 버튼 텍스트 변경
+        changeSetFavoriteStationBtnText();
+
 
         setFavoriteStationBinding.homeSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchHomeActivity.class));
@@ -48,24 +47,14 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             startActivity(new Intent(this, SearchSchoolActivity.class));
         });
 
-        View rootView = findViewById(android.R.id.content);
-
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
-                return false;
-            }
-        });
-
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
             homeStation = SearchHomeActivity.homeStation;
             schoolStation = SearchSchoolActivity.schoolStation;
-            Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
-            finish();
-                //MainActivity로 돌아감
+            if(homeStation != null || schoolStation != null) {
+                Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
+            }
+            finish();  //MainActivity로 돌아감
         });
     }
 
@@ -76,24 +65,24 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setFavoriteStationText();
     }
 
+    private void setHideKeyBoard(){
+        View rootView = findViewById(android.R.id.content);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트가 발생시 키보드를 숨기기
+                hideKeyboard();
+                return false;
+            }
+        });
+    }
+
     private void hideKeyboard() {
         View view = getCurrentFocus();
 
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
-    // toolbar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 
@@ -114,4 +103,38 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             editTextSchool.setText(schoolStation.getStationName());
         }else{ editTextSchool.setText(""); }
     }
+
+    private void changeSetFavoriteStationBtnText(){
+        if(homeStation == null && schoolStation == null){
+            setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
+        }else{
+            setFavoriteStationBinding.setFavoriteStationBtn.setText("수정하기");
+        }
+    }
+
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setToolBar(){
+        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 등록");
+        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarImage.setVisibility(View.GONE);
+        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(setFavoriteStationBinding.toolbarSetFavoriteStation.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled (true);
+    }
+
 }
