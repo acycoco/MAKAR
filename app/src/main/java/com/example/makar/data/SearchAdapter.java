@@ -1,6 +1,7 @@
 package com.example.makar.data;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }
 
         holder.binding.lineTextView.setText(station.getStationName() + "역 " + station.getLineNum());
+        holder.binding.lineTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(items.get(position));
+            }
+        });
     }
 
     @Override
@@ -83,13 +90,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         public ViewHolder(SearchRecyclerViewItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
-
-            binding.lineTextView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    listener.onItemClick(station);
-                }
-            });
         }
     }
 }
