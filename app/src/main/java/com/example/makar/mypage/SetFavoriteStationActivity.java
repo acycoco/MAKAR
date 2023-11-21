@@ -1,7 +1,9 @@
 package com.example.makar.mypage;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -12,11 +14,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.makar.R;
 import com.example.makar.data.Station;
+import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
+import com.example.makar.route.SetRouteActivity;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SetFavoriteStationActivity extends AppCompatActivity {
 
@@ -24,6 +33,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     public static Station homeStation, schoolStation;
 
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
+
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +57,13 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             startActivity(new Intent(this, SearchSchoolActivity.class));
         });
 
+        setFavoriteStationBinding.textViewHome.setOnClickListener(view -> {
+            startActivity(new Intent(this, SearchSchoolActivity.class));
+        });
+
+        setFavoriteStationBinding.textViewSchool.setOnClickListener(view -> {
+            startActivity(new Intent(this, SearchSchoolActivity.class));
+        });
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
@@ -57,6 +75,24 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 homeStation = SearchHomeActivity.homeStation;
                 schoolStation = SearchSchoolActivity.schoolStation;
                 if (homeStation != null && schoolStation != null) {
+
+                    User user = new User(homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+
+                    firebaseFirestore.collection("users")
+                            .add(user)
+                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                @Override
+                                public void onSuccess(DocumentReference documentReference) {
+                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                                }
+                            });
+
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                     finish();
                 } else if (homeStation == null) {
@@ -66,9 +102,9 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
                 }
-        }
-    });
-}
+            }
+        });
+    }
 
     @Override
     protected void onStart() {
@@ -98,23 +134,29 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     }
 
     private void setFavoriteStationText() {
-        EditText editTextHome = setFavoriteStationBinding.editTextHome;
-        EditText editTextSchool = setFavoriteStationBinding.editTextSchool;
+        TextView textViewHome = setFavoriteStationBinding.textViewHome;
+        TextView textViewSchool = setFavoriteStationBinding.textViewSchool;
 
         if (homeStation != SearchHomeActivity.homeStation && SearchHomeActivity.homeStation != null) {
-            editTextHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
+            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+            textViewHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
         } else if (homeStation != null && homeStation == SearchHomeActivity.homeStation) {
-            editTextHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
+            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+            textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
         } else {
-            editTextHome.setText("");
+            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
+            textViewHome.setText(R.string.home_station_hint);
         }
 
         if (schoolStation != SearchSchoolActivity.schoolStation && SearchSchoolActivity.schoolStation != null) {
-            editTextSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
+            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+            textViewSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
         } else if (schoolStation != null && schoolStation == SearchSchoolActivity.schoolStation) {
-            editTextSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
+            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+            textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
         } else {
-            editTextSchool.setText("");
+            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
+            textViewSchool.setText(R.string.school_station_hint);
         }
     }
 
@@ -127,6 +169,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             setFavoriteStationBinding.setFavoriteStationBtn.setText("수정하기");
         }
     }
+
 
     // toolbar
     @Override
@@ -141,7 +184,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     }
 
     private void setToolBar() {
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 등록");
+        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 설정");
         setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarImage.setVisibility(View.GONE);
         setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarButton.setVisibility(View.GONE);
     }
