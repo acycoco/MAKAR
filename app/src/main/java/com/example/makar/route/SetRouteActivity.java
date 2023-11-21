@@ -71,7 +71,6 @@ public class SetRouteActivity extends AppCompatActivity {
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
                 hideKeyboard();
                 return false;
             }
@@ -120,7 +119,7 @@ public class SetRouteActivity extends AppCompatActivity {
         super.onStart();
 
         //sourceBtn, destinationBtn text 변경
-        setSerchBarText();
+        setSearchBarText();
     }
 
 
@@ -225,15 +224,15 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-    private void setSerchBarText() {
+    private void setSearchBarText() {
         if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation!=null) {
-            sourceBtn.setText(sourceStation.getStationName());
+            sourceBtn.setText(sourceStation.getStationName() + sourceStation.getLineNum());
         }else if(sourceStation != SearchDepartureActivity.sourceStation){
             sourceBtn.setText(SearchDepartureActivity.sourceStation.getStationName());
         }else { sourceBtn.setText(""); }
 
         if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation!=null) {
-            destinationBtn.setText(destinationStation.getStationName());
+            destinationBtn.setText(destinationStation.getStationName() + destinationStation.getLineNum());
         } else if(destinationStation != SearchDestinationActivity.destinationStation){
             destinationBtn.setText(SearchDestinationActivity.destinationStation.getStationName());
         }else { destinationBtn.setText(""); }

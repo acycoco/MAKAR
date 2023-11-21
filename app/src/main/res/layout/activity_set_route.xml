@@ -39,19 +39,6 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/gray"
                 android:textSize="14sp" />
-
-            <!--            <androidx.appcompat.widget.SearchView-->
-            <!--                android:id="@+id/search_departure"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="100dp"-->
-            <!--                android:focusable="true"-->
-            <!--                android:padding="20dp"-->
-            <!--                app:iconifiedByDefault="false"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_weight="1"-->
-            <!--                app:queryHint="출발역을 입력하세요" />-->
         </LinearLayout>
 
         <LinearLayout
