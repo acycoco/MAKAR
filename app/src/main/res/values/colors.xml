@@ -4,10 +4,12 @@
     <color name="white">#FFFFFF</color>
     <color name="main_color">#508AFF</color>
     <color name="text_color">#344054</color>
+    <color name="text_color2">#59595A</color>
     <color name="gray">#7B7B7B</color>
     <color name="light_gray">#CFCFCF</color>
     <color name="light_gray2">#F2F4F7</color>
     <color name="dark_gray">#344054</color>
     <color name="dark_gray2">#9F9F9F</color>
     <color name="red">#CC1A1A</color>
+
 </resources>

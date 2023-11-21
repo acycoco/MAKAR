@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -108,27 +109,35 @@ public class SearchDestinationActivity extends AppCompatActivity {
         searchDestinationBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SetFavoriteStationActivity.homeStation != null) {
+                if (SetFavoriteStationActivity.homeStation != null) {
                     destinationStation = SetFavoriteStationActivity.homeStation;
+                    finish();
+                } else {
+                    startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
                 }
-                finish();
             }
         });
 
         searchDestinationBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SetFavoriteStationActivity.schoolStation != null) {
+                if (SetFavoriteStationActivity.schoolStation != null) {
                     destinationStation = SetFavoriteStationActivity.schoolStation;
+                    finish();
+                } else {
+                    startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
                 }
-                finish();
             }
+        });
+
+        searchDestinationBinding.detailBtn.setOnClickListener(view -> {
+            startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
         });
     }
 
 
     //searchView input 설정
-    private void setSearchView(){
+    private void setSearchView() {
         SearchView searchView = searchDestinationBinding.searchViewDestination;
         searchView.requestFocus();
 
@@ -137,7 +146,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
     }
 
     //키보드 내리기
-    private void setHideKeyBoard(){
+    private void setHideKeyBoard() {
         View rootView = findViewById(android.R.id.content);
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -170,13 +179,13 @@ public class SearchDestinationActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
+    private void setToolBar() {
         searchDestinationBinding.toolbarSearchDestination.toolbarText.setText("도착역 입력");
         searchDestinationBinding.toolbarSearchDestination.toolbarImage.setVisibility(View.GONE);
         searchDestinationBinding.toolbarSearchDestination.toolbarButton.setVisibility(View.GONE);
     }
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(searchDestinationBinding.toolbarSearchDestination.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);

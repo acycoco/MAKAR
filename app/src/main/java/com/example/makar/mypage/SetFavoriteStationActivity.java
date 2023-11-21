@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +30,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
     //임시 즐겨찾는 역
     public static Station homeStation, schoolStation;
+    private Boolean editMode = false;
 
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
 
@@ -58,16 +58,20 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         });
 
         setFavoriteStationBinding.textViewHome.setOnClickListener(view -> {
-            startActivity(new Intent(this, SearchSchoolActivity.class));
+            if (editMode) {
+                startActivity(new Intent(this, SearchHomeActivity.class));
+            }
         });
 
         setFavoriteStationBinding.textViewSchool.setOnClickListener(view -> {
-            startActivity(new Intent(this, SearchSchoolActivity.class));
+            if (editMode) {
+                startActivity(new Intent(this, SearchSchoolActivity.class));
+            }
         });
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
-            if (setFavoriteStationBinding.setFavoriteStationBtn.getText().equals("수정하기")) {
+            if (!editMode) {
                 setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
@@ -162,10 +166,12 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
     private void changeSetFavoriteStationBtnText() {
         if (homeStation == null && schoolStation == null) {
+            editMode = true;
             setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
             setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
         } else {
+            editMode = false;
             setFavoriteStationBinding.setFavoriteStationBtn.setText("수정하기");
         }
     }
