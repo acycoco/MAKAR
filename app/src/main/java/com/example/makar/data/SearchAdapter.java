@@ -66,6 +66,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             holder.binding.lineImageView.setImageResource(R.drawable.ic_line9);
         } else if ("경의중앙".equals(lineNum)) {
             holder.binding.lineImageView.setImageResource(R.drawable.ic_line_k);
+        } else if ("공항철도".equals(lineNum)) {
+            holder.binding.lineImageView.setImageResource(R.drawable.ic_line_a);
         } else {
             holder.binding.lineImageView.setImageResource(R.drawable.ic_line0);
         }
