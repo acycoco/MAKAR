@@ -43,8 +43,11 @@
     <string name="school_text">학교</string>
     <string name="home_station_hint">집 주변 지하철 역을 등록해주세요</string>
     <string name="school_station_hint">학교 주변 지하철 역을 등록해주세요</string>
-    <string name="set_favorite_station_confirm_button">등록하기</string>
+    <string name="set_favorite_station_confirm_button">수정하기</string>
     <string name="set_favorite_station_toast">자주 가는 역이 등록되었습니다</string>
+    <string name="set_favorite_error_toast_1">집 주변 지하철 역을 등록해주세요</string>
+    <string name="set_favorite_error_toast_2">학교 주변 지하철 역을 등록해주세요</string>
+    <string name="set_favorite_error_toast_3">잠시 후 다시 시도해주세요</string>
 
     <!-- 막차 알림-->
     <string name="set_alarm_success">막차 알림이 설정되었습니다</string>
