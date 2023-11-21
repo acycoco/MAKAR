@@ -33,38 +33,22 @@ import java.util.List;
 public class SearchSchoolActivity extends AppCompatActivity {
 
     static Station schoolStation;
+    ActivitySearchSchoolBinding searchSchoolBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        ActivitySearchSchoolBinding searchSchoolBinding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
+        searchSchoolBinding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
         setContentView(searchSchoolBinding.getRoot());
 
-        setSupportActionBar(searchSchoolBinding.toolbarSearchSchool.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setActionBar();
+        setToolBar();
+        setHideKeyBoard();
+        setSearchView(); //searchView request focus
 
-        searchSchoolBinding.toolbarSearchSchool.toolbarText.setText("역 검색");
-        searchSchoolBinding.toolbarSearchSchool.toolbarImage.setVisibility(View.GONE);
-        searchSchoolBinding.toolbarSearchSchool.toolbarButton.setVisibility(View.GONE);
 
-        SearchView searchView = searchSchoolBinding.searchViewSchool;
-        searchView.requestFocus();
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return false;
-            }
-        });
-
+        //set RecyclerView
         RecyclerView recyclerView = searchSchoolBinding.searchSchoolRecyclerView;
         List<Station> resultList = new ArrayList<>();
         SearchAdapter adapter = new SearchAdapter(this, resultList);
@@ -121,6 +105,28 @@ public class SearchSchoolActivity extends AppCompatActivity {
         });
     }
 
+
+    private void setSearchView(){
+        SearchView searchView = searchSchoolBinding.searchViewSchool;
+        searchView.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+
+    // 터치 이벤트가 발생시 키보드를 숨기기
+    private void setHideKeyBoard(){
+        View rootView = findViewById(android.R.id.content);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                hideKeyboard();
+                return false;
+            }
+        });
+    }
+
     private void hideKeyboard() {
         View view = getCurrentFocus();
 
@@ -130,6 +136,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
         }
     }
 
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -139,5 +146,18 @@ public class SearchSchoolActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar(){
+        searchSchoolBinding.toolbarSearchSchool.toolbarText.setText("역 검색");
+        searchSchoolBinding.toolbarSearchSchool.toolbarImage.setVisibility(View.GONE);
+        searchSchoolBinding.toolbarSearchSchool.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(searchSchoolBinding.toolbarSearchSchool.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

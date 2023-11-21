@@ -22,15 +22,13 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
         openSourceLicenseBinding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
         setContentView(openSourceLicenseBinding.getRoot());
 
-        setSupportActionBar(openSourceLicenseBinding.toolbarOpenSourceLicense.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setActionBar();
+        setToolBar();
+        setWebView(); //web setting
+    }
 
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarText.setText("오픈소스 라이선스");
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarImage.setVisibility(View.GONE);
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarButton.setVisibility(View.GONE);
 
+    private void setWebView(){
         WebSettings webSettings = openSourceLicenseBinding.webViewOpenSourceLicense.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -38,9 +36,9 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
 
         openSourceLicenseBinding.webViewOpenSourceLicense.loadUrl("https://docs.google.com/document/d/e/2PACX-1vQ7Yca6G3aODYl_5uEJOoZ1RnSmwfDInh22CUlYfwTzsPwcVWiY6EuPqTJe-xdukRjOSviBEBuhDutX/pub");
         openSourceLicenseBinding.webViewOpenSourceLicense.setWebViewClient(new WebViewClient());
-
     }
 
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -50,5 +48,18 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar(){
+        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarText.setText("오픈소스 라이선스");
+        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarImage.setVisibility(View.GONE);
+        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(openSourceLicenseBinding.toolbarOpenSourceLicense.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

@@ -35,11 +35,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
         setContentView(R.layout.dialog_set_getoff_alarm_time);
 
         alarmTimePicker = findViewById(R.id.getoff_alarm_time_picker);
-        alarmTimePicker.setDisplayedValues(timeArr);
-        alarmTimePicker.setMinValue(0);
-        alarmTimePicker.setMaxValue(5);
-        //alarmTimePicker.setValue(Integer.parseInt(alarmTime));
-
+        setAlarmTimePicker();
         positiveBtn = findViewById(R.id.set_getoff_alarm_time_btn);
         negativeBtn = findViewById(R.id.close_getoff_alarm_time_btn);
 
@@ -60,6 +56,13 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
         negativeBtn.setOnClickListener(view -> {
             dismiss();
         });
+    }
+
+    private void setAlarmTimePicker(){
+        alarmTimePicker.setDisplayedValues(timeArr);
+        alarmTimePicker.setMinValue(0);
+        alarmTimePicker.setMaxValue(5);
+        //alarmTimePicker.setValue(Integer.parseInt(alarmTime));
     }
 
     @Override

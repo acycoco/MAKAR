@@ -43,28 +43,10 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(signUpBinding.getRoot());
 
         initFirebaseAuth();
+        setActionBar();
+        setToolBar();
+        setHideKeyBoard();
 
-        View rootView = findViewById(android.R.id.content);
-
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
-                return false;
-            }
-        });
-
-        setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
-
-        signUpBinding.toolbarSignUp.toolbarText.setText("회원가입");
-        signUpBinding.toolbarSignUp.toolbarImage.setVisibility(View.GONE);
-        signUpBinding.toolbarSignUp.toolbarButton.setVisibility(View.GONE);
-
-        initFirebaseAuth();
 
         //email Listener
         signUpBinding.signupEmail.addTextChangedListener(new TextWatcher() {
@@ -168,25 +150,6 @@ public class SignupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-    // toolbar
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
 
     //신규 사용자 가입
     private void createAccount(String email, String password) {
@@ -235,6 +198,53 @@ public class SignupActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
+    }
+
+
+    private void setHideKeyBoard(){
+        View rootView = findViewById(android.R.id.content);
+        rootView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                // 터치 이벤트가 발생시 키보드를 숨기기
+                hideKeyboard();
+                return false;
+            }
+        });
+    }
+
+    private void hideKeyboard() {
+        View view = getCurrentFocus();
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    // toolbar
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void setToolBar(){
+        signUpBinding.toolbarSignUp.toolbarText.setText("회원가입");
+        signUpBinding.toolbarSignUp.toolbarImage.setVisibility(View.GONE);
+        signUpBinding.toolbarSignUp.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled (true);
     }
 
 }

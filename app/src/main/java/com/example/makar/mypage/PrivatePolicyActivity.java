@@ -21,15 +21,12 @@ public class PrivatePolicyActivity extends AppCompatActivity {
         privatePolicyBinding = ActivityPrivatePolicyBinding.inflate(getLayoutInflater());
         setContentView(privatePolicyBinding.getRoot());
 
-        setSupportActionBar(privatePolicyBinding.toolbarPrivatePolicy.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setActionBar();
+        setToolBar();
+        setWebView(); //web setting
+    }
 
-        privatePolicyBinding.toolbarPrivatePolicy.toolbarText.setText("개인정보 처리 방침");
-        privatePolicyBinding.toolbarPrivatePolicy.toolbarImage.setVisibility(View.GONE);
-        privatePolicyBinding.toolbarPrivatePolicy.toolbarButton.setVisibility(View.GONE);
-
+    private void setWebView(){
         WebSettings webSettings = privatePolicyBinding.webViewPrivatePolicy.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
@@ -37,8 +34,9 @@ public class PrivatePolicyActivity extends AppCompatActivity {
 
         privatePolicyBinding.webViewPrivatePolicy.loadUrl("https://docs.google.com/document/d/e/2PACX-1vTLQ3BLRTtPR63-SpOZqLk4uBKDRx1aLdr1IKPOdLBMFRvXvCjQiRtmBvniVlLykGhpNwx2u6zz9z_a/pub");
         privatePolicyBinding.webViewPrivatePolicy.setWebViewClient(new WebViewClient());
-
     }
+
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -48,5 +46,18 @@ public class PrivatePolicyActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar(){
+        privatePolicyBinding.toolbarPrivatePolicy.toolbarText.setText("개인정보 처리 방침");
+        privatePolicyBinding.toolbarPrivatePolicy.toolbarImage.setVisibility(View.GONE);
+        privatePolicyBinding.toolbarPrivatePolicy.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(privatePolicyBinding.toolbarPrivatePolicy.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

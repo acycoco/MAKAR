@@ -20,16 +20,11 @@ public class TimeTableActivity extends AppCompatActivity {
         timeTableBinding = ActivityTimeTableBinding.inflate(getLayoutInflater());
         setContentView(timeTableBinding.getRoot());
 
-        setSupportActionBar(timeTableBinding.toolbarTimeTable.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
-
-        timeTableBinding.toolbarTimeTable.toolbarText.setText("시간표");
-        timeTableBinding.toolbarTimeTable.toolbarImage.setVisibility(View.GONE);
-        timeTableBinding.toolbarTimeTable.toolbarButton.setVisibility(View.GONE);
+        setActionBar();
+        setToolBar();
     }
 
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -39,5 +34,18 @@ public class TimeTableActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar(){
+        timeTableBinding.toolbarTimeTable.toolbarText.setText("시간표");
+        timeTableBinding.toolbarTimeTable.toolbarImage.setVisibility(View.GONE);
+        timeTableBinding.toolbarTimeTable.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(timeTableBinding.toolbarTimeTable.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled (true);
     }
 }

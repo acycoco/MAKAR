@@ -47,6 +47,9 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
 
+        setActionBar();
+        setToolBar();
+
         //현재 사용자의 uid get
         userUid = getUserUid();
         //db 접근에 이용
@@ -54,12 +57,6 @@ public class MainActivity extends AppCompatActivity {
         //경로 설정 유무 체크
         //checkRouteSet();
 
-        //set toolbar
-        setSupportActionBar(mainBinding.toolbarMain.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-
-        mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -239,4 +236,15 @@ public class MainActivity extends AppCompatActivity {
 //            /**출발지, 도착지 설정을 setRouteActivity에서 한 번에 초기화 할지, MainActivity에서 db에 접근해서 따로 초기화 할지 상의 필요**/
 //        }
 //    }
+
+
+    private void setActionBar(){
+        setSupportActionBar(mainBinding.toolbarMain.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+    }
+
+    private void setToolBar(){
+        mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
+    }
 }

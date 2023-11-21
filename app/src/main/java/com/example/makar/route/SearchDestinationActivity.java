@@ -44,12 +44,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
-
-        SearchView searchView = searchDestinationBinding.searchViewDestination;
-        searchView.requestFocus();
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+        setSearchView(); //searchView request focus
 
 
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -132,6 +127,16 @@ public class SearchDestinationActivity extends AppCompatActivity {
     }
 
 
+    //searchView input 설정
+    private void setSearchView(){
+        SearchView searchView = searchDestinationBinding.searchViewDestination;
+        searchView.requestFocus();
+
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
+    }
+
+    //키보드 내리기
     private void setHideKeyBoard(){
         View rootView = findViewById(android.R.id.content);
         rootView.setOnTouchListener(new View.OnTouchListener() {

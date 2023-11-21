@@ -22,14 +22,9 @@ public class MyPageActivity extends AppCompatActivity {
         myPageBinding = ActivityMyPageBinding.inflate(getLayoutInflater());
         setContentView(myPageBinding.getRoot());
 
-        setSupportActionBar(myPageBinding.toolbarMyPage.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        setActionBar();
+        setToolBar();
 
-        myPageBinding.toolbarMyPage.toolbarText.setText("마이페이지");
-        myPageBinding.toolbarMyPage.toolbarImage.setVisibility(View.GONE);
-        myPageBinding.toolbarMyPage.toolbarButton.setVisibility(View.GONE);
 
         myPageBinding.getOffSettingButton.setOnClickListener(view -> {
             setGetOffAlarm();
@@ -71,6 +66,8 @@ public class MyPageActivity extends AppCompatActivity {
         startActivity(new Intent(MyPageActivity.this, contextClass));
     }
 
+
+    //toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -80,5 +77,18 @@ public class MyPageActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void setToolBar(){
+        myPageBinding.toolbarMyPage.toolbarText.setText("마이페이지");
+        myPageBinding.toolbarMyPage.toolbarImage.setVisibility(View.GONE);
+        myPageBinding.toolbarMyPage.toolbarButton.setVisibility(View.GONE);
+    }
+
+    private void setActionBar(){
+        setSupportActionBar(myPageBinding.toolbarMyPage.getRoot());
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }
