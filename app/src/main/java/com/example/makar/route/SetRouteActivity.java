@@ -12,8 +12,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -225,16 +227,20 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setSearchBarText() {
-        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation!=null) {
-            sourceBtn.setText(sourceStation.getStationName() + sourceStation.getLineNum());
-        }else if(sourceStation != SearchDepartureActivity.sourceStation){
-            sourceBtn.setText(SearchDepartureActivity.sourceStation.getStationName());
-        }else { sourceBtn.setText(""); }
+        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation != null) {
+            sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+        } else if (sourceStation != SearchDepartureActivity.sourceStation) {
+            sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + SearchDepartureActivity.sourceStation.getLineNum());
+        } else {
+            sourceBtn.setText("");
+        }
 
-        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation!=null) {
-            destinationBtn.setText(destinationStation.getStationName() + destinationStation.getLineNum());
-        } else if(destinationStation != SearchDestinationActivity.destinationStation){
-            destinationBtn.setText(SearchDestinationActivity.destinationStation.getStationName());
-        }else { destinationBtn.setText(""); }
+        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation != null) {
+            destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+        } else if (destinationStation != SearchDestinationActivity.destinationStation) {
+            destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
+        } else {
+            destinationBtn.setText("");
+        }
     }
 }
