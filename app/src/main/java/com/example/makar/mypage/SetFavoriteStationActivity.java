@@ -5,6 +5,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,16 +23,14 @@ import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.SetRouteActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SetFavoriteStationActivity extends AppCompatActivity {
 
@@ -42,9 +41,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference usersRef = database.getReference("users");
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +51,10 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setActionBar(); //actionBar 변경
         setToolBar(); //toolBar 변경
         setHideKeyBoard();
+        getUserData();
 
         //즐겨찾는 역 유무에 따라 편집 모드 변경
-        changeSetFavoriteStationBtnText();
+        setEditMode();
 
         setFavoriteStationBinding.homeSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchHomeActivity.class));
@@ -87,27 +84,58 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             } else {
-                homeStation = SearchHomeActivity.homeStation;
-                schoolStation = SearchSchoolActivity.schoolStation;
                 if (homeStation != null && schoolStation != null) {
-
                     User user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
 
                     firebaseFirestore.collection("users")
-                            .add(user)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            .whereEqualTo("userUId", LoginActivity.userUId)
+                            .get()
+                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        QuerySnapshot querySnapshot = task.getResult();
+                                        if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                            // 값이 존재하는 경우, 해당 데이터를 수정
+                                            DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                            String documentId = documentSnapshot.getId();
+                                            firebaseFirestore.collection("users")
+                                                    .document(documentId)
+                                                    .set(user)
+                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                        @Override
+                                                        public void onSuccess(Void aVoid) {
+                                                            Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                        }
+                                                    });
+                                        } else {
+                                            // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
+                                            firebaseFirestore.collection("users")
+                                                    .add(user)
+                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                        @Override
+                                                        public void onSuccess(DocumentReference documentReference) {
+                                                            Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                        }
+                                                    })
+                                                    .addOnFailureListener(new OnFailureListener() {
+                                                        @Override
+                                                        public void onFailure(@NonNull Exception e) {
+                                                            Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
+                                    }
                                 }
                             });
-
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                     finish();
                 } else if (homeStation == null) {
@@ -125,6 +153,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //즐겨찾는 역 텍스트 수정
+
         setFavoriteStationText();
     }
 
@@ -148,6 +177,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void setFavoriteStationText() {
         TextView textViewHome = setFavoriteStationBinding.textViewHome;
         TextView textViewSchool = setFavoriteStationBinding.textViewSchool;
@@ -175,18 +205,53 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
-    private void changeSetFavoriteStationBtnText() {
+    private void setEditMode() {
         if (homeStation == null && schoolStation == null) {
             editMode = true;
+            setFavoriteStationBinding.textViewHome.setText(R.string.home_station_hint);
+            setFavoriteStationBinding.textViewSchool.setText(R.string.school_station_hint);
             setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
             setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
         } else {
             editMode = false;
+            setFavoriteStationBinding.homeSearchButton.setVisibility(View.GONE);
+            setFavoriteStationBinding.schoolSearchButton.setVisibility(View.GONE);
             setFavoriteStationBinding.setFavoriteStationBtn.setText("수정하기");
         }
     }
 
+    private void getUserData() {
+        firebaseFirestore.collection("users")
+                .whereEqualTo("userUId", LoginActivity.userUId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @SuppressLint("ResourceAsColor")
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                homeStation = documentSnapshot.get("homeStation", Station.class);
+                                schoolStation = documentSnapshot.get("schoolStation", Station.class);
+
+                                String homeStationText = homeStation.getStationName() + "역 " + homeStation.getLineNum();
+                                String schoolStationText = schoolStation.getStationName() + "역 " + schoolStation.getLineNum();
+
+                                setFavoriteStationBinding.textViewHome.setTextColor(R.color.dark_gray);
+                                setFavoriteStationBinding.textViewSchool.setTextColor(R.color.dark_gray);
+                                setFavoriteStationBinding.textViewHome.setText(homeStationText);
+                                setFavoriteStationBinding.textViewSchool.setText(schoolStationText);
+
+                                setEditMode();
+                            }
+                        } else {
+                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+                        }
+                    }
+                });
+    }
 
     // toolbar
     @Override

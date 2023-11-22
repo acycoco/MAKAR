@@ -29,13 +29,16 @@ import com.example.makar.data.TransferInfo;
 
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.MyPageActivity;
 import com.example.makar.mypage.SearchHomeActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -43,7 +46,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -78,12 +83,13 @@ public class SetRouteActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
+//        getUserData();
+//        setUserData();
 
         sourceBtn = setRouteBinding.searchDepartureButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
-
-//        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
+        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
 //        databaseConverter.createUniqueStationExcelFile();
@@ -118,17 +124,54 @@ public class SetRouteActivity extends AppCompatActivity {
             User user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
 
             firebaseFirestore.collection("users")
-                    .add(user)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    .whereEqualTo("userUId", LoginActivity.userUId)
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                    // 값이 존재하는 경우, 해당 데이터를 수정
+                                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                    String documentId = documentSnapshot.getId();
+                                    firebaseFirestore.collection("users")
+                                            .document(documentId)
+                                            .set(user)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                }
+                                            });
+                                } else {
+                                    // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
+                                    firebaseFirestore.collection("users")
+                                            .add(user)
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                @Override
+                                                public void onSuccess(DocumentReference documentReference) {
+                                                    Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                                                }
+                                            });
+
+                                    MainActivity.isRouteSet = true;
+                                }
+                            } else {
+                                Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
+                            }
                         }
                     });
           
@@ -254,7 +297,37 @@ public class SetRouteActivity extends AppCompatActivity {
         return routes;
     }
 
+    private void setUserData() {
+        if (sourceStation != null && destinationStation != null) {
+            sourceBtn.setText(" " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            destinationBtn.setText(" " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+        }
+    }
 
+//    private void getUserData() {
+//        firebaseFirestore.collection("users")
+//                .whereEqualTo("userUId", LoginActivity.userUId)
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            QuerySnapshot querySnapshot = task.getResult();
+//                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+//                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+//                                sourceStation = documentSnapshot.get("departureStation", Station.class);
+//                                destinationStation = documentSnapshot.get("destinationStation", Station.class);
+//
+//                                sourceBtn.setText(" " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+//                                destinationBtn.setText(" " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+//                            }
+//                        } else {
+//                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+//                        }
+//                    }
+//                });
+//
+//    }
     //터치 시 키보드 내리기
     private void setHideKeyBoard() {
         View rootView = findViewById(android.R.id.content);

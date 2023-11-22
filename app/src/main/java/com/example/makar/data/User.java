@@ -22,7 +22,7 @@ public class User {
         return schoolStation;
     }
 
-    public Station getDepatrureStation() {
+    public Station getDepartureStation() {
         return departureStation;
     }
 
