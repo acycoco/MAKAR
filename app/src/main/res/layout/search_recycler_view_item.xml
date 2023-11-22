@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:paddingHorizontal="10dp"
+    android:paddingStart="15dp">
 
     <ImageView
         android:id="@+id/line_image_view"
@@ -18,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
         android:paddingStart="10dp"
-        android:text="숭실대입구"
         android:textColor="@color/black"
-        android:textSize="17sp" />
+        android:textSize="17sp"
+        tools:ignore="RtlSymmetry" />
 </LinearLayout>

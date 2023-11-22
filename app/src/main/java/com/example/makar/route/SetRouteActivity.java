@@ -13,6 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,8 +27,13 @@ import com.example.makar.data.RouteSearchResponse;
 import com.example.makar.data.SubRoute;
 import com.example.makar.data.TransferInfo;
 
+import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.BufferedReader;
@@ -47,6 +53,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,12 +105,30 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceStation = SearchDepartureActivity.sourceStation;
             destinationStation = SearchDestinationActivity.destinationStation;
 
+
+
+            User user = new User(SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
+
+            firebaseFirestore.collection("users")
+                    .add(user)
+                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                        }
+                    });
+          
             double sourceX = getX(sourceStation);
             double sourceY = getY(sourceStation);
             double destinationX = getX(destinationStation);
             double destinationY = getY(destinationStation);
-            System.out.println(sourceX);
-            System.out.println(destinationX);
+
             new Thread(() -> {
                 try {
                     String routeJson = searchRoute(sourceX, sourceY, destinationX, destinationY);

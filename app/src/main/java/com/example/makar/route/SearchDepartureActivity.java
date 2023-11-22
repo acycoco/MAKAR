@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -126,27 +127,35 @@ public class SearchDepartureActivity extends AppCompatActivity {
         searchDepartureBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SetFavoriteStationActivity.homeStation != null) {
+                if (SetFavoriteStationActivity.homeStation != null) {
                     sourceStation = SetFavoriteStationActivity.homeStation;
+                    finish();
+                } else {
+                    startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
                 }
-                finish();
             }
         });
 
         searchDepartureBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(SetFavoriteStationActivity.schoolStation != null) {
+                if (SetFavoriteStationActivity.schoolStation != null) {
                     sourceStation = SetFavoriteStationActivity.schoolStation;
+                    finish();
+                } else {
+                    startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
                 }
-                finish();
             }
+        });
+
+        searchDepartureBinding.detailBtn.setOnClickListener(view -> {
+            startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
         });
     }
 
 
     //searchView input 설정
-    private void setSearchView(){
+    private void setSearchView() {
         SearchView searchView = searchDepartureBinding.searchViewDeparture;
         searchView.requestFocus();
 
@@ -155,7 +164,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
     }
 
     //키보드 내리기
-    private void setHideKeyBoard(){
+    private void setHideKeyBoard() {
         View rootView = findViewById(android.R.id.content);
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -188,13 +197,13 @@ public class SearchDepartureActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
+    private void setToolBar() {
         searchDepartureBinding.toolbarSearchDeparture.toolbarText.setText("출발역 입력");
         searchDepartureBinding.toolbarSearchDeparture.toolbarImage.setVisibility(View.GONE);
         searchDepartureBinding.toolbarSearchDeparture.toolbarButton.setVisibility(View.GONE);
     }
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(searchDepartureBinding.toolbarSearchDeparture.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);

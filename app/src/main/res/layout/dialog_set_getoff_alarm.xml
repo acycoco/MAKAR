@@ -10,12 +10,11 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="하차 알림 설정하기"
+        android:text="@string/get_off_alarm_setting_text"
         android:textAlignment="center"
         android:textStyle="bold"
         android:textSize="20sp"
-        android:layout_marginTop="20dp"
-        />
+        android:layout_marginTop="20dp" />
 
     <Button
         android:id="@+id/set_getoff_alarm_time_btn"

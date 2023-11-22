@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:lines="2"
-        android:text="자주 가는 역을\n 등록하시겠어요?"
+        android:text="@string/favorite_station_text"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />

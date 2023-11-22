@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:paddingHorizontal="20dp"></NumberPicker>
+        android:paddingHorizontal="20dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
             android:background="@drawable/custom_button_white"
-            android:text="닫기"
+            android:text="@string/close_button"
             android:textColor="@color/black"
             android:textSize="16sp"
             android:textStyle="bold" />
@@ -35,7 +35,7 @@
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_main"
-            android:text="등록"
+            android:text="@string/register_button"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

@@ -59,7 +59,7 @@
                         android:layout_marginEnd="2dp"
                         android:drawablePadding="9dp"
                         android:text="내 위치"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="@color/text_color2"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -87,8 +87,7 @@
                         android:layout_marginEnd="2dp"
                         android:drawablePadding="9dp"
                         android:text="집"
-                        android:textColor="@color/dark_gray"
-
+                        android:textColor="@color/text_color2"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -116,11 +115,12 @@
                         android:layout_marginEnd="2dp"
                         android:drawablePadding="9dp"
                         android:text="학교"
-                        android:textColor="@color/dark_gray"
+                        android:textColor="@color/text_color2"
                         android:textStyle="bold" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/detail_btn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="10dp"
