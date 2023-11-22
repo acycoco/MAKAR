@@ -84,8 +84,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             } else {
-                if (homeStation != null && schoolStation != null) {
-                    User user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                if (SearchHomeActivity.homeStation != null && SearchSchoolActivity.schoolStation != null) {
+                    User user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
 
                     firebaseFirestore.collection("users")
                             .whereEqualTo("userUId", LoginActivity.userUId)
@@ -106,6 +106,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(Void aVoid) {
                                                             Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
+                                                            homeStation = SearchHomeActivity.homeStation;
+                                                            schoolStation = SearchSchoolActivity.schoolStation;
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -138,9 +140,9 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                             });
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                     finish();
-                } else if (homeStation == null) {
+                } else if (SearchHomeActivity.homeStation == null) {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_1, Toast.LENGTH_SHORT).show();
-                } else if (schoolStation == null) {
+                } else if (SearchSchoolActivity.schoolStation == null) {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_2, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
@@ -182,23 +184,33 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         TextView textViewHome = setFavoriteStationBinding.textViewHome;
         TextView textViewSchool = setFavoriteStationBinding.textViewSchool;
 
-        if (homeStation != SearchHomeActivity.homeStation && SearchHomeActivity.homeStation != null) {
+        if (homeStation != null) {
+            if (SearchHomeActivity.homeStation != null) {
+                textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+                textViewHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
+            } else {
+                textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+                textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
+            }
+        } else if (SearchHomeActivity.homeStation != null) {
             textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
             textViewHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
-        } else if (homeStation != null && homeStation == SearchHomeActivity.homeStation) {
-            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-            textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
         } else {
             textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
             textViewHome.setText(R.string.home_station_hint);
         }
 
-        if (schoolStation != SearchSchoolActivity.schoolStation && SearchSchoolActivity.schoolStation != null) {
+        if (schoolStation != null) {
+            if (SearchSchoolActivity.schoolStation != null) {
+                textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+                textViewSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
+            } else {
+                textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+                textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
+            }
+        } else if (SearchSchoolActivity.schoolStation != null) {
             textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
             textViewSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
-        } else if (schoolStation != null && schoolStation == SearchSchoolActivity.schoolStation) {
-            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-            textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
         } else {
             textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
             textViewSchool.setText(R.string.school_station_hint);
@@ -258,6 +270,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                SearchHomeActivity.homeStation = null;
+                SearchSchoolActivity.schoolStation = null;
                 finish();
                 return true;
             default:
