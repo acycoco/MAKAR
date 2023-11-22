@@ -84,9 +84,18 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             } else {
-                if (SearchHomeActivity.homeStation != null && SearchSchoolActivity.schoolStation != null) {
-                    User user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
-
+                if ((SearchHomeActivity.homeStation != null && SearchSchoolActivity.schoolStation != null)
+                        || (homeStation != null && schoolStation != null)) {
+                    User user;
+                    if (SearchHomeActivity.homeStation == null) {
+                        user = new User(LoginActivity.userUId, homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                    } else if (SearchSchoolActivity.schoolStation == null) {
+                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                    } else if (SearchHomeActivity.homeStation == null && SearchSchoolActivity.schoolStation == null) {
+                        user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                    } else {
+                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                    }
                     firebaseFirestore.collection("users")
                             .whereEqualTo("userUId", LoginActivity.userUId)
                             .get()
@@ -245,11 +254,22 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                homeStation = documentSnapshot.get("homeStation", Station.class);
-                                schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                                if (documentSnapshot.contains("homeStation")) {
+                                    homeStation = documentSnapshot.get("homeStation", Station.class);
+                                }
+                                if (documentSnapshot.contains("schoolStation")) {
+                                    schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                                }
 
-                                String homeStationText = homeStation.getStationName() + "역 " + homeStation.getLineNum();
-                                String schoolStationText = schoolStation.getStationName() + "역 " + schoolStation.getLineNum();
+                                String homeStationText = "";
+                                String schoolStationText = "";
+
+                                if (homeStation != null) {
+                                    homeStationText = homeStation.getStationName() + "역 " + homeStation.getLineNum();
+                                }
+                                if (schoolStation != null) {
+                                    schoolStationText = schoolStation.getStationName() + "역 " + schoolStation.getLineNum();
+                                }
 
                                 setFavoriteStationBinding.textViewHome.setTextColor(R.color.dark_gray);
                                 setFavoriteStationBinding.textViewSchool.setTextColor(R.color.dark_gray);

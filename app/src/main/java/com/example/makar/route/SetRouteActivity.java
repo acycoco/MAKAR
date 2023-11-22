@@ -16,7 +16,9 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
+import com.example.makar.R;
 import com.example.makar.data.DataConverter;
 import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
@@ -68,8 +70,7 @@ public class SetRouteActivity extends AppCompatActivity {
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    private DatabaseReference usersRef = database.getReference("users");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +85,7 @@ public class SetRouteActivity extends AppCompatActivity {
         setToolBar();
         setHideKeyBoard();
 //        getUserData();
-//        setUserData();
+        setUserData();
 
         sourceBtn = setRouteBinding.searchDepartureButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
@@ -121,6 +122,7 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceStation = SearchDepartureActivity.sourceStation;
             destinationStation = SearchDestinationActivity.destinationStation;
 
+            // TODO : 경로 찾기 != 경로 선택
             User user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
 
             firebaseFirestore.collection("users")
@@ -212,7 +214,7 @@ public class SetRouteActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //sourceBtn, destinationBtn text 변경
-        setSearchBarText();
+        setSearchViewText();
     }
 
 
@@ -326,8 +328,8 @@ public class SetRouteActivity extends AppCompatActivity {
 //                        }
 //                    }
 //                });
-//
 //    }
+
     //터치 시 키보드 내리기
     private void setHideKeyBoard() {
         View rootView = findViewById(android.R.id.content);
@@ -355,6 +357,8 @@ public class SetRouteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                SearchDepartureActivity.sourceStation = null;
+                SearchDestinationActivity.destinationStation = null;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -367,25 +371,33 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
     }
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setSearchBarText() {
-        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation != null) {
-            sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-        } else if (sourceStation != SearchDepartureActivity.sourceStation) {
+    private void setSearchViewText() {
+        if (sourceStation != null) {
+            if (SearchDepartureActivity.sourceStation != null) {
+                sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            } else {
+                sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            }
+        } else if (SearchDepartureActivity.sourceStation != null) {
             sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + SearchDepartureActivity.sourceStation.getLineNum());
         } else {
             sourceBtn.setText("");
         }
 
-        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation != null) {
-            destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
-        } else if (destinationStation != SearchDestinationActivity.destinationStation) {
+        if (destinationStation != null) {
+            if (SearchDestinationActivity.destinationStation != null) {
+                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + sourceStation.getLineNum());
+            } else {
+                destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+            }
+        } else if (SearchDestinationActivity.destinationStation != null) {
             destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
         } else {
             destinationBtn.setText("");

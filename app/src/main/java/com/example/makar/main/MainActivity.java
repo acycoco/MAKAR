@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
         //경로 설정 유무 체크
         //checkRouteSet();
 
-
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
         });
@@ -162,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
 //            destination = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();
 //        }
 
-        startNotification();
+//        startNotification();
 //        if (!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
 //            setFavoriteStation();
         //경로 설정 유무에 따라 view component change
@@ -256,12 +255,14 @@ public class MainActivity extends AppCompatActivity {
                                 SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
 
-                                String sourceStation = SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum();
-                                String destinationStation = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();
-
                                 isRouteSet = true;
                                 leftTime = 10;
-                                MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, sourceStation, destinationStation);
+                                MainActivityChangeView.changeView(
+                                        mainBinding,
+                                        isRouteSet,
+                                        leftTime,
+                                        SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
+                                        SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
                             }
                         } else {
                             Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
