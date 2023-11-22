@@ -66,6 +66,10 @@
     <string name="set_alarm_text">막차 알림 설정하기</string>
     <string name="main_title_text">막차까지 %d분 남았어요!</string>
 
+    <string name="set_route_error_toast_1">출발역을 등록해주세요</string>
+    <string name="set_route_error_toast_2">도착역을 등록해주세요</string>
+    <string name="set_route_error_toast_3">잠시 후 다시 시도해주세요</string>
+
     <!-- 마이페이지 -->
     <string name="my_info_header_text">내 정보</string>
     <string name="app_info_header_text">앱 정보</string>

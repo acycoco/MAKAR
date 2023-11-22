@@ -5,7 +5,7 @@ import android.view.View;
 import com.example.makar.databinding.ActivityMainBinding;
 
 public class MainActivityChangeView {
-    static boolean changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String source, String destination) {
+    static void changeView(ActivityMainBinding mainBinding, boolean isRouteSet, long leftTime, String source, String destination) {
         if (isRouteSet) {
             //route 설정된 메인화면
             mainBinding.timetableBtn.setVisibility(View.VISIBLE);
@@ -17,7 +17,6 @@ public class MainActivityChangeView {
             mainBinding.setRouteBtn.setVisibility(View.GONE);
             mainBinding.favoriteRouteText.setVisibility(View.GONE);
             mainBinding.recentRouteText.setVisibility(View.GONE);
-            return true;
         } else {
             //route 미설정 화면
             mainBinding.timetableBtn.setVisibility(View.GONE);
@@ -29,7 +28,6 @@ public class MainActivityChangeView {
             mainBinding.setRouteBtn.setVisibility(View.VISIBLE);
             mainBinding.favoriteRouteText.setVisibility(View.VISIBLE);
             mainBinding.recentRouteText.setVisibility(View.VISIBLE);
-            return false;
             //false를 리턴해 MainActivity에서 setFavoriteStation() 실행
         }
     }

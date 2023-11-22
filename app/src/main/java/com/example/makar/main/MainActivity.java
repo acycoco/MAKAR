@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-//        getUserData();
+        getUserData();
 
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
@@ -150,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        getUserData();
 //        String source = "source";
 //        String destination = "destination";
 
@@ -255,14 +256,26 @@ public class MainActivity extends AppCompatActivity {
                                 SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
 
-                                isRouteSet = true;
-                                leftTime = 10;
-                                MainActivityChangeView.changeView(
-                                        mainBinding,
-                                        isRouteSet,
-                                        leftTime,
-                                        SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
-                                        SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
+                                    isRouteSet = false;
+                                    leftTime = 0;
+                                    MainActivityChangeView.changeView(
+                                            mainBinding,
+                                            isRouteSet,
+                                            leftTime,
+                                            "",
+                                            "");
+                                } else {
+                                    isRouteSet = true;
+                                    leftTime = 10;
+
+                                    MainActivityChangeView.changeView(
+                                            mainBinding,
+                                            isRouteSet,
+                                            leftTime,
+                                            SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
+                                            SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                }
                             }
                         } else {
                             Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
