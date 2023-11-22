@@ -29,10 +29,19 @@ import com.example.makar.data.TransferInfo;
 
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.example.makar.mypage.MyPageActivity;
+import com.example.makar.mypage.SearchHomeActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
+import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -54,7 +63,8 @@ public class SetRouteActivity extends AppCompatActivity {
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference usersRef = database.getReference("users");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,9 +115,7 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceStation = SearchDepartureActivity.sourceStation;
             destinationStation = SearchDestinationActivity.destinationStation;
 
-
-
-            User user = new User(SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
+            User user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
 
             firebaseFirestore.collection("users")
                     .add(user)

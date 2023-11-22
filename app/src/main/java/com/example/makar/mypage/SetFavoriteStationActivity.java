@@ -20,9 +20,16 @@ import com.example.makar.R;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
+import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -35,6 +42,9 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference usersRef = database.getReference("users");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +82,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         //자주 가는 역 등록하기 버튼 클릭 리스너
         setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
             if (!editMode) {
+                editMode = true;
                 setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
@@ -80,7 +91,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 schoolStation = SearchSchoolActivity.schoolStation;
                 if (homeStation != null && schoolStation != null) {
 
-                    User user = new User(homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                    User user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
 
                     firebaseFirestore.collection("users")
                             .add(user)

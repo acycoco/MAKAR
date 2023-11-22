@@ -1,12 +1,17 @@
 package com.example.makar.data;
 
 public class User {
+    String userUId;
     Station homeStation;
     Station schoolStation;
-    Station depatureStation;
+    Station departureStation;
     Station destinationStation;
 
     public User() {
+    }
+
+    public String getUserUId() {
+        return userUId;
     }
 
     public Station getHomeStation() {
@@ -17,18 +22,39 @@ public class User {
         return schoolStation;
     }
 
-    public Station getDepatureStation() {
-        return depatureStation;
+    public Station getDepatrureStation() {
+        return departureStation;
     }
 
     public Station getDestinationStation() {
         return destinationStation;
     }
 
-    public User(Station homeStation, Station schoolStation, Station depatureStation, Station destinationStation) {
+    public User(String userUId, Station homeStation, Station schoolStation, Station departureStation, Station destinationStation) {
+        this.userUId = userUId;
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
-        this.depatureStation = depatureStation;
+        this.departureStation = departureStation;
         this.destinationStation = destinationStation;
+    }
+
+    public void setHomeStation(Station homeStation) {
+        this.homeStation = homeStation;
+    }
+
+    public void setSchoolStation(Station schoolStation) {
+        this.schoolStation = schoolStation;
+    }
+
+    public void setDepartureStation(Station departureStation) {
+        this.departureStation = departureStation;
+    }
+
+    public void setDestinationStation(Station destinationStation) {
+        this.destinationStation = destinationStation;
+    }
+
+    public void setUserUId(String userUId) {
+        this.userUId = userUId;
     }
 }

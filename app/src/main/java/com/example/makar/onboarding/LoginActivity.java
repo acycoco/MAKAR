@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
+    public static String userUId;
     private String email;
     private String password;
 
@@ -61,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void initFirebaseAuth() {
         mAuth = FirebaseAuth.getInstance();
+        userUId = FirebaseAuth.getInstance().getUid();
     }
 
     @Override
