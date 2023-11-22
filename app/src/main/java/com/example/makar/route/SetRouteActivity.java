@@ -17,6 +17,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.makar.data.DataConverter;
+import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -71,9 +73,21 @@ public class SetRouteActivity extends AppCompatActivity {
         destinationBtn = setRouteBinding.searchDestinationButton;
 
 
-        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
+//        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
 //        databaseConverter.readExcelFileAndSave();
+//        databaseConverter.createUniqueStationExcelFile();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                databaseConverter.readUniqueStationNameAndSearchStation();
+//                databaseConverter.addCleanStationNameAtDB();
+//                databaseConverter.createUniqueStationExcelFile();
+//                databaseConverter.validateOdsayStationsDataFromDB();
+//                databaseConverter.modifyOdsayStationData();
+//            }
+//        }).start();
+
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -91,6 +105,8 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceStation = SearchDepartureActivity.sourceStation;
             destinationStation = SearchDestinationActivity.destinationStation;
 
+
+
             User user = new User(SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
 
             firebaseFirestore.collection("users")
@@ -107,10 +123,15 @@ public class SetRouteActivity extends AppCompatActivity {
                             Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
                         }
                     });
+          
+            double sourceX = getX(sourceStation);
+            double sourceY = getY(sourceStation);
+            double destinationX = getX(destinationStation);
+            double destinationY = getY(destinationStation);
 
             new Thread(() -> {
                 try {
-                    String routeJson = searchRoute();
+                    String routeJson = searchRoute(sourceX, sourceY, destinationX, destinationY);
                     System.out.println(routeJson);
                     List<Route> routes = parseRouteResponse(routeJson);
                     // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
@@ -126,6 +147,16 @@ public class SetRouteActivity extends AppCompatActivity {
 
     }
 
+    private double getX(Station station) {
+        OdsayStation odsayStation = station.getOdsayStation();
+        return odsayStation.getX();
+    }
+
+    private double getY(Station station) {
+        OdsayStation odsayStation = station.getOdsayStation();
+        return odsayStation.getY();
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -134,7 +165,7 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
 
-    private String searchRoute() throws IOException {
+    private String searchRoute(double sourceX, double sourceY, double destinationX, double destinationY) throws IOException {
         String apiKey = BuildConfig.ODSAY_API_KEY;
         if (apiKey == null) {
             Log.e("MAKAR", "api key null");
@@ -142,10 +173,10 @@ public class SetRouteActivity extends AppCompatActivity {
 
         //대중교통 길찾기 api
         StringBuilder urlBuilder = new StringBuilder("https://api.odsay.com/v1/api/searchPubTransPathT");
-        urlBuilder.append("?SX=" + URLEncoder.encode("126.953991", "UTF-8"));
-        urlBuilder.append("&SY=" + URLEncoder.encode("37.610469", "UTF-8"));
-        urlBuilder.append("&EX=" + URLEncoder.encode("127.128111", "UTF-8"));
-        urlBuilder.append("&EY=" + URLEncoder.encode("37.502162", "UTF-8"));
+        urlBuilder.append("?SX=" + URLEncoder.encode(String.valueOf(sourceX), "UTF-8"));
+        urlBuilder.append("&SY=" + URLEncoder.encode(String.valueOf(sourceY), "UTF-8"));
+        urlBuilder.append("&EX=" + URLEncoder.encode(String.valueOf(destinationX), "UTF-8"));
+        urlBuilder.append("&EY=" + URLEncoder.encode(String.valueOf(destinationY), "UTF-8"));
 //        테스트 값 "x": 126.953991,
 //                "y": 37.495861,
 //                "x": 127.024521,
@@ -168,6 +199,7 @@ public class SetRouteActivity extends AppCompatActivity {
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
+            System.out.println(sb);
             return sb.toString();
         } finally {
             conn.disconnect();
