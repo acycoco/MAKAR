@@ -7,11 +7,13 @@ public class Route {
     private final int totalTime;
     private final int transitCount;
     private final List<SubRouteItem> subRouteItems;
+    private final List<BriefStatoion> briefRoute;
 
-    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems) {
+    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems, List<BriefStatoion> briefRoute) {
         this.totalTime = totalTime;
         this.transitCount = transitCount;
         this.subRouteItems = subRouteItems;
+        this.briefRoute = briefRoute;
     }
 
     public List<SubRouteItem> getRouteItems() {
@@ -24,6 +26,7 @@ public class Route {
                 "totalTime=" + totalTime +
                 ", transitCount=" + transitCount +
                 ", subRouteItems=" + subRouteItems +
+                ", briefRoute=" + briefRoute +
                 '}';
     }
 }
