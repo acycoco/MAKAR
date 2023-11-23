@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchHomeActivity extends AppCompatActivity {
-    static Station homeStation;
+    public static Station homeStation;
     ActivitySearchHomeBinding searchHomeBinding;
 
     @Override

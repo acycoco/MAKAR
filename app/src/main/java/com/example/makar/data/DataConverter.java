@@ -237,7 +237,7 @@ public class DataConverter {
                                                         docRef.update("odsayStationName", odsayStation.getStationName());
                                                         docRef.update("x", odsayStation.getX());
                                                         docRef.update("y", odsayStation.getY());
-                                                        docRef.update("OdsayLaneType", odsayStation.getType());
+                                                        docRef.update("odsayLaneType", odsayStation.getType());
                                                         Log.d("makar",document.getId() + "success");
                                                     }
                                                 } else {
@@ -261,8 +261,7 @@ public class DataConverter {
                             WriteBatch batch = db.batch();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 DocumentReference docRef = db.collection("stations").document(document.getId());
-                                batch.update(docRef, "X", FieldValue.delete());
-                                batch.update(docRef, "Y", FieldValue.delete());
+                                batch.update(docRef, "OdsayLaneType", FieldValue.delete());
                             }
                             batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

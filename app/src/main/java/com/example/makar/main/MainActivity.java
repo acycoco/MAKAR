@@ -12,16 +12,25 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.makar.data.Station;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
 import com.example.makar.mypage.SetFavoriteStationActivity;
+import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -31,15 +40,16 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-23 14:36:30"; //임시 막차 시간
+    private String makarTimeString = "2023-11-25 14:36:30"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
-    private static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
+    public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private String userUid;
 
+    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,14 +59,15 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
+        getUserData();
 
+        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
         userUid = getUserUid();
         //db 접근에 이용
 
         //경로 설정 유무 체크
         //checkRouteSet();
-
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -86,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
             updateUI(SetRouteActivity.class);
 
             //임시 경로 설정 플래그 수정
-            isRouteSet = true;
             isGetOffSet = true;
         });
     }
@@ -103,20 +113,20 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 if (isRouteSet) {
                     leftTime = checkNotificationTime(makarTimeString);
-                    if ( leftTime <= 0) {
+                    if (leftTime <= 0) {
                         //막차 시간 달성
                         setRouteUnset();
                     } else {
                         //경로는 설정되어있으나 시간 미달
-                        if(leftTime == Integer.parseInt(makarAlarmTime)){
+                        if (leftTime == Integer.parseInt(makarAlarmTime)) {
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
-                            showNotification("MAKAR 막차 알림", "막차까지 "+leftTime+"분 남았습니다", MainActivity.this);
+                            showNotification("MAKAR 막차 알림", "막차까지 " + leftTime + "분 남았습니다", MainActivity.this);
                         }
-                            //남은 시간 계산
-                            int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                            Log.d("makar", "LeftTime : " + timeDifferenceMinutes);
-                            //title text 변경
-                            changeMainTitleText(timeDifferenceMinutes);
+                        //남은 시간 계산
+                        int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                        Log.d("makar", "LeftTime : " + timeDifferenceMinutes);
+                        //title text 변경
+                        changeMainTitleText(timeDifferenceMinutes);
                     }
                 } else if (isGetOffSet) {
                     if (checkNotificationTime(getOffTimeString) < 0) {
@@ -140,16 +150,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String source = "source";
-        String destination = "destination";
+        getUserData();
+//        String source = "source";
+//        String destination = "destination";
 
-        //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
-        if(SetRouteActivity.sourceStation != null){source = SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum();}
-        if(SetRouteActivity.destinationStation != null){destination = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();}
+//        //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
+//        if (SetRouteActivity.sourceStation != null) {
+//            source = SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum();
+//        }
+//        if (SetRouteActivity.destinationStation != null) {
+//            destination = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();
+//        }
 
-        startNotification();
-        if(!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
-            setFavoriteStation();
+//        startNotification();
+//        if (!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
+//            setFavoriteStation();
         //경로 설정 유무에 따라 view component change
     }
 
@@ -157,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
     private void setFavoriteStation() {
         //자주가는 역 설정X, 경로 설정X 일 때, 자주 가는 역 설정 다이얼로그 띄움
         //TODO 자주가는 역 변수 수정 필요
-        if(SetFavoriteStationActivity.homeStation == null || SetFavoriteStationActivity.schoolStation == null) {
+        if (SetFavoriteStationActivity.homeStation == null || SetFavoriteStationActivity.schoolStation == null) {
             SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
             setFavoriteStationDialog.show();
         }
@@ -179,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
 
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.RED);
         spannableString.setSpan(foregroundColorSpan, 5,
-                   5 + length , Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                5 + length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //string index 직접 접근해서 색 변경
         mainBinding.mainTitleText.setText(spannableString);
     }
@@ -216,13 +231,58 @@ public class MainActivity extends AppCompatActivity {
         updateUI(MainActivity.class);
     }
 
-    private String getUserUid(){
+    private String getUserUid() {
         Intent intent = getIntent();
         return intent.getStringExtra("uid");
     }
 
     private void updateUI(Class contextClass) {
         startActivity(new Intent(MainActivity.this, contextClass));
+    }
+
+    private void getUserData() {
+        firebaseFirestore.collection("users")
+                .whereEqualTo("userUId", LoginActivity.userUId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                SetFavoriteStationActivity.homeStation = documentSnapshot.get("homeStation", Station.class);
+                                SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                                SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
+                                SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
+
+                                if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
+                                    isRouteSet = false;
+                                    leftTime = 0;
+                                    MainActivityChangeView.changeView(
+                                            mainBinding,
+                                            isRouteSet,
+                                            leftTime,
+                                            "",
+                                            "");
+                                } else {
+                                    isRouteSet = true;
+                                    leftTime = 10;
+
+                                    MainActivityChangeView.changeView(
+                                            mainBinding,
+                                            isRouteSet,
+                                            leftTime,
+                                            SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
+                                            SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                }
+                            }
+                        } else {
+                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+                        }
+                    }
+                });
+
     }
 
 //    private void checkRouteSet(){
@@ -238,13 +298,13 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(mainBinding.toolbarMain.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
     }
 
-    private void setToolBar(){
+    private void setToolBar() {
         mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
     }
 }

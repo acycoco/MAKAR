@@ -12,12 +12,15 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.makar.R;
 import com.example.makar.data.DataConverter;
+import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -28,12 +31,18 @@ import com.example.makar.data.TransferInfo;
 
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
+import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -67,8 +76,10 @@ public class SetRouteActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
+        getUserData();
+//        setUserData();
 
-        sourceBtn = setRouteBinding.searchDepartureButton;
+        sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
 
@@ -92,7 +103,7 @@ public class SetRouteActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         sourceBtn.setOnClickListener(view -> {
-            startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
+            startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
         });
 
         destinationBtn.setOnClickListener(view -> {
@@ -102,27 +113,76 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            sourceStation = SearchDepartureActivity.sourceStation;
-            destinationStation = SearchDestinationActivity.destinationStation;
+            if ((SearchSourceActivity.sourceStation != null && SearchDestinationActivity.destinationStation != null)
+                    || (sourceStation != null && destinationStation != null)) {
+                User user;
+                if (SearchSourceActivity.sourceStation == null) {
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, SearchDestinationActivity.destinationStation);
+                } else if (SearchDestinationActivity.destinationStation == null) {
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, destinationStation);
+                } else if (SearchSourceActivity.sourceStation == null && SearchDestinationActivity.destinationStation == null) {
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
+                } else {
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, SearchDestinationActivity.destinationStation);
+                }
 
+                // TODO : 경로 찾기 != 경로 선택
+                firebaseFirestore.collection("users")
+                        .whereEqualTo("userUId", LoginActivity.userUId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    QuerySnapshot querySnapshot = task.getResult();
+                                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                        // 값이 존재하는 경우, 해당 데이터를 수정
+                                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                        String documentId = documentSnapshot.getId();
+                                        firebaseFirestore.collection("users")
+                                                .document(documentId)
+                                                .set(user)
+                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                    @Override
+                                                    public void onSuccess(Void aVoid) {
+                                                        Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
+                                                        sourceStation = SearchSourceActivity.sourceStation;
+                                                        destinationStation = SearchDestinationActivity.destinationStation;
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                    }
+                                                });
+                                    } else {
+                                        // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
+                                        firebaseFirestore.collection("users")
+                                                .add(user)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                        sourceStation = SearchSourceActivity.sourceStation;
+                                                        destinationStation = SearchDestinationActivity.destinationStation;
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
+                                                    }
+                                                });
 
-
-            User user = new User(SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
-
-            firebaseFirestore.collection("users")
-                    .add(user)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
-                        }
+                                        MainActivity.isRouteSet = true;
+                                    }
+                                } else {
+                                    Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
+                                }
+                            }
                     });
+
 
             new Thread(() -> {
                 try {
@@ -138,16 +198,37 @@ public class SetRouteActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }).start();
+            } else if (SearchSourceActivity.sourceStation == null) {
+                Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
+            } else if (SearchDestinationActivity.destinationStation == null) {
+                Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
+            }
         });
 
     }
 
     @Override
-
     protected void onStart() {
         super.onStart();
         //sourceBtn, destinationBtn text 변경
-        setSearchBarText();
+        setSearchViewText();
+    }
+
+    private void executeSearchRoute() {
+        new Thread(() -> {
+            try {
+                String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
+                System.out.println(routeJson);
+                List<Route> routes = parseRouteResponse(routeJson);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    Log.d("MAKAR", routes.toString());
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
 
@@ -232,6 +313,47 @@ public class SetRouteActivity extends AppCompatActivity {
         return routes;
     }
 
+    private void setUserData() {
+        if (sourceStation != null && destinationStation != null) {
+            sourceBtn.setText(" " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            destinationBtn.setText(" " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+        }
+    }
+
+    private void getUserData() {
+        firebaseFirestore.collection("users")
+                .whereEqualTo("userUId", LoginActivity.userUId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                if (documentSnapshot.contains("sourceStation")) {
+                                    sourceStation = documentSnapshot.get("sourceStation", Station.class);
+                                }
+                                if (documentSnapshot.contains("destinationStation")) {
+                                    destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                }
+
+                                String sourceStationText = "";
+                                String destinationStationText = "";
+
+                                if (sourceStation != null) {
+                                    sourceStationText = " " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum();
+                                }
+                                if (destinationStation != null) {
+                                    destinationStationText = " " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum();
+                                }
+                            }
+                        } else {
+                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+                        }
+                    }
+                });
+    }
 
     //터치 시 키보드 내리기
     private void setHideKeyBoard() {
@@ -260,6 +382,8 @@ public class SetRouteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
+                SearchSourceActivity.sourceStation = null;
+                SearchDestinationActivity.destinationStation = null;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -272,25 +396,33 @@ public class SetRouteActivity extends AppCompatActivity {
         setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
     }
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
-    private void setSearchBarText() {
-        if (sourceStation == SearchDepartureActivity.sourceStation && sourceStation != null) {
-            sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-        } else if (sourceStation != SearchDepartureActivity.sourceStation) {
-            sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + SearchDepartureActivity.sourceStation.getLineNum());
+    private void setSearchViewText() {
+        if (sourceStation != null) {
+            if (SearchSourceActivity.sourceStation != null) {
+                sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            } else {
+                sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            }
+        } else if (SearchSourceActivity.sourceStation != null) {
+            sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + SearchSourceActivity.sourceStation.getLineNum());
         } else {
             sourceBtn.setText("");
         }
 
-        if (destinationStation == SearchDestinationActivity.destinationStation && destinationStation != null) {
-            destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
-        } else if (destinationStation != SearchDestinationActivity.destinationStation) {
+        if (destinationStation != null) {
+            if (SearchDestinationActivity.destinationStation != null) {
+                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + sourceStation.getLineNum());
+            } else {
+                destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+            }
+        } else if (SearchDestinationActivity.destinationStation != null) {
             destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
         } else {
             destinationBtn.setText("");

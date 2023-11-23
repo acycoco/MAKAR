@@ -1,12 +1,19 @@
 package com.example.makar.data;
 
 public class User {
+    String userUId;
     Station homeStation;
     Station schoolStation;
-    Station depatureStation;
+    Station sourceStation;
     Station destinationStation;
 
+    //TODO 하차 알림 시간, 막차 일림 시간 정보도 같이 저장
+
     public User() {
+    }
+
+    public String getUserUId() {
+        return userUId;
     }
 
     public Station getHomeStation() {
@@ -17,18 +24,50 @@ public class User {
         return schoolStation;
     }
 
-    public Station getDepatureStation() {
-        return depatureStation;
+    public Station getSourceStation() {
+        return sourceStation;
     }
 
     public Station getDestinationStation() {
         return destinationStation;
     }
 
-    public User(Station homeStation, Station schoolStation, Station depatureStation, Station destinationStation) {
+    public User(String userUId, Station homeStation, Station schoolStation, Station sourceStation, Station destinationStation) {
+        this.userUId = userUId;
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
-        this.depatureStation = depatureStation;
+        this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;
+    }
+
+    public void setHomeStation(Station homeStation) {
+        this.homeStation = homeStation;
+    }
+
+    public void setSchoolStation(Station schoolStation) {
+        this.schoolStation = schoolStation;
+    }
+
+    public void setSourceStation(Station sourceStation) {
+        this.sourceStation = sourceStation;
+    }
+
+    public void setDestinationStation(Station destinationStation) {
+        this.destinationStation = destinationStation;
+    }
+
+    public void setUserUId(String userUId) {
+        this.userUId = userUId;
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userUId='" + userUId + '\'' +
+                ", homeStation=" + homeStation +
+                ", schoolStation=" + schoolStation +
+                ", sourceStation=" + sourceStation +
+                ", destinationStation=" + destinationStation +
+                '}';
     }
 }

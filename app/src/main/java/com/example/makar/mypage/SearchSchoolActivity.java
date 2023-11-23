@@ -32,7 +32,7 @@ import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
 
-    static Station schoolStation;
+    public static Station schoolStation;
     ActivitySearchSchoolBinding searchSchoolBinding;
 
     @Override

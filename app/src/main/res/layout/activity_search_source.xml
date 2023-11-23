@@ -7,7 +7,7 @@
     android:orientation="vertical">
 
     <include
-        android:id="@+id/toolbar_search_departure"
+        android:id="@+id/toolbar_search_source"
         layout="@layout/custom_toolbar" />
 
     <LinearLayout
@@ -23,7 +23,7 @@
             android:paddingTop="10dp">
 
             <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_view_departure"
+                android:id="@+id/search_view_source"
                 style="@style/CustomSearchView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -147,7 +147,7 @@
             android:background="@color/light_gray2" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/search_departure_recycler_view"
+            android:id="@+id/search_source_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
