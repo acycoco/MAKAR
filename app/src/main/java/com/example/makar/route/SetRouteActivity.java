@@ -148,6 +148,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
                                                         sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
+                                                        executeSearchRoute();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -166,6 +167,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
                                                         sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
+                                                        executeSearchRoute();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -184,20 +186,6 @@ public class SetRouteActivity extends AppCompatActivity {
                     });
 
 
-            new Thread(() -> {
-                try {
-                    String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
-                    System.out.println(routeJson);
-                    List<Route> routes = parseRouteResponse(routeJson);
-                    // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        Log.d("MAKAR", routes.toString());
-                        // 결과를 사용하여 UI 업데이트 등의 작업 수행
-                    });
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }).start();
             } else if (SearchSourceActivity.sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
             } else if (SearchDestinationActivity.destinationStation == null) {
