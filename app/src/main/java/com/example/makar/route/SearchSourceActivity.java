@@ -19,12 +19,11 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.makar.data.OdsayStation;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
-import com.example.makar.databinding.ActivitySearchDepartureBinding;
+import com.example.makar.databinding.ActivitySearchSourceBinding;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -33,16 +32,16 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchDepartureActivity extends AppCompatActivity {
-    ActivitySearchDepartureBinding searchDepartureBinding;
+public class SearchSourceActivity extends AppCompatActivity {
+    ActivitySearchSourceBinding binding;
     static Station sourceStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchDepartureBinding = ActivitySearchDepartureBinding.inflate(getLayoutInflater());
-        setContentView(searchDepartureBinding.getRoot());
+        binding = ActivitySearchSourceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
         setToolBar();
@@ -50,14 +49,14 @@ public class SearchDepartureActivity extends AppCompatActivity {
         setSearchView(); //searchView request focus
 
 
-        RecyclerView recyclerView = searchDepartureBinding.searchDepartureRecyclerView;
+        RecyclerView recyclerView = binding.searchSourceRecyclerView;
         List<Station> resultList = new ArrayList<>();
         SearchAdapter adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        searchDepartureBinding.searchViewDeparture.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchViewSource.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -124,7 +123,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
         });
 
         //즐겨찾는 역 출발지로 설정
-        searchDepartureBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
+        binding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.homeStation != null) {
@@ -132,12 +131,12 @@ public class SearchDepartureActivity extends AppCompatActivity {
                     sourceStation = SetFavoriteStationActivity.homeStation;
                     finish();
                 } else {
-                    startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
+                    startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
                 }
             }
         });
 
-        searchDepartureBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
+        binding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.schoolStation != null) {
@@ -145,20 +144,20 @@ public class SearchDepartureActivity extends AppCompatActivity {
                     sourceStation = SetFavoriteStationActivity.schoolStation;
                     finish();
                 } else {
-                    startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
+                    startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
                 }
             }
         });
 
-        searchDepartureBinding.detailBtn.setOnClickListener(view -> {
-            startActivity(new Intent(SearchDepartureActivity.this, SetFavoriteStationActivity.class));
+        binding.detailBtn.setOnClickListener(view -> {
+            startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
         });
     }
 
 
     //searchView input 설정
     private void setSearchView() {
-        SearchView searchView = searchDepartureBinding.searchViewDeparture;
+        SearchView searchView = binding.searchViewSource;
         searchView.requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -200,13 +199,13 @@ public class SearchDepartureActivity extends AppCompatActivity {
     }
 
     private void setToolBar() {
-        searchDepartureBinding.toolbarSearchDeparture.toolbarText.setText("출발역 입력");
-        searchDepartureBinding.toolbarSearchDeparture.toolbarImage.setVisibility(View.GONE);
-        searchDepartureBinding.toolbarSearchDeparture.toolbarButton.setVisibility(View.GONE);
+        binding.toolbarSearchSource.toolbarText.setText("출발역 입력");
+        binding.toolbarSearchSource.toolbarImage.setVisibility(View.GONE);
+        binding.toolbarSearchSource.toolbarButton.setVisibility(View.GONE);
     }
 
     private void setActionBar() {
-        setSupportActionBar(searchDepartureBinding.toolbarSearchDeparture.getRoot());
+        setSupportActionBar(binding.toolbarSearchSource.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

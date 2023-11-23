@@ -25,7 +25,7 @@
             android:name=".route.SearchDestinationActivity"
             android:exported="true" />
         <activity
-            android:name=".route.SearchDepartureActivity"
+            android:name=".route.SearchSourceActivity"
             android:exported="true" />
         <activity
             android:name=".mypage.OpenSourceLicenseActivity"

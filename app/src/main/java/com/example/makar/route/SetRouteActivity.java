@@ -17,10 +17,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.makar.R;
-import com.example.makar.data.DataConverter;
 import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
@@ -33,9 +31,6 @@ import com.example.makar.data.TransferInfo;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.example.makar.main.MainActivity;
-import com.example.makar.mypage.MyPageActivity;
-import com.example.makar.mypage.SearchHomeActivity;
-import com.example.makar.mypage.SearchSchoolActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,12 +38,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -62,7 +51,6 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -90,7 +78,7 @@ public class SetRouteActivity extends AppCompatActivity {
         getUserData();
 //        setUserData();
 
-        sourceBtn = setRouteBinding.searchDepartureButton;
+        sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
@@ -112,7 +100,7 @@ public class SetRouteActivity extends AppCompatActivity {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         sourceBtn.setOnClickListener(view -> {
-            startActivity(new Intent(SetRouteActivity.this, SearchDepartureActivity.class));
+            startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
         });
 
         destinationBtn.setOnClickListener(view -> {
@@ -122,17 +110,17 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            if ((SearchDepartureActivity.sourceStation != null && SearchDestinationActivity.destinationStation != null)
+            if ((SearchSourceActivity.sourceStation != null && SearchDestinationActivity.destinationStation != null)
                     || (sourceStation != null && destinationStation != null)) {
                 User user;
-                if (SearchDepartureActivity.sourceStation == null) {
+                if (SearchSourceActivity.sourceStation == null) {
                     user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, SearchDestinationActivity.destinationStation);
                 } else if (SearchDestinationActivity.destinationStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchDepartureActivity.sourceStation, destinationStation);
-                } else if (SearchDepartureActivity.sourceStation == null && SearchDestinationActivity.destinationStation == null) {
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, destinationStation);
+                } else if (SearchSourceActivity.sourceStation == null && SearchDestinationActivity.destinationStation == null) {
                     user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
                 } else {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchDepartureActivity.sourceStation, SearchDestinationActivity.destinationStation);
+                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, SearchDestinationActivity.destinationStation);
                 }
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
@@ -154,7 +142,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(Void aVoid) {
                                                         Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
-                                                        sourceStation = SearchDepartureActivity.sourceStation;
+                                                        sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
                                                     }
                                                 })
@@ -172,7 +160,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                                                        sourceStation = SearchDepartureActivity.sourceStation;
+                                                        sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
                                                     }
                                                 })
@@ -211,7 +199,7 @@ public class SetRouteActivity extends AppCompatActivity {
                     throw new RuntimeException(e);
                 }
             }).start();
-            } else if (SearchDepartureActivity.sourceStation == null) {
+            } else if (SearchSourceActivity.sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
             } else if (SearchDestinationActivity.destinationStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
@@ -391,7 +379,7 @@ public class SetRouteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                SearchDepartureActivity.sourceStation = null;
+                SearchSourceActivity.sourceStation = null;
                 SearchDestinationActivity.destinationStation = null;
                 return true;
             default:
@@ -414,13 +402,13 @@ public class SetRouteActivity extends AppCompatActivity {
 
     private void setSearchViewText() {
         if (sourceStation != null) {
-            if (SearchDepartureActivity.sourceStation != null) {
-                sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            if (SearchSourceActivity.sourceStation != null) {
+                sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
             } else {
                 sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
             }
-        } else if (SearchDepartureActivity.sourceStation != null) {
-            sourceBtn.setText("  " + SearchDepartureActivity.sourceStation.getStationName() + "역 " + SearchDepartureActivity.sourceStation.getLineNum());
+        } else if (SearchSourceActivity.sourceStation != null) {
+            sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + SearchSourceActivity.sourceStation.getLineNum());
         } else {
             sourceBtn.setText("");
         }
