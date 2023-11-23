@@ -18,7 +18,6 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.makar.data.DataConverter;
-import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -73,18 +72,19 @@ public class SetRouteActivity extends AppCompatActivity {
         destinationBtn = setRouteBinding.searchDestinationButton;
 
 
-//        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
+        //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
-//        databaseConverter.readExcelFileAndSave();
-//        databaseConverter.createUniqueStationExcelFile();
+////        databaseConverter.readExcelFileAndSave();
+////        databaseConverter.createUniqueStationExcelFile();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                databaseConverter.readUniqueStationNameAndSearchStation();
-//                databaseConverter.addCleanStationNameAtDB();
-//                databaseConverter.createUniqueStationExcelFile();
-//                databaseConverter.validateOdsayStationsDataFromDB();
-//                databaseConverter.modifyOdsayStationData();
+////                databaseConverter.readUniqueStationNameAndSearchStation();
+////                databaseConverter.addCleanStationNameAtDB();
+////                databaseConverter.createUniqueStationExcelFile();
+////                databaseConverter.validateOdsayStationsDataFromDB();
+////                databaseConverter.modifyOdsayStationData();
+//                databaseConverter.updateStationsCollection();
 //            }
 //        }).start();
 
@@ -123,15 +123,10 @@ public class SetRouteActivity extends AppCompatActivity {
                             Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
                         }
                     });
-          
-            double sourceX = getX(sourceStation);
-            double sourceY = getY(sourceStation);
-            double destinationX = getX(destinationStation);
-            double destinationY = getY(destinationStation);
 
             new Thread(() -> {
                 try {
-                    String routeJson = searchRoute(sourceX, sourceY, destinationX, destinationY);
+                    String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
                     System.out.println(routeJson);
                     List<Route> routes = parseRouteResponse(routeJson);
                     // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
@@ -147,17 +142,8 @@ public class SetRouteActivity extends AppCompatActivity {
 
     }
 
-    private double getX(Station station) {
-        OdsayStation odsayStation = station.getOdsayStation();
-        return odsayStation.getX();
-    }
-
-    private double getY(Station station) {
-        OdsayStation odsayStation = station.getOdsayStation();
-        return odsayStation.getY();
-    }
-
     @Override
+
     protected void onStart() {
         super.onStart();
         //sourceBtn, destinationBtn text 변경

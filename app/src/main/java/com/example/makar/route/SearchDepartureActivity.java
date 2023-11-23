@@ -16,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.makar.data.OdsayStation;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDepartureBinding;
@@ -24,7 +23,6 @@ import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -70,7 +68,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
                     CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("cleanStationName")
+                    Query query = collectionRef.orderBy("stationName")
                             .startAt(newText)
                             .endAt(newText + "\uf8ff");
 
@@ -82,32 +80,15 @@ public class SearchDepartureActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
                                     Station station = document.toObject(Station.class);
-                                    CollectionReference odsayStations = document.getReference()
-                                            .collection("odsay_stations");
-                                    odsayStations.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> odsayTask) {
-                                            if (odsayTask.isSuccessful()) {
-                                                for (QueryDocumentSnapshot odsayDocument : odsayTask.getResult()) {
-                                                    OdsayStation odsayStation = odsayDocument.toObject(OdsayStation.class);
-                                                    System.out.println(odsayStation);
-                                                    station.setOdsayStation(odsayStation);
-                                                    resultList.add(station);
-                                                    adapter.notifyDataSetChanged();
-                                                }
-                                            } else {
-                                                Log.d("MAKAR", "검색 중 오류 발생: ", odsayTask.getException());
-                                            }
-                                        }
-                                    });
-
+                                    resultList.add(station);
                                 }
-
+                                adapter.notifyDataSetChanged();
                             } else {
                                 Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
                             }
                         }
                     });
+
 
                 }
                 return true;

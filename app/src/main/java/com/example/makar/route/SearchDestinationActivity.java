@@ -15,9 +15,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 
-import com.example.makar.data.OdsayStation;
 import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
@@ -49,8 +47,6 @@ public class SearchDestinationActivity extends AppCompatActivity {
         setSearchView(); //searchView request focus
 
 
-//        DataConverter databaseConverter = new DataConverter(this);
-//        databaseConverter.readExcelFileAndSave();
 
         RecyclerView recyclerView = searchDestinationBinding.searchDestinationRecyclerView;
         List<Station> resultList = new ArrayList<>();
@@ -64,7 +60,6 @@ public class SearchDestinationActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
-
             @Override
             public boolean onQueryTextChange(String newText) {
 
@@ -72,7 +67,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
                     CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("cleanStationName")
+                    Query query = collectionRef.orderBy("stationName")
                             .startAt(newText)
                             .endAt(newText + "\uf8ff");
 
@@ -84,32 +79,15 @@ public class SearchDestinationActivity extends AppCompatActivity {
                                 for (QueryDocumentSnapshot document : task.getResult()) {
 
                                     Station station = document.toObject(Station.class);
-                                    CollectionReference odsayStations = document.getReference()
-                                            .collection("odsay_stations");
-                                    odsayStations.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<QuerySnapshot> odsayTask) {
-                                            if (odsayTask.isSuccessful()) {
-                                                for (QueryDocumentSnapshot odsayDocument : odsayTask.getResult()) {
-                                                    OdsayStation odsayStation = odsayDocument.toObject(OdsayStation.class);
-                                                    System.out.println(odsayStation);
-                                                    station.setOdsayStation(odsayStation);
-                                                    resultList.add(station);
-                                                    adapter.notifyDataSetChanged();
-                                                }
-                                            } else {
-                                                Log.d("MAKAR", "검색 중 오류 발생: ", odsayTask.getException());
-                                            }
-                                        }
-                                    });
-
+                                    resultList.add(station);
                                 }
-
+                                adapter.notifyDataSetChanged();
                             } else {
                                 Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
                             }
                         }
                     });
+
 
                 }
                 return true;
