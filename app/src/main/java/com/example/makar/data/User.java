@@ -7,6 +7,8 @@ public class User {
     Station departureStation;
     Station destinationStation;
 
+    //TODO 하차 알림 시간, 막차 일림 시간 정보도 같이 저장
+
     public User() {
     }
 

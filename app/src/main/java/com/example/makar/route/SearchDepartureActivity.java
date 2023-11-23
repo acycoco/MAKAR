@@ -128,6 +128,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.homeStation != null) {
+                    //TODO homeStation에 Odsay관련 정보 초기화x -> 수정필요
                     sourceStation = SetFavoriteStationActivity.homeStation;
                     finish();
                 } else {
@@ -140,6 +141,7 @@ public class SearchDepartureActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.schoolStation != null) {
+                    //TODO schoolStation에 Odsay관련 정보 초기화x -> 수정필요
                     sourceStation = SetFavoriteStationActivity.schoolStation;
                     finish();
                 } else {

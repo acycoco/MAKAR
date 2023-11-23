@@ -172,6 +172,8 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                        sourceStation = SearchDepartureActivity.sourceStation;
+                                                        destinationStation = SearchDestinationActivity.destinationStation;
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -188,7 +190,8 @@ public class SetRouteActivity extends AppCompatActivity {
                                 }
                             }
                     });
-          
+
+                //TODO NullException 발생
             double sourceX = getX(sourceStation);
             double sourceY = getY(sourceStation);
             double destinationX = getX(destinationStation);
@@ -219,6 +222,8 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private double getX(Station station) {
+        //TODO 인자로 들어온 station의 정보는 toString으로 잘 출력되나
+        //TODO station.getOdsayStation()에서 nullException발생
         OdsayStation odsayStation = station.getOdsayStation();
         return odsayStation.getX();
     }
