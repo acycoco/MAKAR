@@ -13,13 +13,16 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -212,6 +215,73 @@ public class DataConverter {
         }
     }
 
+    public void updateStationsCollection() {
+        db.collection("stations")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DocumentReference docRef = db.collection("stations").document(document.getId());
+                                docRef.collection("odsay_stations")
+                                        .get()
+                                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()) {
+                                                    for (QueryDocumentSnapshot subDocument : task.getResult()) {
+                                                        OdsayStation odsayStation = subDocument.toObject(OdsayStation.class);
+
+                                                        docRef.update("odsayStationID", odsayStation.getStationID());
+                                                        docRef.update("odsayStationName", odsayStation.getStationName());
+                                                        docRef.update("x", odsayStation.getX());
+                                                        docRef.update("y", odsayStation.getY());
+                                                        docRef.update("OdsayLaneType", odsayStation.getType());
+                                                        Log.d("makar",document.getId() + "success");
+                                                    }
+                                                } else {
+                                                    Log.d("makar", "Error getting sub-collection documents: ", task.getException());
+                                                }
+                                            }
+                                        });
+                            }
+                        } else {
+                            Log.d("makar", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+        db.collection("stations")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            WriteBatch batch = db.batch();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DocumentReference docRef = db.collection("stations").document(document.getId());
+                                batch.update(docRef, "X", FieldValue.delete());
+                                batch.update(docRef, "Y", FieldValue.delete());
+                            }
+                            batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d("makar", "Document successfully updated!");
+                                    } else {
+                                        Log.d("makar", "Error updating document", task.getException());
+                                    }
+                                }
+                            });
+                        } else {
+                            Log.d("makar", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+    }
     private void updateOdsayStationDataInDocument(QueryDocumentSnapshot document, OdsayStationData.Station odsayStation) {
         String stationName = odsayStation.getStationName();
         int stationType = odsayStation.getType();
