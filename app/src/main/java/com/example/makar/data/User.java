@@ -4,7 +4,7 @@ public class User {
     String userUId;
     Station homeStation;
     Station schoolStation;
-    Station departureStation;
+    Station sourceStation;
     Station destinationStation;
 
     //TODO 하차 알림 시간, 막차 일림 시간 정보도 같이 저장
@@ -24,19 +24,19 @@ public class User {
         return schoolStation;
     }
 
-    public Station getDepartureStation() {
-        return departureStation;
+    public Station getSourceStation() {
+        return sourceStation;
     }
 
     public Station getDestinationStation() {
         return destinationStation;
     }
 
-    public User(String userUId, Station homeStation, Station schoolStation, Station departureStation, Station destinationStation) {
+    public User(String userUId, Station homeStation, Station schoolStation, Station sourceStation, Station destinationStation) {
         this.userUId = userUId;
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
-        this.departureStation = departureStation;
+        this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;
     }
 
@@ -48,8 +48,8 @@ public class User {
         this.schoolStation = schoolStation;
     }
 
-    public void setDepartureStation(Station departureStation) {
-        this.departureStation = departureStation;
+    public void setSourceStation(Station sourceStation) {
+        this.sourceStation = sourceStation;
     }
 
     public void setDestinationStation(Station destinationStation) {
