@@ -19,6 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.makar.R;
+import com.example.makar.data.DataConverter;
 import com.example.makar.data.OdsayStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
@@ -81,18 +82,20 @@ public class SetRouteActivity extends AppCompatActivity {
         sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
+
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
-//        databaseConverter.readExcelFileAndSave();
-//        databaseConverter.createUniqueStationExcelFile();
+////        databaseConverter.readExcelFileAndSave();
+////        databaseConverter.createUniqueStationExcelFile();
 //        new Thread(new Runnable() {
 //            @Override
 //            public void run() {
-//                databaseConverter.readUniqueStationNameAndSearchStation();
-//                databaseConverter.addCleanStationNameAtDB();
-//                databaseConverter.createUniqueStationExcelFile();
-//                databaseConverter.validateOdsayStationsDataFromDB();
-//                databaseConverter.modifyOdsayStationData();
+////                databaseConverter.readUniqueStationNameAndSearchStation();
+////                databaseConverter.addCleanStationNameAtDB();
+////                databaseConverter.createUniqueStationExcelFile();
+////                databaseConverter.validateOdsayStationsDataFromDB();
+////                databaseConverter.modifyOdsayStationData();
+//                databaseConverter.updateStationsCollection();
 //            }
 //        }).start();
 
@@ -122,6 +125,7 @@ public class SetRouteActivity extends AppCompatActivity {
                 } else {
                     user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, SearchDestinationActivity.destinationStation);
                 }
+
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
                         .whereEqualTo("userUId", LoginActivity.userUId)
@@ -144,6 +148,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
                                                         sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
+                                                        executeSearchRoute();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -162,6 +167,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
                                                         sourceStation = SearchSourceActivity.sourceStation;
                                                         destinationStation = SearchDestinationActivity.destinationStation;
+                                                        executeSearchRoute();
                                                     }
                                                 })
                                                 .addOnFailureListener(new OnFailureListener() {
@@ -179,26 +185,7 @@ public class SetRouteActivity extends AppCompatActivity {
                             }
                     });
 
-                //TODO NullException 발생
-            double sourceX = getX(sourceStation);
-            double sourceY = getY(sourceStation);
-            double destinationX = getX(destinationStation);
-            double destinationY = getY(destinationStation);
 
-            new Thread(() -> {
-                try {
-                    String routeJson = searchRoute(sourceX, sourceY, destinationX, destinationY);
-                    System.out.println(routeJson);
-                    List<Route> routes = parseRouteResponse(routeJson);
-                    // 결과를 사용하여 UI 업데이트 등의 작업을 하려면 Handler를 사용
-                    new Handler(Looper.getMainLooper()).post(() -> {
-                        Log.d("MAKAR", routes.toString());
-                        // 결과를 사용하여 UI 업데이트 등의 작업 수행
-                    });
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            }).start();
             } else if (SearchSourceActivity.sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
             } else if (SearchDestinationActivity.destinationStation == null) {
@@ -207,18 +194,7 @@ public class SetRouteActivity extends AppCompatActivity {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
             }
         });
-    }
 
-    private double getX(Station station) {
-        //TODO 인자로 들어온 station의 정보는 toString으로 잘 출력되나
-        //TODO station.getOdsayStation()에서 nullException발생
-        OdsayStation odsayStation = station.getOdsayStation();
-        return odsayStation.getX();
-    }
-
-    private double getY(Station station) {
-        OdsayStation odsayStation = station.getOdsayStation();
-        return odsayStation.getY();
     }
 
     @Override
@@ -226,6 +202,21 @@ public class SetRouteActivity extends AppCompatActivity {
         super.onStart();
         //sourceBtn, destinationBtn text 변경
         setSearchViewText();
+    }
+
+    private void executeSearchRoute() {
+        new Thread(() -> {
+            try {
+                String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
+                System.out.println(routeJson);
+                List<Route> routes = parseRouteResponse(routeJson);
+                new Handler(Looper.getMainLooper()).post(() -> {
+                    Log.d("MAKAR", routes.toString());
+                });
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }).start();
     }
 
 

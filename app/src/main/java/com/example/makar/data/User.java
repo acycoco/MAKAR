@@ -59,4 +59,15 @@ public class User {
     public void setUserUId(String userUId) {
         this.userUId = userUId;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "userUId='" + userUId + '\'' +
+                ", homeStation=" + homeStation +
+                ", schoolStation=" + schoolStation +
+                ", sourceStation=" + sourceStation +
+                ", destinationStation=" + destinationStation +
+                '}';
+    }
 }

@@ -2,12 +2,16 @@ package com.example.makar.data;
 
 public class Station {
 
-    private String cleanStationName;
     private String stationName;
     private String stationCode;
     private String lineNum;
     private String railOpr;
-    private OdsayStation odsayStation;
+    private String odsayStationName;
+    private int odsayStationID;
+    private double x;
+    private double y;
+    private int odsayLaneType;
+
     public Station() {
     }
 
@@ -18,8 +22,16 @@ public class Station {
         this.railOpr = railOpr;
     }
 
-    public String getCleanStationName() {
-        return cleanStationName;
+    public Station(String stationName, String stationCode, String lineNum, String railOpr, String odsayStationName, int odsayStationID, double x, double y, int odsayLaneType) {
+        this.stationName = stationName;
+        this.stationCode = stationCode;
+        this.lineNum = lineNum;
+        this.railOpr = railOpr;
+        this.odsayStationName = odsayStationName;
+        this.odsayStationID = odsayStationID;
+        this.x = x;
+        this.y = y;
+        this.odsayLaneType = odsayLaneType;
     }
 
     public String getStationName() {
@@ -38,23 +50,38 @@ public class Station {
         return railOpr;
     }
 
-    public OdsayStation getOdsayStation() {
-        return odsayStation;
+    public String getOdsayStationName() {
+        return odsayStationName;
     }
 
-    public void setOdsayStation(OdsayStation odsayStation) {
-        this.odsayStation = odsayStation;
+    public int getOdsayStationID() {
+        return odsayStationID;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public int getOdsayLaneType() {
+        return odsayLaneType;
     }
 
     @Override
     public String toString() {
         return "Station{" +
-                "cleanStationName='" + cleanStationName + '\'' +
-                ", stationName='" + stationName + '\'' +
+                "stationName='" + stationName + '\'' +
                 ", stationCode='" + stationCode + '\'' +
                 ", lineNum='" + lineNum + '\'' +
                 ", railOpr='" + railOpr + '\'' +
-                ", odsayStation=" + odsayStation +
+                ", odsayStationName='" + odsayStationName + '\'' +
+                ", odsayStationID=" + odsayStationID +
+                ", x=" + x +
+                ", y=" + y +
+                ", odsayLaneType=" + odsayLaneType +
                 '}';
     }
 }
