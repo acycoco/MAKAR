@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.makar.data.SearchAdapter;
+import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
 import com.example.makar.mypage.SetFavoriteStationActivity;

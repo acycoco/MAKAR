@@ -1,19 +1,16 @@
-package com.example.makar.data;
+package com.example.makar.data.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
+import com.example.makar.data.Station;
 import com.example.makar.databinding.SearchRecyclerViewItemBinding;
 import com.example.makar.route.OnItemClickListener;
-import com.example.makar.route.SetRouteActivity;
 
 import java.util.List;
 

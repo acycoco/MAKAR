@@ -1,4 +1,4 @@
-package com.example.makar.data;
+package com.example.makar.data.dialog;
 
 import android.content.Context;
 import android.widget.Button;
