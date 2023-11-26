@@ -33,7 +33,7 @@
                     android:id="@+id/main_title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="막차까지 %d분 남았어요!"
+                    android:text=""
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -137,6 +137,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="50dp"
                 android:visibility="visible"
+                android:textSize="14sp"
                 tools:itemCount="3" />
 
             <!--최근 경로-->
@@ -146,6 +147,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="40dp"
                 android:visibility="visible"
+                android:textSize="14sp"
                 tools:itemCount="3" />
         </LinearLayout>
     </ScrollView>
