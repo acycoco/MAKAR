@@ -5,5 +5,4 @@ import com.example.makar.data.Station;
 
 public interface OnItemClickListener {
     void onItemClick(Station station);
-    void onItemClick(Route route);
 }
