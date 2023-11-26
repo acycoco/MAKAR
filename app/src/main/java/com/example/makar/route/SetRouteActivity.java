@@ -413,7 +413,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
         if (destinationStation != null) {
             if (SearchDestinationActivity.destinationStation != null) {
-                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + sourceStation.getLineNum());
+                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
             } else {
                 destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
             }
