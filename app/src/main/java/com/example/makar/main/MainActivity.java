@@ -15,7 +15,12 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.makar.data.Route;
+import com.example.makar.data.RouteAdapter;
+import com.example.makar.data.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
@@ -34,7 +39,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 
@@ -48,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private String userUid;
+    private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    private List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -60,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         getUserData();
+        setRecyclerView(); //경로 관련 recyclerView set
+
 
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
@@ -98,6 +110,13 @@ public class MainActivity extends AppCompatActivity {
 
             //임시 경로 설정 플래그 수정
             isGetOffSet = true;
+        });
+
+        mainBinding.recentRouteText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
         });
     }
 
@@ -255,6 +274,8 @@ public class MainActivity extends AppCompatActivity {
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
                                 SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                recentRouteArr = documentSnapshot.get("recentRouteArr", Route.class);
+                                favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", Route.class);
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
                                     isRouteSet = false;
@@ -306,5 +327,19 @@ public class MainActivity extends AppCompatActivity {
 
     private void setToolBar() {
         mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
+    }
+
+    private void setRecyclerView(){
+        //최근경로
+        RecyclerView recentRouteRecyclerView = mainBinding.recentRouteText;
+        RouteAdapter recentRouteAdapter = new RouteAdapter(this, recentRouteArr);
+        recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recentRouteRecyclerView.setAdapter(recentRouteAdapter);
+
+        //즐겨찾는 경로
+        RecyclerView favoriteRouteRecyclerView = mainBinding.favoriteRouteText;
+        RouteAdapter favoriteRouteAdapter = new RouteAdapter(this, favoriteRouteArr);
+        favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        favoriteRouteRecyclerView.setAdapter(favoriteRouteAdapter);
     }
 }
