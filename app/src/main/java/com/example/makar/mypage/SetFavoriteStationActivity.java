@@ -21,6 +21,7 @@ import com.example.makar.R;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -88,13 +89,13 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                         || (homeStation != null && schoolStation != null)) {
                     User user;
                     if (SearchHomeActivity.homeStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                        user = new User(LoginActivity.userUId, homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
                     } else if (SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
                     } else if (SearchHomeActivity.homeStation == null && SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                        user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
                     } else {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
+                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
                     }
                     firebaseFirestore.collection("users")
                             .whereEqualTo("userUId", LoginActivity.userUId)

@@ -117,7 +117,7 @@ public class SetRouteActivity extends AppCompatActivity {
                 Station source = (SearchSourceActivity.sourceStation != null) ? SearchSourceActivity.sourceStation : sourceStation;
                 Station destination = (SearchDestinationActivity.destinationStation != null) ? SearchDestinationActivity.destinationStation : destinationStation;
 
-                user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, source, destination);
+                user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, source, destination, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
 
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
@@ -380,7 +380,6 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setSearchViewText() {
-        // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
             if (SearchSourceActivity.sourceStation != null) {
                 sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + SearchSourceActivity.sourceStation.getLineNum());
@@ -393,7 +392,6 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceBtn.setText("");
         }
 
-        // 서버에 도착역 저장했을 때
         if (destinationStation != null) {
             if (SearchDestinationActivity.destinationStation != null) {
                 destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
