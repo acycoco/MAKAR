@@ -18,7 +18,7 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String getOffAlarmTime = MainActivity.getOffAlarmTime;
+    static String getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
 
     public SetGetOffAlarmDialog(@NonNull Context context) {
         super(context);
@@ -64,7 +64,6 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
 
     @Override
     public void sendDataToMainActivity(String data) {
-        MainActivity.getOffAlarmTime = data;
         MainActivity.user.setGetOffAlarmTime(data);
     }
 }

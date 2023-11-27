@@ -18,7 +18,7 @@ public class SetMakarAlarmTimeDialog extends Dialog  implements SetAlarmTimeDial
     private String[] timeArr = {"10", "20", "30", "40", "50", "60"};
 
     private Button positiveBtn, negativeBtn;
-    private String makarAlarmTime = MainActivity.makarAlarmTime;
+    private String makarAlarmTime = MainActivity.user.getMakarAlarmTime();
 
 
     public SetMakarAlarmTimeDialog(@NonNull Context context) {
@@ -63,7 +63,7 @@ public class SetMakarAlarmTimeDialog extends Dialog  implements SetAlarmTimeDial
     }
 
     public void sendDataToFirstDialog(String data) {
-       MainActivity.makarAlarmTime = data;
+       MainActivity.user.setMakarAlarmTime(data);
        SetMakarAlarmDialog.makarAlarmTime = data;
        SetMakarAlarmDialog.setAlarmTimeBtn.setText(data+"분 전 알림");
     }

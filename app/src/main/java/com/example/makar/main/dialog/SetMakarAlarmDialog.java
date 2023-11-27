@@ -17,7 +17,7 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String makarAlarmTime = MainActivity.makarAlarmTime;
+    static String makarAlarmTime = MainActivity.user.getMakarAlarmTime();
 
     public SetMakarAlarmDialog(@NonNull Context context) {
         super(context);
@@ -60,7 +60,6 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     }
 
     public void sendDataToMainActivity(String data) {
-        MainActivity.makarAlarmTime = data;
         MainActivity.user.setMakarAlarmTime(data);
     }
 }

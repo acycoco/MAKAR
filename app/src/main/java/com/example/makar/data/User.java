@@ -11,8 +11,8 @@ public class User {
     Station schoolStation;
     Station sourceStation;
     Station destinationStation;
-    String makarAlarmTime;
-    String getOffAlarmTime;
+    String makarAlarmTime = "10";
+    String getOffAlarmTime = "10";
     List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 

@@ -110,14 +110,14 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            User user;
+            User user = MainActivity.user;
             if ((SearchSourceActivity.sourceStation != null || sourceStation != null)
                     && (SearchDestinationActivity.destinationStation != null || destinationStation != null)) {
 
                 Station source = (SearchSourceActivity.sourceStation != null) ? SearchSourceActivity.sourceStation : sourceStation;
                 Station destination = (SearchDestinationActivity.destinationStation != null) ? SearchDestinationActivity.destinationStation : destinationStation;
 
-                user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, source, destination);
+                user.setRouteStation(source, destination);
 
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
