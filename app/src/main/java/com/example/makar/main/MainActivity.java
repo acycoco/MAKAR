@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-27 06:17:20"; //임시 막차 시간
+    private String makarTimeString = "2023-11-27 15:40:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private static String userUid;
-    private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    private static List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
     public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -67,12 +67,10 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        getUserData();
         setRecyclerView(); //경로 관련 recyclerView set
 
         //현재 사용자의 uid get
         userUid = LoginActivity.userUId;
-
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -102,7 +100,6 @@ public class MainActivity extends AppCompatActivity {
             updateUI(SetRouteActivity.class);
 
         });
-
     }
 
     /**
@@ -219,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
 
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-        updateUI(MainActivity.class);
+        //updateUI(MainActivity.class);
         finish();
     }
 
@@ -239,7 +236,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void updateUI(Class contextClass) {
@@ -261,9 +257,8 @@ public class MainActivity extends AppCompatActivity {
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
                                 SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                //TODO: arr 가져오기 수정 필요
-                                //recentRouteArr = documentSnapshot.get("recentRouteArr", List.class);
-                                //favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
+                                recentRouteArr = (List<Route>)documentSnapshot.get("recentRouteArr");
+                                favoriteRouteArr = (List<Route>)documentSnapshot.get("favoriteRouteArr");
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
                                     isRouteSet = false;
@@ -298,7 +293,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
 
@@ -322,10 +316,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRouteClick(Route route) {
                 Log.d("MAKAR", route.toString());
-                int transCount = route.getTransitCount();
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
-
-                recentRouteArr.add(route);
 
                 //최근 경로 수정
                 //TODO: collection 추가 수정 필요
@@ -344,8 +335,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-                updateUI(MainActivity.class);
                 finish();
             }
         });
@@ -356,5 +345,31 @@ public class MainActivity extends AppCompatActivity {
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRouteArr);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
+        favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
+            @Override
+            public void onRouteClick(Route route) {
+                Log.d("MAKAR", route.toString());
+                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
+
+                //TODO: collection 추가 수정 필요
+                isRouteSet = true;
+                isGetOffSet = true;
+                usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentReference reference = task.getResult().getDocuments().get(0).getReference();
+                            //Route에 출발지, 도착지만 따로 Station type으로 저장
+                            reference.update("sourceStation", route.getSourceStation());
+                            reference.update("destinationStation", route.getDestinationStation());
+                            reference.update("favoriteRouteArr", favoriteRouteArr);
+                            recentRouteArr.add(route);
+                            reference.update("recentRouteArr", recentRouteArr);
+                        }
+                    }
+                });
+                finish();
+            }
+        });
     }
 }

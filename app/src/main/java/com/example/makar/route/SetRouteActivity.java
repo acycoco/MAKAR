@@ -206,7 +206,8 @@ public class SetRouteActivity extends AppCompatActivity {
                     Log.d("MAKAR", routes.toString());
 
                     //TODO: 경로를 눌렀을 때 recentArr에 추가
-                    /**추후 수정 필요**/
+                    //db에 바로 업데이트해야 함
+                    //경로 리스트 기능 구현되면 추후 수정
                     MainActivity.recentRouteArr.add(routes.get(0));
 
                 });
