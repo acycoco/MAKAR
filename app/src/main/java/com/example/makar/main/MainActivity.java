@@ -55,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
-    private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    private static List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
     public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
     public static User user;
 
@@ -69,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        getUserData();
         setRecyclerView(); //경로 관련 recyclerView set
 
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
@@ -104,7 +103,6 @@ public class MainActivity extends AppCompatActivity {
             updateUI(SetRouteActivity.class);
 
         });
-
     }
 
     /**
@@ -221,7 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-        updateUI(MainActivity.class);
+        //updateUI(MainActivity.class);
         finish();
     }
 
@@ -241,7 +239,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void updateUI(Class contextClass) {
@@ -263,9 +260,12 @@ public class MainActivity extends AppCompatActivity {
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
                                 SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                //TODO: arr 가져오기 수정 필요
-                                //recentRouteArr = documentSnapshot.get("recentRouteArr", List.class);
-                                //favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
+                                if(documentSnapshot.get("recentRouteArr")!=null) {
+                                   // recentRouteArr = (List<Route>) documentSnapshot.get("recentRouteArr");
+                                }
+                                if(documentSnapshot.get("favoriteRouteArr")!=null) {
+                                   // favoriteRouteArr = (List<Route>) documentSnapshot.get("favoriteRouteArr");
+                                }
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
                                     isRouteSet = false;
@@ -300,7 +300,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
     }
 
 
@@ -324,10 +323,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRouteClick(Route route) {
                 Log.d("MAKAR", route.toString());
-                int transCount = route.getTransitCount();
-                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
-
-                recentRouteArr.add(route);
+                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
 
                 //최근 경로 수정
                 //TODO: collection 추가 수정 필요
@@ -346,8 +342,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-
-                updateUI(MainActivity.class);
                 finish();
             }
         });
@@ -358,5 +352,50 @@ public class MainActivity extends AppCompatActivity {
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRouteArr);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
+        favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
+            @Override
+            public void onRouteClick(Route route) {
+                Log.d("MAKAR", route.toString());
+                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
+
+                //TODO: collection 추가 수정 필요
+                isRouteSet = true;
+                isGetOffSet = true;
+                usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentReference reference = task.getResult().getDocuments().get(0).getReference();
+                            //Route에 출발지, 도착지만 따로 Station type으로 저장
+                            reference.update("sourceStation", route.getSourceStation());
+                            reference.update("destinationStation", route.getDestinationStation());
+                            reference.update("favoriteRouteArr", favoriteRouteArr);
+
+                            //최근 경로에 해당 즐겨찾는 경로 추가
+                            addRouteToList(recentRouteArr, route);
+                            reference.update("recentRouteArr", recentRouteArr);
+                        }
+                    }
+                });
+                finish();
+            }
+        });
+    }
+
+    public static void addRouteToList(List<Route> list, Route route){
+        int size = list.size();
+        if(size>=3){
+            list.set(1, list.get(0));
+            list.set(2, list.get(1));
+            list.set(0, route);
+            for(int i=3; i<size; i++){
+                list.remove(i);
+            }
+        }else{
+            list.add(route);
+        }
+        for(int i= 0; i<list.size(); i++){
+            Log.d("MAKAR", "routeList :" +list.get(i));
+        }
     }
 }
