@@ -75,8 +75,6 @@ public class SetRouteActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
-        getUserData();
-//        setUserData();
 
         sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
@@ -112,18 +110,14 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            if ((SearchSourceActivity.sourceStation != null && SearchDestinationActivity.destinationStation != null)
-                    || (sourceStation != null && destinationStation != null)) {
-                User user;
-                if (SearchSourceActivity.sourceStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, SearchDestinationActivity.destinationStation);
-                } else if (SearchDestinationActivity.destinationStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, destinationStation);
-                } else if (SearchSourceActivity.sourceStation == null && SearchDestinationActivity.destinationStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
-                } else {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, SearchDestinationActivity.destinationStation);
-                }
+            User user;
+            if ((SearchSourceActivity.sourceStation != null || sourceStation != null)
+                    && (SearchDestinationActivity.destinationStation != null || destinationStation != null)) {
+
+                Station source = (SearchSourceActivity.sourceStation != null) ? SearchSourceActivity.sourceStation : sourceStation;
+                Station destination = (SearchDestinationActivity.destinationStation != null) ? SearchDestinationActivity.destinationStation : destinationStation;
+
+                user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, source, destination);
 
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
@@ -182,12 +176,10 @@ public class SetRouteActivity extends AppCompatActivity {
                                     Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
                                 }
                             }
-                    });
-
-
-            } else if (SearchSourceActivity.sourceStation == null) {
+                        });
+            } else if (sourceStation == null && SearchSourceActivity.sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
-            } else if (SearchDestinationActivity.destinationStation == null) {
+            } else if (destinationStation == null && SearchDestinationActivity.destinationStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
@@ -200,6 +192,7 @@ public class SetRouteActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //sourceBtn, destinationBtn text 변경
+        getUserData();
         setSearchViewText();
     }
 
@@ -308,13 +301,6 @@ public class SetRouteActivity extends AppCompatActivity {
         return routes;
     }
 
-    private void setUserData() {
-        if (sourceStation != null && destinationStation != null) {
-            sourceBtn.setText(" " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-            destinationBtn.setText(" " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
-        }
-    }
-
     private void getUserData() {
         firebaseFirestore.collection("users")
                 .whereEqualTo("userUId", LoginActivity.userUId)
@@ -331,16 +317,6 @@ public class SetRouteActivity extends AppCompatActivity {
                                 }
                                 if (documentSnapshot.contains("destinationStation")) {
                                     destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                }
-
-                                String sourceStationText = "";
-                                String destinationStationText = "";
-
-                                if (sourceStation != null) {
-                                    sourceStationText = " " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum();
-                                }
-                                if (destinationStation != null) {
-                                    destinationStationText = " " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum();
                                 }
                             }
                         } else {
@@ -399,9 +375,10 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setSearchViewText() {
+        // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
             if (SearchSourceActivity.sourceStation != null) {
-                sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+                sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + SearchSourceActivity.sourceStation.getLineNum());
             } else {
                 sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
             }
@@ -411,9 +388,10 @@ public class SetRouteActivity extends AppCompatActivity {
             sourceBtn.setText("");
         }
 
+        // 서버에 도착역 저장했을 때
         if (destinationStation != null) {
             if (SearchDestinationActivity.destinationStation != null) {
-                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + sourceStation.getLineNum());
+                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
             } else {
                 destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
             }

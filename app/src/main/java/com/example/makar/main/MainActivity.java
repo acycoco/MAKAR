@@ -253,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
                                 SetFavoriteStationActivity.homeStation = documentSnapshot.get("homeStation", Station.class);
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
+                                SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
