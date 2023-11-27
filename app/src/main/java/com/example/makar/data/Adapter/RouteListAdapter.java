@@ -11,22 +11,23 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
-import com.example.makar.main.OnRouteClickListener;
+import com.example.makar.main.OnRouteListClickListener;
 
 import java.util.List;
 
-public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
+public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.ViewHolder> {
+    //즐겨찾는 경로, 최근 경로
     private Context context;
     private List<Route> items;
     private Route route;
-    private OnRouteClickListener listener;
+    private OnRouteListClickListener listener;
 
-    public RouteAdapter(Context context, List<Route> routeList) {
+    public RouteListAdapter(Context context, List<Route> routeList) {
         this.context = context;
         this.items = routeList;
     }
 
-    public void setOnRouteClickListener(OnRouteClickListener listener) {
+    public void setOnRouteClickListener(OnRouteListClickListener listener) {
         this.listener = listener;
     }
 
@@ -35,7 +36,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         RouteRecyclerViewItemBinding binding = RouteRecyclerViewItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
-        return new RouteAdapter.ViewHolder(binding);
+        return new RouteListAdapter.ViewHolder(binding);
     }
 
     @Override

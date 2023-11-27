@@ -1,8 +1,7 @@
 package com.example.makar.main;
 
 import com.example.makar.data.Route;
-import com.example.makar.data.Station;
 
-public interface OnRouteClickListener {
+public interface OnRouteListClickListener {
     void onRouteClick(Route route);
 }

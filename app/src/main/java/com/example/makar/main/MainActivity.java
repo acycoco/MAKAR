@@ -19,8 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.data.Route;
-import com.example.makar.data.RouteAdapter;
-import com.example.makar.data.SearchAdapter;
+import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
@@ -32,14 +31,13 @@ import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,18 +46,18 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-25 14:36:30"; //임시 막차 시간
+    private String makarTimeString = "2023-11-27 06:17:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
-    private String userUid;
+    private static String userUid;
     private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
-    private List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
+    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
-    private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,14 +70,9 @@ public class MainActivity extends AppCompatActivity {
         getUserData();
         setRecyclerView(); //경로 관련 recyclerView set
 
-
-        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
-        userUid = getUserUid();
-        //db 접근에 이용
+        userUid = LoginActivity.userUId;
 
-        //경로 설정 유무 체크
-        //checkRouteSet();
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -108,16 +101,8 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.setRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
 
-            //임시 경로 설정 플래그 수정
-            isGetOffSet = true;
         });
 
-        mainBinding.recentRouteText.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        });
     }
 
     /**
@@ -170,21 +155,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         getUserData();
-//        String source = "source";
-//        String destination = "destination";
-
-//        //TODO 출발역, 도착역 임시 변수 사용 -> 수정 필요
-//        if (SetRouteActivity.sourceStation != null) {
-//            source = SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum();
-//        }
-//        if (SetRouteActivity.destinationStation != null) {
-//            destination = SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum();
-//        }
-
-//        startNotification();
-//        if (!MainActivityChangeView.changeView(mainBinding, isRouteSet, leftTime, source, destination))
-//            setFavoriteStation();
-        //경로 설정 유무에 따라 view component change
+        setRecyclerView(); //경로 관련 recyclerView set
     }
 
     //자주 가는 역 설정 다이얼로그
@@ -240,19 +211,35 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRouteUnset() {
-        //조건 추가 필요
         isRouteSet = false;
-        //db에서 경로 제거 필요
 
-        //TODO 임시 출발지, 도착지 초기화 -> 수정 필요
+        //TODO 임시 출발지, 도착지 초기화
         SetRouteActivity.sourceStation = null;
         SetRouteActivity.destinationStation = null;
+
+        deleteStation("sourceStation");
+        deleteStation("destinationStation");
         updateUI(MainActivity.class);
+        finish();
     }
 
-    private String getUserUid() {
-        Intent intent = getIntent();
-        return intent.getStringExtra("uid");
+    private void deleteStation(String path) {
+        Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users")
+                .whereEqualTo("userUId", userUid).get();
+        usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
+                    DocumentReference documentReference = documentSnapshot.getReference();
+
+                    documentReference.update(path, null);
+                } else {
+                    Log.d("MAKAR", "Station 초기화 중 오류 발생");
+                }
+            }
+        });
+
     }
 
     private void updateUI(Class contextClass) {
@@ -261,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getUserData() {
         firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId)
+                .whereEqualTo("userUId", userUid)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -272,10 +259,11 @@ public class MainActivity extends AppCompatActivity {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
                                 SetFavoriteStationActivity.homeStation = documentSnapshot.get("homeStation", Station.class);
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                SetRouteActivity.sourceStation = documentSnapshot.get("departureStation", Station.class);
+                                SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                recentRouteArr = documentSnapshot.get("recentRouteArr", Route.class);
-                                favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", Route.class);
+                                //TODO: arr 가져오기 수정 필요
+                                //recentRouteArr = documentSnapshot.get("recentRouteArr", List.class);
+                                //favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
                                     isRouteSet = false;
@@ -286,9 +274,15 @@ public class MainActivity extends AppCompatActivity {
                                             leftTime,
                                             "",
                                             "");
+                                    Log.d("MAKAR", "route is UnSet");
                                 } else {
                                     isRouteSet = true;
+                                    isGetOffSet = true;
                                     leftTime = 10;
+                                    startNotification();
+
+                                    //makarTimeString = ""; //막차 시간 설정
+                                    //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
 
                                     MainActivityChangeView.changeView(
                                             mainBinding,
@@ -296,6 +290,7 @@ public class MainActivity extends AppCompatActivity {
                                             leftTime,
                                             SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
                                             SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                    Log.d("MAKAR", "route is Set");
                                 }
                             }
                         } else {
@@ -305,18 +300,6 @@ public class MainActivity extends AppCompatActivity {
                 });
 
     }
-
-//    private void checkRouteSet(){
-//        if(/**db에 경로 설정이 되어 있으면**/){
-//            isRouteSet = true;
-//            isGetOffSet = true;
-//            //makarTimeString = ""; //막차 시간 설정
-//            //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
-//            //source = ""; //출발지 설정
-//            //destination = ""; //도착지 설정
-//            /**출발지, 도착지 설정을 setRouteActivity에서 한 번에 초기화 할지, MainActivity에서 db에 접근해서 따로 초기화 할지 상의 필요**/
-//        }
-//    }
 
 
     private void setActionBar() {
@@ -329,17 +312,49 @@ public class MainActivity extends AppCompatActivity {
         mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
     }
 
-    private void setRecyclerView(){
+    private void setRecyclerView() {
         //최근경로
         RecyclerView recentRouteRecyclerView = mainBinding.recentRouteText;
-        RouteAdapter recentRouteAdapter = new RouteAdapter(this, recentRouteArr);
+        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRouteArr);
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recentRouteRecyclerView.setAdapter(recentRouteAdapter);
+        recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
+        recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
+            @Override
+            public void onRouteClick(Route route) {
+                Log.d("MAKAR", route.toString());
+                int transCount = route.getTransitCount();
+                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
+
+                recentRouteArr.add(route);
+
+                //최근 경로 수정
+                //TODO: collection 추가 수정 필요
+                isRouteSet = true;
+                isGetOffSet = true;
+
+                usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            DocumentReference reference = task.getResult().getDocuments().get(0).getReference();
+                            //Route에 출발지, 도착지만 따로 Station type으로 저장
+                            reference.update("sourceStation", route.getSourceStation());
+                            reference.update("destinationStation", route.getDestinationStation());
+                            reference.update("recentRouteArr", recentRouteArr);
+                        }
+                    }
+                });
+
+                updateUI(MainActivity.class);
+                finish();
+            }
+        });
+
 
         //즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = mainBinding.favoriteRouteText;
-        RouteAdapter favoriteRouteAdapter = new RouteAdapter(this, favoriteRouteArr);
+        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRouteArr);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        favoriteRouteRecyclerView.setAdapter(favoriteRouteAdapter);
+        favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
     }
 }

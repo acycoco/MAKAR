@@ -19,7 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.makar.R;
-import com.example.makar.data.BriefStatoion;
+import com.example.makar.data.BriefStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -211,6 +211,11 @@ public class SetRouteActivity extends AppCompatActivity {
                 List<Route> routes = parseRouteResponse(routeJson);
                 new Handler(Looper.getMainLooper()).post(() -> {
                     Log.d("MAKAR", routes.toString());
+
+                    //TODO: 경로를 눌렀을 때 recentArr에 추가
+                    /**추후 수정 필요**/
+                    MainActivity.recentRouteArr.add(routes.get(0));
+
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -272,7 +277,7 @@ public class SetRouteActivity extends AppCompatActivity {
             RouteSearchResponse.Info pathInfo = path.getInfo();
             List<SubRouteItem> subRouteItems = new ArrayList<>();
             List<RouteSearchResponse.SubPath> subPaths = path.getSubPath();
-            List<BriefStatoion> briefRoute = new ArrayList<>();
+            List<BriefStation> briefRoute = new ArrayList<>();
 
             int count = 1;
             //경로의 서브 경로 탐색
@@ -291,9 +296,9 @@ public class SetRouteActivity extends AppCompatActivity {
                 int wayCode = subPath.getWayCode();
                 SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
                 TransferInfo transferInfo = new TransferInfo(); //TODO 환승정보 만들어야됨 마지막인 경우는 null로 생성
-                briefRoute.add(new BriefStatoion(startStationName, lineNum));
+                briefRoute.add(new BriefStation(startStationName, lineNum));
                 if (count == pathInfo.getSubwayTransitCount()) {
-                    briefRoute.add(new BriefStatoion(endStationName, lineNum));
+                    briefRoute.add(new BriefStation(endStationName, lineNum));
                 }
                 //서브 경로 리스트에 추가
                 subRouteItems.add(new SubRouteItem(subRoute, transferInfo));
@@ -302,7 +307,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
 
             //경로 리스트에 추가
-            Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute);
+            Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
             routes.add(route);
         }
         return routes;
