@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
+import com.example.makar.databinding.RouteListRecyclerViewItemBinding;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.main.OnRouteListClickListener;
 
@@ -35,7 +36,7 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        RouteRecyclerViewItemBinding binding = RouteRecyclerViewItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
+        RouteListRecyclerViewItemBinding binding = RouteListRecyclerViewItemBinding.inflate(LayoutInflater.from(viewGroup.getContext()), viewGroup, false);
         return new RouteListAdapter.ViewHolder(binding);
     }
 
@@ -45,9 +46,9 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
         List<BriefStation> briefStations = route.getBriefRoute();
         String text = briefStations.get(0).getStationName();
 
-        for(int i=1; i<briefStations.size(); i++){
+        for (int i = 1; i < briefStations.size(); i++) {
             String stationName = briefStations.get(i).getStationName();
-            text = text +" > "+stationName;
+            text = text + " > " + stationName;
         }
 
         holder.binding.lineTextView.setText(text);
@@ -69,9 +70,9 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        RouteRecyclerViewItemBinding binding;
+        RouteListRecyclerViewItemBinding binding;
 
-        public ViewHolder(RouteRecyclerViewItemBinding binding) {
+        public ViewHolder(RouteListRecyclerViewItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
 

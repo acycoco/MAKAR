@@ -17,9 +17,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
 import com.example.makar.data.BriefStation;
+import com.example.makar.data.RouteAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -31,7 +34,6 @@ import com.example.makar.data.TransferInfo;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.example.makar.main.MainActivity;
-import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -61,6 +63,10 @@ public class SetRouteActivity extends AppCompatActivity {
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    public List<Route> resultList = new ArrayList<>();
+    public Route selectedRoute;
+    private RecyclerView recyclerView;
+    private RouteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,11 @@ public class SetRouteActivity extends AppCompatActivity {
         sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
+        //set recyclerView
+        recyclerView = setRouteBinding.routeRecyclerView;
+        adapter = new RouteAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -95,7 +106,6 @@ public class SetRouteActivity extends AppCompatActivity {
 //                databaseConverter.updateStationsCollection();
 //            }
 //        }).start();
-
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -186,6 +196,13 @@ public class SetRouteActivity extends AppCompatActivity {
             }
         });
 
+        adapter.setOnRouteClickListener(new OnRouteClickListener() {
+            @Override
+            public void onRouteClick(Route route) {
+                selectedRoute = route;
+                finish();
+            }
+        });
     }
 
     @Override
@@ -201,13 +218,13 @@ public class SetRouteActivity extends AppCompatActivity {
             try {
                 String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
                 System.out.println(routeJson);
-                List<Route> routes = parseRouteResponse(routeJson);
+                resultList = parseRouteResponse(routeJson);
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    Log.d("MAKAR", routes.toString());
+                    Log.d("MAKARrrrrr", resultList.toString());
 
                     //TODO: 경로를 눌렀을 때 recentArr에 추가
                     /**추후 수정 필요**/
-                    MainActivity.recentRouteArr.add(routes.get(0));
+                    MainActivity.recentRouteArr.add(resultList.get(0));
 
                 });
             } catch (IOException e) {

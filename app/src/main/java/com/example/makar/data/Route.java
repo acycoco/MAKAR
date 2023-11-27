@@ -3,12 +3,10 @@ package com.example.makar.data;
 import java.util.List;
 
 public class Route {
-
     private final int totalTime;
     private final int transitCount;
     private final List<SubRouteItem> subRouteItems;
     private final List<BriefStation> briefRoute;
-
     private final Station sourceStation;
     private final Station destinationStation;
 
@@ -21,23 +19,29 @@ public class Route {
         this.destinationStation = destinationStation;
     }
 
+    public int getTotalTime() {
+        return totalTime;
+    }
+
+    public int getTransitCount() {
+        return transitCount;
+    }
+
     public List<SubRouteItem> getRouteItems() {
         return subRouteItems;
     }
+
     public List<BriefStation> getBriefRoute() {
         return briefRoute;
     }
-    public int getTransitCount() {
-        return transitCount;
+
+    public Station getSourceStation() {
+        return sourceStation;
     }
 
     public Station getDestinationStation() {
         return destinationStation;
     }
-    public Station getSourceStation() {
-        return sourceStation;
-    }
-
 
     @Override
     public String toString() {
