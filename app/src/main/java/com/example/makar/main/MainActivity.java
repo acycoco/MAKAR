@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
+import com.example.makar.data.User;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
@@ -53,9 +54,8 @@ public class MainActivity extends AppCompatActivity {
     public static String makarAlarmTime = "10"; //설정한 막차 알람 시간
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
-    private static String userUid;
     private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
-    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
+    public static User user;
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -70,6 +70,8 @@ public class MainActivity extends AppCompatActivity {
         getUserData();
         setRecyclerView(); //경로 관련 recyclerView set
 
+        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
+        user = new User(LoginActivity.userUId);
         //현재 사용자의 uid get
         userUid = LoginActivity.userUId;
 

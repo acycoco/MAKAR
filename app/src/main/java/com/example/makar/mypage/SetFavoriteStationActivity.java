@@ -87,15 +87,15 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
             } else {
                 if ((SearchHomeActivity.homeStation != null && SearchSchoolActivity.schoolStation != null)
                         || (homeStation != null && schoolStation != null)) {
-                    User user;
+                    User user = MainActivity.user;
                     if (SearchHomeActivity.homeStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
+                        user.setFavoriteStation(homeStation, SetFavoriteStationActivity.schoolStation);
                     } else if (SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
+                        user.setFavoriteStation(SearchHomeActivity.homeStation, schoolStation);
                     } else if (SearchHomeActivity.homeStation == null && SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
+                        user.setFavoriteStation(homeStation, schoolStation);
                     } else {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation, MainActivity.makarAlarmTime, MainActivity.getOffAlarmTime);
+                        user.setFavoriteStation(SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation);
                     }
                     firebaseFirestore.collection("users")
                             .whereEqualTo("userUId", LoginActivity.userUId)

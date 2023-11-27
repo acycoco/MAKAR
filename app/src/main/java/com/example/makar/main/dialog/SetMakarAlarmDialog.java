@@ -61,5 +61,6 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
 
     public void sendDataToMainActivity(String data) {
         MainActivity.makarAlarmTime = data;
+        MainActivity.user.setMakarAlarmTime(data);
     }
 }

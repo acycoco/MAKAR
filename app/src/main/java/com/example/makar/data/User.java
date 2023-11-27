@@ -52,35 +52,21 @@ public class User {
         return getOffAlarmTime;
     }
 
-    public User(String userUId,
-                Station homeStation,
-                Station schoolStation,
-                Station sourceStation,
-                Station destinationStation,
-                String makarAlarmTime,
-                String getOffAlarmTime) {
+    public User(String userUId) {
         this.userUId = userUId;
+    }
+
+    public void setUserUId(String userUId) {
+        this.userUId = userUId;
+    }
+
+    public void setFavoriteStation(Station homeStation, Station schoolStation) {
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
+    }
+
+    public void setRouteStation(Station sourceStation, Station destinationStation) {
         this.sourceStation = sourceStation;
-        this.destinationStation = destinationStation;
-        this.makarAlarmTime = makarAlarmTime;
-        this.getOffAlarmTime = getOffAlarmTime;
-    }
-
-    public void setHomeStation(Station homeStation) {
-        this.homeStation = homeStation;
-    }
-
-    public void setSchoolStation(Station schoolStation) {
-        this.schoolStation = schoolStation;
-    }
-
-    public void setSourceStation(Station sourceStation) {
-        this.sourceStation = sourceStation;
-    }
-
-    public void setDestinationStation(Station destinationStation) {
         this.destinationStation = destinationStation;
     }
 
@@ -102,6 +88,24 @@ public class User {
 
     public void setGetOffAlarmTime(String getOffAlarmTime) {
         this.getOffAlarmTime = getOffAlarmTime;
+    }
+
+    public void updateFavoriteStation(Station newHomeStation, Station newSchoolStation) {
+        this.homeStation = newHomeStation;
+        this.schoolStation = newSchoolStation;
+    }
+
+    public void updateRouteStation(Station newSourceStation, Station newDestinationStation) {
+        this.sourceStation = newSourceStation;
+        this.destinationStation = newDestinationStation;
+    }
+
+    public void updateMakarAlarmTime(String newMakarAlarmTime) {
+        this.makarAlarmTime = newMakarAlarmTime;
+    }
+
+    public void updateGetOffAlarmTime(String newGetOffAlarmTime) {
+        this.getOffAlarmTime = newGetOffAlarmTime;
     }
 
     @Override

@@ -65,5 +65,6 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     @Override
     public void sendDataToMainActivity(String data) {
         MainActivity.getOffAlarmTime = data;
+        MainActivity.user.setGetOffAlarmTime(data);
     }
 }
