@@ -13,9 +13,6 @@ public class User {
     Station destinationStation;
     String makarAlarmTime;
     String getOffAlarmTime;
-    List<Route> favoriteRoutes;
-    List<Route> recentRoutes;
-
     List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
@@ -58,10 +55,6 @@ public class User {
         this.userUId = userUId;
     }
 
-    public void setUserUId(String userUId) {
-        this.userUId = userUId;
-    }
-
     public void setFavoriteStation(Station homeStation, Station schoolStation) {
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
@@ -92,12 +85,12 @@ public class User {
         this.getOffAlarmTime = getOffAlarmTime;
     }
 
-    public void setFavoriteRoutes(List<Route> favoriteRoutes) {
-        this.favoriteRoutes = favoriteRoutes;
+    public void setFavoriteRouteArr(List<Route> favoriteRouteArr) {
+        this.favoriteRouteArr = favoriteRouteArr;
     }
 
-    public void setRecentRoutes(List<Route> recentRoutes) {
-        this.recentRoutes = recentRoutes;
+    public void setRecentRouteArr(List<Route> recentRouteArr) {
+        this.recentRouteArr = recentRouteArr;
     }
 
     @Override

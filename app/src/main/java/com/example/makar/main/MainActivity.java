@@ -32,6 +32,7 @@ import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     public static String getOffAlarmTime = "10"; //하차 알림 시간
     private ActivityMainBinding mainBinding;
     private List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
     public static User user;
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -73,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         user = new User(LoginActivity.userUId);
         //현재 사용자의 uid get
-        userUid = LoginActivity.userUId;
-
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void deleteStation(String path) {
         Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", userUid).get();
+                .whereEqualTo("userUId", LoginActivity.userUId).get();
         usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getUserData() {
         firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", userUid)
+                .whereEqualTo("userUId", LoginActivity.userUId)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
             public void onRouteClick(Route route) {
                 Log.d("MAKAR", route.toString());
                 int transCount = route.getTransitCount();
-                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", userUid).get();
+                Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
                 recentRouteArr.add(route);
 
