@@ -46,7 +46,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-27 15:40:20"; //임시 막차 시간
+    private String makarTimeString = "2023-11-27 16:47:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -257,8 +257,12 @@ public class MainActivity extends AppCompatActivity {
                                 SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
                                 SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                recentRouteArr = (List<Route>)documentSnapshot.get("recentRouteArr");
-                                favoriteRouteArr = (List<Route>)documentSnapshot.get("favoriteRouteArr");
+                                if(documentSnapshot.get("recentRouteArr")!=null) {
+                                   // recentRouteArr = (List<Route>) documentSnapshot.get("recentRouteArr");
+                                }
+                                if(documentSnapshot.get("favoriteRouteArr")!=null) {
+                                   // favoriteRouteArr = (List<Route>) documentSnapshot.get("favoriteRouteArr");
+                                }
 
                                 if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
                                     isRouteSet = false;
@@ -363,7 +367,9 @@ public class MainActivity extends AppCompatActivity {
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
                             reference.update("favoriteRouteArr", favoriteRouteArr);
-                            recentRouteArr.add(route);
+
+                            //최근 경로에 해당 즐겨찾는 경로 추가
+                            addRouteToList(recentRouteArr, route);
                             reference.update("recentRouteArr", recentRouteArr);
                         }
                     }
@@ -371,5 +377,22 @@ public class MainActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public static void addRouteToList(List<Route> list, Route route){
+        int size = list.size();
+        if(size>=3){
+            list.set(1, list.get(0));
+            list.set(2, list.get(1));
+            list.set(0, route);
+            for(int i=3; i<size; i++){
+                list.remove(i);
+            }
+        }else{
+            list.add(route);
+        }
+        for(int i= 0; i<list.size(); i++){
+            Log.d("MAKAR", "routeList :" +list.get(i));
+        }
     }
 }
