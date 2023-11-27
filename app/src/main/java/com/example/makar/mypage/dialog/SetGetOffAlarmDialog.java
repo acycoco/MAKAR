@@ -11,9 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.makar.R;
-import com.example.makar.data.SetAlarmDialog;
+import com.example.makar.data.dialog.SetAlarmDialog;
 import com.example.makar.main.MainActivity;
-import com.example.makar.main.dialog.SetMakarAlarmTimeDialog;
 
 public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;

@@ -1,11 +1,21 @@
 package com.example.makar.data;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Queue;
+
 public class User {
     String userUId;
     Station homeStation;
     Station schoolStation;
     Station sourceStation;
     Station destinationStation;
+
+    List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
+
+
 
     //TODO 하차 알림 시간, 막차 일림 시간 정보도 같이 저장
 
@@ -54,6 +64,14 @@ public class User {
 
     public void setDestinationStation(Station destinationStation) {
         this.destinationStation = destinationStation;
+    }
+
+    public List<Route> getRecentRouteArr() {
+        return recentRouteArr;
+    }
+
+    public List<Route> getFavoriteRouteArr() {
+        return favoriteRouteArr;
     }
 
     public void setUserUId(String userUId) {
