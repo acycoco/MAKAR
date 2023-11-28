@@ -18,7 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
+import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,6 +38,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SearchAdapter adapter;
     private List<Station> resultList = new ArrayList<>();
+    private User user = MainActivity.user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +107,8 @@ public class SearchDestinationActivity extends AppCompatActivity {
         searchDestinationBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SetFavoriteStationActivity.homeStation != null) {
-                    SetRouteActivity.destinationStation = SetFavoriteStationActivity.homeStation;
+                if (user.getHomeStation() != null) {
+                    SetRouteActivity.destinationStation = user.getHomeStation();
                     finish();
                 } else {
                     startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
@@ -116,8 +119,8 @@ public class SearchDestinationActivity extends AppCompatActivity {
         searchDestinationBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SetFavoriteStationActivity.schoolStation != null) {
-                    SetRouteActivity.destinationStation = SetFavoriteStationActivity.schoolStation;
+                if (user.getSchoolStation() != null) {
+                    SetRouteActivity.destinationStation = user.getSchoolStation();
                     finish();
                 } else {
                     startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));

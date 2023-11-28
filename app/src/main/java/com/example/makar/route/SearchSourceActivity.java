@@ -18,7 +18,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
+import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySearchSourceBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,6 +39,7 @@ public class SearchSourceActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SearchAdapter adapter;
     private List<Station> resultList = new ArrayList<>();
+    private User user = MainActivity.user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,8 +109,8 @@ public class SearchSourceActivity extends AppCompatActivity {
         binding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SetFavoriteStationActivity.homeStation != null) {
-                    SetRouteActivity.sourceStation = SetFavoriteStationActivity.homeStation;
+                if (user.getHomeStation() != null) {
+                    SetRouteActivity.sourceStation = user.getSourceStation();
                     finish();
                 } else {
                     startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
@@ -118,8 +121,8 @@ public class SearchSourceActivity extends AppCompatActivity {
         binding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (SetFavoriteStationActivity.schoolStation != null) {
-                    SetRouteActivity.sourceStation = SetFavoriteStationActivity.schoolStation;
+                if (user.getSchoolStation() != null) {
+                    SetRouteActivity.sourceStation = user.getSchoolStation();
                     Log.d("MAKARTEST", "SearchSource : Source = " + SetRouteActivity.sourceStation);
                     finish();
                 } else {
