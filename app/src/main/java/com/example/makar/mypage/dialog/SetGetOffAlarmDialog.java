@@ -13,12 +13,18 @@ import androidx.annotation.NonNull;
 import com.example.makar.R;
 import com.example.makar.data.dialog.SetAlarmDialog;
 import com.example.makar.main.MainActivity;
+import com.example.makar.onboarding.LoginActivity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
+    static String getOffAlarmTime;
 
     public SetGetOffAlarmDialog(@NonNull Context context) {
         super(context);
@@ -32,6 +38,8 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
         setContentView(R.layout.dialog_set_getoff_alarm);
+
+        getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
 
         positiveBtn = findViewById(R.id.set_getoff_alarm_btn);
         negativeBtn = findViewById(R.id.cancel_getoff_alarm_btn);
@@ -64,6 +72,16 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
 
     @Override
     public void sendDataToMainActivity(String data) {
-        MainActivity.user.setGetOffAlarmTime(data);
+        Task<QuerySnapshot> usersCollection = FirebaseFirestore.getInstance().collection("users")
+                .whereEqualTo("userUId", LoginActivity.userUId).get();
+        usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentReference reference = task.getResult().getDocuments().get(0).getReference();
+                    reference.update("getOffAlarmTime", getOffAlarmTime);
+                }
+            }
+        });
     }
 }

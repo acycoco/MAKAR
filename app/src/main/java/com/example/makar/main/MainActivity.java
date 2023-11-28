@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-29 20:27:20"; //임시 막차 시간
+    private String makarTimeString = "2023-11-29 00:34:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -262,18 +262,29 @@ public class MainActivity extends AppCompatActivity {
                                 Station homeStation = documentSnapshot.get("homeStation", Station.class);
                                 Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
                                 user.setFavoriteStation(homeStation, schoolStation);
-                                Log.d("MAKAR", "MAIN: Home : "+user.getHomeStation());
-                                Log.d("MAKAR", "MAIN: School : "+user.getSchoolStation());
+                                Log.d("MAKARTEST", "MAIN: Home : "+user.getHomeStation());
+                                Log.d("MAKARTEST", "MAIN: School : "+user.getSchoolStation());
+
                                 //출발, 도착지 등록
                                 Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
                                 user.setRouteStation(sourceStation, destinationStation);
-                                Log.d("MAKAR", "MAIN: Source : "+user.getSourceStation());
-                                Log.d("MAKAR", "MAIN: Destination : "+user.getDestinationStation());
+                                Log.d("MAKARTEST", "MAIN: Source : "+user.getSourceStation());
+                                Log.d("MAKARTEST", "MAIN: Destination : "+user.getDestinationStation());
+
                                 //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
-                                Log.d("MAKAR", "user.recentArr : "+user.getRecentRouteArr().toString());
+                                Log.d("MAKARTEST", "user.recentArr : "+user.getRecentRouteArr().toString());
                                 user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
+                                //막차, 하차 알림
+                                String makarAlarmTime = documentSnapshot.get("makarAlarmTime", String.class);
+                                String getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", String.class);
+                                if(makarAlarmTime == null) makarAlarmTime = "10";
+                                if(getoffAlarmTime == null) getoffAlarmTime = "10";
+                                user.setMakarAlarmTime(makarAlarmTime);
+                                user.setGetOffAlarmTime(getoffAlarmTime);
+                                Log.d("MAKARTEST", "MakarAlarmTime : "+user.getMakarAlarmTime());
+                                Log.d("MAKARTEST", "GetOffAlarmTime : "+user.getGetOffAlarmTime());
 
 
                                 if (user.getSourceStation() == null || user.getDestinationStation() == null) {
