@@ -1,6 +1,7 @@
 package com.example.makar.data.Adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,12 @@ import android.view.ViewGroup;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
+import com.example.makar.data.LineNumImage;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.SearchRecyclerViewItemBinding;
 import com.example.makar.route.OnItemClickListener;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {
@@ -20,7 +23,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     private List<Station> items;
     private Context context;
     private Station station;
-
+    private LineNumImage lineNumImage = new LineNumImage();
     public SearchAdapter(Context context, List<Station> items) {
         this.context = context;
         this.items = items;
@@ -40,31 +43,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         station = items.get(position);
+        lineNumImage.addLineNum();
 
         String lineNum = station.getLineNum();
 
-        if ("1호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line1);
-        } else if ("2호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line2);
-        } else if ("3호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line3);
-        } else if ("4호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line4);
-        } else if ("5호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line5);
-        } else if ("6호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line6);
-        } else if ("7호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line7);
-        } else if ("8호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line8);
-        } else if ("9호선".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line9);
-        } else if ("경의중앙".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line_k);
-        } else if ("공항철도".equals(lineNum)) {
-            holder.binding.lineImageView.setImageResource(R.drawable.ic_line_a);
+        if (LineNumImage.lineNumMap.containsKey(lineNum)) {
+            holder.binding.lineImageView.setImageResource(LineNumImage.lineNumMap.get(lineNum));
         } else {
             holder.binding.lineImageView.setImageResource(R.drawable.ic_line0);
         }

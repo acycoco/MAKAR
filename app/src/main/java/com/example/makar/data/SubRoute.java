@@ -61,4 +61,8 @@ public class SubRoute {
                 ", sectionTime=" + sectionTime +
                 '}';
     }
+
+    public String lineNumToString() {
+        return lineNum + "호선";
+    }
 }

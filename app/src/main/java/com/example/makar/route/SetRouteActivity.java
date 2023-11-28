@@ -17,8 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
+import com.example.makar.data.Adapter.RouteAdapter;
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
@@ -31,7 +34,6 @@ import com.example.makar.data.TransferInfo;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.example.makar.main.MainActivity;
-import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -51,6 +53,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -62,6 +65,11 @@ public class SetRouteActivity extends AppCompatActivity {
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private User user = MainActivity.user;
+    public Route selectedRoute;
+    public List<Route> resultList = new ArrayList<>();
+
+    private RecyclerView recyclerView;
+    private RouteAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,14 +84,13 @@ public class SetRouteActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
+        setRecyclerView();
 
+        // 출발역, 도착역 데이터가 있다면 받아오기
         sourceStation = user.getSourceStation();
         Log.d("MAKARTEST", "setRoute : Source : " + sourceStation);
         destinationStation = user.getDestinationStation();
         Log.d("MAKARTEST", "setRoute : Destination : " + destinationStation);
-        sourceBtn = setRouteBinding.searchSourceButton;
-        destinationBtn = setRouteBinding.searchDestinationButton;
-
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -101,8 +108,8 @@ public class SetRouteActivity extends AppCompatActivity {
 //            }
 //        }).start();
 
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        sourceBtn = setRouteBinding.searchSourceButton;
+        destinationBtn = setRouteBinding.searchDestinationButton;
 
         sourceBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
@@ -115,11 +122,12 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            if (sourceStation != null && destinationStation != null) {
-
+            if (sourceStation != null && destinationStation != null && !Objects.equals(sourceStation.getStationName(), destinationStation.getOdsayStationName())) {
+                resultList.clear();
+                // TODO : 경로 찾기 != 경로 선택 (경로 선택까지 할 때만 저장해야 됨)
                 user.setRouteStation(sourceStation, destinationStation);
 
-                // TODO : 경로 찾기 != 경로 선택
+                // 사용자를 식별해 데이터 저장
                 firebaseFirestore.collection("users")
                         .whereEqualTo("userUId", LoginActivity.userUId)
                         .get()
@@ -147,7 +155,6 @@ public class SetRouteActivity extends AppCompatActivity {
                                             }
                                         });
                                         executeSearchRoute();
-
                                     } else {
                                         // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
                                         firebaseFirestore.collection("users")
@@ -190,8 +197,10 @@ public class SetRouteActivity extends AppCompatActivity {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
             } else if (destinationStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (Objects.equals(sourceStation.getStationName(), destinationStation.getStationName())) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_4, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -209,14 +218,13 @@ public class SetRouteActivity extends AppCompatActivity {
             try {
                 String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
                 System.out.println(routeJson);
-                List<Route> routes = parseRouteResponse(routeJson);
+                resultList = parseRouteResponse(routeJson);
                 new Handler(Looper.getMainLooper()).post(() -> {
-                    Log.d("MAKAR", routes.toString());
-
+                    setRecyclerView();
                     //TODO: 경로를 눌렀을 때 recentArr에 추가
                     /**추후 수정 필요**/
-//                    user.recentRouteArr.add(routes.get(0));
-                    user.getRecentRouteArr().add(routes.get(0));
+//                    user.recentRouteArr.add(resultList.get(0));
+                    user.getRecentRouteArr().add(resultList.get(0));
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -376,5 +384,12 @@ public class SetRouteActivity extends AppCompatActivity {
         } else {
             destinationBtn.setText("");
         }
+    }
+
+    private void setRecyclerView() {
+        recyclerView = setRouteBinding.routeRecyclerView;
+        adapter = new RouteAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 }

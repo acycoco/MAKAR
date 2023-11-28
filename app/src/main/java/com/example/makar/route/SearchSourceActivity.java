@@ -34,6 +34,9 @@ import java.util.List;
 public class SearchSourceActivity extends AppCompatActivity {
     ActivitySearchSourceBinding binding;
     //static Station sourceStation;
+    private RecyclerView recyclerView;
+    private SearchAdapter adapter;
+    private List<Station> resultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +47,9 @@ public class SearchSourceActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        setHideKeyBoard();
-        setSearchView(); //searchView request focus
-
-
-        RecyclerView recyclerView = binding.searchSourceRecyclerView;
-        List<Station> resultList = new ArrayList<>();
-        SearchAdapter adapter = new SearchAdapter(this, resultList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        setHideKeyboard();
+        setSearchView();
+        setRecyclerView();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         binding.searchViewSource.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -100,7 +97,7 @@ public class SearchSourceActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Station station) {
                 SetRouteActivity.sourceStation = station;
-                Log.d("MAKARTEST", "SearchSource : Source = "+SetRouteActivity.sourceStation);
+                Log.d("MAKARTEST", "SearchSource : Source = " + SetRouteActivity.sourceStation);
                 finish();
             }
         });
@@ -123,7 +120,7 @@ public class SearchSourceActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.schoolStation != null) {
                     SetRouteActivity.sourceStation = SetFavoriteStationActivity.schoolStation;
-                    Log.d("MAKARTEST", "SearchSource : Source = "+SetRouteActivity.sourceStation);
+                    Log.d("MAKARTEST", "SearchSource : Source = " + SetRouteActivity.sourceStation);
                     finish();
                 } else {
                     startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
@@ -147,25 +144,19 @@ public class SearchSourceActivity extends AppCompatActivity {
     }
 
     //키보드 내리기
-    private void setHideKeyBoard() {
+    private void setHideKeyboard() {
         View rootView = findViewById(android.R.id.content);
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 return false;
             }
         });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     //toolbar
@@ -193,4 +184,10 @@ public class SearchSourceActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
+    private void setRecyclerView() {
+        recyclerView = binding.searchSourceRecyclerView;
+        adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+    }
 }

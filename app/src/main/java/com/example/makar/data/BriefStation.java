@@ -19,7 +19,7 @@ public class BriefStation {
 
     @Override
     public String toString() {
-        return "BriefStatoion{" +
+        return "BriefStation{" +
                 "stationName='" + stationName + '\'' +
                 ", lineNum=" + lineNum +
                 '}';

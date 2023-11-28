@@ -13,9 +13,9 @@ public class User {
     Station destinationStation;
     String makarAlarmTime = "10";
     String getOffAlarmTime = "10";
+    Route selecedRoute;
     List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
-
 
 
     //TODO 하차 알림 시간, 막차 일림 시간 정보도 같이 저장
@@ -63,6 +63,10 @@ public class User {
     public void setRouteStation(Station sourceStation, Station destinationStation) {
         this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;
+    }
+
+    public void setSelecedRoute(Route selecedRoute) {
+        this.selecedRoute = selecedRoute;
     }
 
     public List<Route> getRecentRouteArr() {

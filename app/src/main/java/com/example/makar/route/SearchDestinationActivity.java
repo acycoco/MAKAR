@@ -33,6 +33,9 @@ import java.util.List;
 
 public class SearchDestinationActivity extends AppCompatActivity {
     ActivitySearchDestinationBinding searchDestinationBinding;
+    private RecyclerView recyclerView;
+    private SearchAdapter adapter;
+    private List<Station> resultList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,16 +45,9 @@ public class SearchDestinationActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        setHideKeyBoard();
-        setSearchView(); //searchView request focus
-
-
-
-        RecyclerView recyclerView = searchDestinationBinding.searchDestinationRecyclerView;
-        List<Station> resultList = new ArrayList<>();
-        SearchAdapter adapter = new SearchAdapter(this, resultList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        setHideKeyboard();
+        setSearchView();
+        setRecyclerView();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         searchDestinationBinding.searchViewDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -59,6 +55,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             public boolean onQueryTextSubmit(String query) {
                 return false;
             }
+
             @Override
             public boolean onQueryTextChange(String newText) {
 
@@ -98,7 +95,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             @Override
             public void onItemClick(Station station) {
                 SetRouteActivity.destinationStation = station;
-                Log.d("MAKARTEST", "SearchDestination : Destination = "+SetRouteActivity.destinationStation);
+                Log.d("MAKARTEST", "SearchDestination : Destination = " + SetRouteActivity.destinationStation);
                 finish();
             }
         });
@@ -144,25 +141,19 @@ public class SearchDestinationActivity extends AppCompatActivity {
     }
 
     //키보드 내리기
-    private void setHideKeyBoard() {
+    private void setHideKeyboard() {
         View rootView = findViewById(android.R.id.content);
         rootView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
+                View view = getCurrentFocus();
+                if (view != null) {
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
                 return false;
             }
         });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     //toolbar
@@ -188,5 +179,12 @@ public class SearchDestinationActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void setRecyclerView() {
+        recyclerView = searchDestinationBinding.searchDestinationRecyclerView;
+        adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 }
