@@ -61,6 +61,7 @@ public class SetRouteActivity extends AppCompatActivity {
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,7 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            User user = MainActivity.user;
+            user = MainActivity.user;
             if ((SearchSourceActivity.sourceStation != null || sourceStation != null)
                     && (SearchDestinationActivity.destinationStation != null || destinationStation != null)) {
 
@@ -207,8 +208,8 @@ public class SetRouteActivity extends AppCompatActivity {
 
                     //TODO: 경로를 눌렀을 때 recentArr에 추가
                     /**추후 수정 필요**/
-                    MainActivity.recentRouteArr.add(routes.get(0));
-
+//                    user.recentRouteArr.add(routes.get(0));
+                    user.getRecentRouteArr().add(routes.get(0));
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
