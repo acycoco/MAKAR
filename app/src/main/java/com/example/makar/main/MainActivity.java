@@ -48,7 +48,7 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-28 19:27:20"; //임시 막차 시간
+    private String makarTimeString = "2023-11-29 20:27:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
+        getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
 
 
@@ -257,16 +258,25 @@ public class MainActivity extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                SetFavoriteStationActivity.homeStation = documentSnapshot.get("homeStation", Station.class);
-                                SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
-                                SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                //즐겨찾는 역 등록
+                                Station homeStation = documentSnapshot.get("homeStation", Station.class);
+                                Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                                user.setFavoriteStation(homeStation, schoolStation);
+                                Log.d("MAKAR", "MAIN: Home : "+user.getHomeStation());
+                                Log.d("MAKAR", "MAIN: School : "+user.getSchoolStation());
+                                //출발, 도착지 등록
+                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
+                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                user.setRouteStation(sourceStation, destinationStation);
+                                Log.d("MAKAR", "MAIN: Source : "+user.getSourceStation());
+                                Log.d("MAKAR", "MAIN: Destination : "+user.getDestinationStation());
+                                //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKAR", "user.recentArr : "+user.getRecentRouteArr().toString());
                                 user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
 
 
-                                if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
+                                if (user.getSourceStation() == null || user.getDestinationStation() == null) {
                                     isRouteSet = false;
                                     leftTime = 0;
                                     MainActivityChangeView.changeView(
@@ -289,8 +299,8 @@ public class MainActivity extends AppCompatActivity {
                                             mainBinding,
                                             isRouteSet,
                                             leftTime,
-                                            SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
-                                            SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                            user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
+                                            user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                     Log.d("MAKAR", "route is Set");
                                 }
                             }
