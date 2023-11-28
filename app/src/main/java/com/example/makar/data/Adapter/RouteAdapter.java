@@ -1,4 +1,4 @@
-package com.example.makar.data;
+package com.example.makar.data.Adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.makar.data.Route;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.route.OnRouteClickListener;
 

@@ -48,14 +48,14 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-30 06:17:20"; //임시 막차 시간
+    private String makarTimeString = "2023-11-29 20:27:20"; //임시 막차 시간
     private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     private ActivityMainBinding mainBinding;
     private static List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
-    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
-    public static User user;
+    //    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
+    public static User user = new User(LoginActivity.userUId);
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -65,13 +65,14 @@ public class MainActivity extends AppCompatActivity {
         mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(mainBinding.getRoot());
 
+        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
+        //현재 사용자의 uid get
+
         setActionBar();
         setToolBar();
-        setRecyclerView(); //경로 관련 recyclerView set
+        getUserData();
+        //setRecyclerView(); //경로 관련 recyclerView set
 
-        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
-        user = new User(LoginActivity.userUId);
-        //현재 사용자의 uid get
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     if (leftTime <= 0) {
                         //막차 시간 달성
                         setRouteUnset();
+                        Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
                     } else {
                         //경로는 설정되어있으나 시간 미달
                         if (leftTime == Integer.parseInt(user.getMakarAlarmTime())) {
@@ -126,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         //남은 시간 계산
                         int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                        Log.d("makar", "LeftTime : " + timeDifferenceMinutes);
+                        Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
                         //title text 변경
                         changeMainTitleText(timeDifferenceMinutes);
                     }
@@ -134,14 +136,14 @@ public class MainActivity extends AppCompatActivity {
                     if (checkNotificationTime(getOffTimeString) < 0) {
                         //현재 시간이 하차 시간이면 notification show
                         showNotification("MAKAR 하차 알림", "하차까지 %d분 남았습니다", MainActivity.this); //text 수정 필요, %d는 설정한 하차 알림 시간(10)
-                        setRouteUnset();
                         isGetOffSet = false;
                     }
                 }
                 //notification 이후 경로 설정 해제, runnable remove
                 else {
                     handler.removeCallbacks(this);
-                    Log.d("makar", "remove runnable");
+                    Log.d("MAKAR", "remove runnable");
+                    return;
                 }
                 handler.postDelayed(this, 10000); // 10초마다 체크
             }
@@ -153,7 +155,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         getUserData();
-        setRecyclerView(); //경로 관련 recyclerView set
+       // setRecyclerView(); //경로 관련 recyclerView set
+        Log.d("MAKAR", "onRecyclerView : userRecent : "+user.getRecentRouteArr());
+
     }
 
     //자주 가는 역 설정 다이얼로그
@@ -217,7 +221,7 @@ public class MainActivity extends AppCompatActivity {
 
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-        //updateUI(MainActivity.class);
+        updateUI(MainActivity.class);
         finish();
     }
 
@@ -254,18 +258,25 @@ public class MainActivity extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                SetFavoriteStationActivity.homeStation = documentSnapshot.get("homeStation", Station.class);
-                                SetFavoriteStationActivity.schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                SetRouteActivity.sourceStation = documentSnapshot.get("sourceStation", Station.class);
-                                SetRouteActivity.destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                if(documentSnapshot.get("recentRouteArr")!=null) {
-                                   // recentRouteArr = (List<Route>) documentSnapshot.get("recentRouteArr");
-                                }
-                                if(documentSnapshot.get("favoriteRouteArr")!=null) {
-                                   // favoriteRouteArr = (List<Route>) documentSnapshot.get("favoriteRouteArr");
-                                }
+                                //즐겨찾는 역 등록
+                                Station homeStation = documentSnapshot.get("homeStation", Station.class);
+                                Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                                user.setFavoriteStation(homeStation, schoolStation);
+                                Log.d("MAKAR", "MAIN: Home : "+user.getHomeStation());
+                                Log.d("MAKAR", "MAIN: School : "+user.getSchoolStation());
+                                //출발, 도착지 등록
+                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
+                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                user.setRouteStation(sourceStation, destinationStation);
+                                Log.d("MAKAR", "MAIN: Source : "+user.getSourceStation());
+                                Log.d("MAKAR", "MAIN: Destination : "+user.getDestinationStation());
+                                //즐겨찾는 경로, 최근 경로 등록
+                                user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
+                                Log.d("MAKAR", "user.recentArr : "+user.getRecentRouteArr().toString());
+                                user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
 
-                                if (SetRouteActivity.sourceStation == null || SetRouteActivity.destinationStation == null) {
+
+                                if (user.getSourceStation() == null || user.getDestinationStation() == null) {
                                     isRouteSet = false;
                                     leftTime = 0;
                                     MainActivityChangeView.changeView(
@@ -288,8 +299,8 @@ public class MainActivity extends AppCompatActivity {
                                             mainBinding,
                                             isRouteSet,
                                             leftTime,
-                                            SetRouteActivity.sourceStation.getStationName() + "역 " + SetRouteActivity.sourceStation.getLineNum(),
-                                            SetRouteActivity.destinationStation.getStationName() + "역 " + SetRouteActivity.destinationStation.getLineNum());
+                                            user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
+                                            user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                     Log.d("MAKAR", "route is Set");
                                 }
                             }
@@ -314,7 +325,8 @@ public class MainActivity extends AppCompatActivity {
     private void setRecyclerView() {
         //최근경로
         RecyclerView recentRouteRecyclerView = mainBinding.recentRouteText;
-        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRouteArr);
+        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, user.getRecentRouteArr());
+        Log.d("MAKAR", "onRecyclerView : userRecent : "+user.getRecentRouteArr());
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
@@ -336,11 +348,11 @@ public class MainActivity extends AppCompatActivity {
                             //Route에 출발지, 도착지만 따로 Station type으로 저장
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
-                            reference.update("recentRouteArr", recentRouteArr);
+                            reference.update("recentRouteArr", user.getRecentRouteArr());
                         }
                     }
                 });
-                finish();
+//                finish();
             }
         });
 
@@ -370,30 +382,30 @@ public class MainActivity extends AppCompatActivity {
                             reference.update("favoriteRouteArr", favoriteRouteArr);
 
                             //최근 경로에 해당 즐겨찾는 경로 추가
-                            addRouteToList(recentRouteArr, route);
-                            reference.update("recentRouteArr", recentRouteArr);
+                            addRouteToList(user.getRecentRouteArr(), route);
+                            reference.update("recentRouteArr", user.getRecentRouteArr());
                         }
                     }
                 });
-                finish();
+//                finish();
             }
         });
     }
 
-    public static void addRouteToList(List<Route> list, Route route){
+    public static void addRouteToList(List<Route> list, Route route) {
         int size = list.size();
-        if(size>=3){
+        if (size >= 3) {
             list.set(1, list.get(0));
             list.set(2, list.get(1));
             list.set(0, route);
-            for(int i=3; i<size; i++){
+            for (int i = 3; i < size; i++) {
                 list.remove(i);
             }
-        }else{
+        } else {
             list.add(route);
         }
-        for(int i= 0; i<list.size(); i++){
-            Log.d("MAKAR", "routeList :" +list.get(i));
+        for (int i = 0; i < list.size(); i++) {
+            Log.d("MAKAR", "routeList :" + list.get(i));
         }
     }
 }
