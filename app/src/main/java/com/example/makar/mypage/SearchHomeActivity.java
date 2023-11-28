@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchHomeActivity extends AppCompatActivity {
-    public static Station homeStation;
     ActivitySearchHomeBinding searchHomeBinding;
 
     @Override
@@ -99,7 +98,7 @@ public class SearchHomeActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
-                homeStation = station;
+                SetFavoriteStationActivity.homeStation = station;
                 finish();
             }
         });
