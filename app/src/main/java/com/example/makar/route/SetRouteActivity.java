@@ -19,7 +19,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.makar.R;
-import com.example.makar.data.BriefStatoion;
+import com.example.makar.data.BriefStation;
 import com.example.makar.data.Station;
 import com.example.makar.BuildConfig;
 import com.example.makar.data.Route;
@@ -61,6 +61,7 @@ public class SetRouteActivity extends AppCompatActivity {
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    private User user = MainActivity.user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,9 +76,11 @@ public class SetRouteActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         setHideKeyBoard();
-        getUserData();
-//        setUserData();
 
+        sourceStation = user.getSourceStation();
+        Log.d("MAKARTEST", "setRoute : Source : " + sourceStation);
+        destinationStation = user.getDestinationStation();
+        Log.d("MAKARTEST", "setRoute : Destination : " + destinationStation);
         sourceBtn = setRouteBinding.searchSourceButton;
         destinationBtn = setRouteBinding.searchDestinationButton;
 
@@ -112,18 +115,9 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            if ((SearchSourceActivity.sourceStation != null && SearchDestinationActivity.destinationStation != null)
-                    || (sourceStation != null && destinationStation != null)) {
-                User user;
-                if (SearchSourceActivity.sourceStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, SearchDestinationActivity.destinationStation);
-                } else if (SearchDestinationActivity.destinationStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, destinationStation);
-                } else if (SearchSourceActivity.sourceStation == null && SearchDestinationActivity.destinationStation == null) {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, sourceStation, destinationStation);
-                } else {
-                    user = new User(LoginActivity.userUId, SetFavoriteStationActivity.homeStation, SetFavoriteStationActivity.schoolStation, SearchSourceActivity.sourceStation, SearchDestinationActivity.destinationStation);
-                }
+            if (sourceStation != null && destinationStation != null) {
+
+                user.setRouteStation(sourceStation, destinationStation);
 
                 // TODO : 경로 찾기 != 경로 선택
                 firebaseFirestore.collection("users")
@@ -137,25 +131,23 @@ public class SetRouteActivity extends AppCompatActivity {
                                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                         // 값이 존재하는 경우, 해당 데이터를 수정
                                         DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                        String documentId = documentSnapshot.getId();
-                                        firebaseFirestore.collection("users")
-                                                .document(documentId)
-                                                .set(user)
-                                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                    @Override
-                                                    public void onSuccess(Void aVoid) {
-                                                        Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
-                                                        sourceStation = SearchSourceActivity.sourceStation;
-                                                        destinationStation = SearchDestinationActivity.destinationStation;
-                                                        executeSearchRoute();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
-                                                    }
-                                                });
+
+                                        //sourceStation 수정
+                                        documentSnapshot.getReference().update("sourceStation", sourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                            }
+                                        });
+                                        //destinationStation 수정
+                                        documentSnapshot.getReference().update("destinationStation", destinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                            }
+                                        });
+                                        executeSearchRoute();
+
                                     } else {
                                         // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
                                         firebaseFirestore.collection("users")
@@ -164,8 +156,19 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                                                        sourceStation = SearchSourceActivity.sourceStation;
-                                                        destinationStation = SearchDestinationActivity.destinationStation;
+//
+                                                        documentReference.update("sourceStation", sourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                            }
+                                                        });
+                                                        documentReference.update("destinationStation", destinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                            }
+                                                        });
                                                         executeSearchRoute();
                                                     }
                                                 })
@@ -176,18 +179,16 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     }
                                                 });
 
-                                        MainActivity.isRouteSet = true;
                                     }
+                                    MainActivity.isRouteSet = true;
                                 } else {
                                     Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
                                 }
                             }
-                    });
-
-
-            } else if (SearchSourceActivity.sourceStation == null) {
+                        });
+            } else if (sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
-            } else if (SearchDestinationActivity.destinationStation == null) {
+            } else if (destinationStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
@@ -211,6 +212,11 @@ public class SetRouteActivity extends AppCompatActivity {
                 List<Route> routes = parseRouteResponse(routeJson);
                 new Handler(Looper.getMainLooper()).post(() -> {
                     Log.d("MAKAR", routes.toString());
+
+                    //TODO: 경로를 눌렀을 때 recentArr에 추가
+                    /**추후 수정 필요**/
+//                    user.recentRouteArr.add(routes.get(0));
+                    user.getRecentRouteArr().add(routes.get(0));
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -253,6 +259,7 @@ public class SetRouteActivity extends AppCompatActivity {
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
+            System.out.println(sb);
             return sb.toString();
         } finally {
             conn.disconnect();
@@ -271,7 +278,7 @@ public class SetRouteActivity extends AppCompatActivity {
             RouteSearchResponse.Info pathInfo = path.getInfo();
             List<SubRouteItem> subRouteItems = new ArrayList<>();
             List<RouteSearchResponse.SubPath> subPaths = path.getSubPath();
-            List<BriefStatoion> briefRoute = new ArrayList<>();
+            List<BriefStation> briefRoute = new ArrayList<>();
 
             int count = 1;
             //경로의 서브 경로 탐색
@@ -290,9 +297,9 @@ public class SetRouteActivity extends AppCompatActivity {
                 int wayCode = subPath.getWayCode();
                 SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
                 TransferInfo transferInfo = new TransferInfo(); //TODO 환승정보 만들어야됨 마지막인 경우는 null로 생성
-                briefRoute.add(new BriefStatoion(startStationName, lineNum));
+                briefRoute.add(new BriefStation(startStationName, lineNum));
                 if (count == pathInfo.getSubwayTransitCount()) {
-                    briefRoute.add(new BriefStatoion(endStationName, lineNum));
+                    briefRoute.add(new BriefStation(endStationName, lineNum));
                 }
                 //서브 경로 리스트에 추가
                 subRouteItems.add(new SubRouteItem(subRoute, transferInfo));
@@ -301,54 +308,13 @@ public class SetRouteActivity extends AppCompatActivity {
 
 
             //경로 리스트에 추가
-            Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute);
+            Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
             route.setMakarTime("2023-11-25 14:36:30"); //TODO 막차시간 구하기 (막차시간 임시로 설정)
             routes.add(route);
         }
         return routes;
     }
 
-    private void setUserData() {
-        if (sourceStation != null && destinationStation != null) {
-            sourceBtn.setText(" " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-            destinationBtn.setText(" " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
-        }
-    }
-
-    private void getUserData() {
-        firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                if (documentSnapshot.contains("sourceStation")) {
-                                    sourceStation = documentSnapshot.get("sourceStation", Station.class);
-                                }
-                                if (documentSnapshot.contains("destinationStation")) {
-                                    destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                }
-
-                                String sourceStationText = "";
-                                String destinationStationText = "";
-
-                                if (sourceStation != null) {
-                                    sourceStationText = " " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum();
-                                }
-                                if (destinationStation != null) {
-                                    destinationStationText = " " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum();
-                                }
-                            }
-                        } else {
-                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
-                        }
-                    }
-                });
-    }
 
     //터치 시 키보드 내리기
     private void setHideKeyBoard() {
@@ -377,8 +343,6 @@ public class SetRouteActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 finish();
-                SearchSourceActivity.sourceStation = null;
-                SearchDestinationActivity.destinationStation = null;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -399,26 +363,16 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setSearchViewText() {
+        // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
-            if (SearchSourceActivity.sourceStation != null) {
-                sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-            } else {
-                sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
-            }
-        } else if (SearchSourceActivity.sourceStation != null) {
-            sourceBtn.setText("  " + SearchSourceActivity.sourceStation.getStationName() + "역 " + SearchSourceActivity.sourceStation.getLineNum());
+            sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
         } else {
             sourceBtn.setText("");
         }
 
+        // 서버에 도착역 저장했을 때
         if (destinationStation != null) {
-            if (SearchDestinationActivity.destinationStation != null) {
-                destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + sourceStation.getLineNum());
-            } else {
-                destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
-            }
-        } else if (SearchDestinationActivity.destinationStation != null) {
-            destinationBtn.setText("  " + SearchDestinationActivity.destinationStation.getStationName() + "역 " + SearchDestinationActivity.destinationStation.getLineNum());
+            destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
         } else {
             destinationBtn.setText("");
         }

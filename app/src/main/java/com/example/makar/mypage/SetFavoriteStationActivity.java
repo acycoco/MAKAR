@@ -21,6 +21,7 @@ import com.example.makar.R;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
+import com.example.makar.main.MainActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.SetRouteActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -39,6 +40,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     private Boolean editMode = false;
 
     ActivitySetFavoriteStationBinding setFavoriteStationBinding;
+    private User user = MainActivity.user;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
@@ -51,10 +53,15 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setActionBar(); //actionBar 변경
         setToolBar(); //toolBar 변경
         setHideKeyBoard();
-        getUserData();
+
+        homeStation = user.getHomeStation();
+        Log.d("MAKARTEST", "setFavoriteStation : home : " + homeStation);
+        schoolStation = user.getSchoolStation();
+        Log.d("MAKARTEST", "setFavoriteStation : school : " + schoolStation);
 
         //즐겨찾는 역 유무에 따라 편집 모드 변경
         setEditMode();
+
 
         setFavoriteStationBinding.homeSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchHomeActivity.class));
@@ -84,18 +91,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
                 setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
             } else {
-                if ((SearchHomeActivity.homeStation != null && SearchSchoolActivity.schoolStation != null)
-                        || (homeStation != null && schoolStation != null)) {
-                    User user;
-                    if (SearchHomeActivity.homeStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
-                    } else if (SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
-                    } else if (SearchHomeActivity.homeStation == null && SearchSchoolActivity.schoolStation == null) {
-                        user = new User(LoginActivity.userUId, homeStation, schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
-                    } else {
-                        user = new User(LoginActivity.userUId, SearchHomeActivity.homeStation, SearchSchoolActivity.schoolStation, SetRouteActivity.sourceStation, SetRouteActivity.destinationStation);
-                    }
+                if (homeStation != null && schoolStation != null) {
                     firebaseFirestore.collection("users")
                             .whereEqualTo("userUId", LoginActivity.userUId)
                             .get()
@@ -107,24 +103,30 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                                         if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                             // 값이 존재하는 경우, 해당 데이터를 수정
                                             DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                            String documentId = documentSnapshot.getId();
-                                            firebaseFirestore.collection("users")
-                                                    .document(documentId)
-                                                    .set(user)
-                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+
+                                            //homeStation 수정
+                                            documentSnapshot.getReference().update("homeStation", homeStation).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                         @Override
-                                                        public void onSuccess(Void aVoid) {
-                                                            Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentId);
-                                                            homeStation = SearchHomeActivity.homeStation;
-                                                            schoolStation = SearchSchoolActivity.schoolStation;
+                                                        public void onSuccess(Void unused) {
+                                                            Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                         }
-                                                    })
-                                                    .addOnFailureListener(new OnFailureListener() {
+                                                    }).addOnFailureListener(new OnFailureListener() {
                                                         @Override
                                                         public void onFailure(@NonNull Exception e) {
                                                             Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
                                                         }
                                                     });
+                                            //schoolStation 수정
+                                            documentSnapshot.getReference().update("schoolStation", schoolStation).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                }}).addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                    }
+                                            });
                                         } else {
                                             // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
                                             firebaseFirestore.collection("users")
@@ -133,6 +135,20 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onSuccess(DocumentReference documentReference) {
                                                             Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+
+                                                            documentReference.update("homeStation", homeStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                                }
+                                                            });
+                                                            documentReference.update("schoolStation", schoolStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                                }
+                                                            });
+
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -149,9 +165,9 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                             });
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_station_toast, Toast.LENGTH_SHORT).show();
                     finish();
-                } else if (SearchHomeActivity.homeStation == null) {
+                } else if (homeStation == null) {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_1, Toast.LENGTH_SHORT).show();
-                } else if (SearchSchoolActivity.schoolStation == null) {
+                } else if (schoolStation == null) {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_2, Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SetFavoriteStationActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
@@ -164,7 +180,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         //즐겨찾는 역 텍스트 수정
-
         setFavoriteStationText();
     }
 
@@ -193,35 +208,19 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         TextView textViewHome = setFavoriteStationBinding.textViewHome;
         TextView textViewSchool = setFavoriteStationBinding.textViewSchool;
 
+        textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+        textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
+
         if (homeStation != null) {
-            if (SearchHomeActivity.homeStation != null) {
-                textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-                textViewHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
-            } else {
-                textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-                textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
-            }
-        } else if (SearchHomeActivity.homeStation != null) {
-            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-            textViewHome.setText(" " + SearchHomeActivity.homeStation.getStationName() + "역 " + SearchHomeActivity.homeStation.getLineNum());
-        } else {
-            textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
+            textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
+        }
+       else {
             textViewHome.setText(R.string.home_station_hint);
         }
 
         if (schoolStation != null) {
-            if (SearchSchoolActivity.schoolStation != null) {
-                textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-                textViewSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
-            } else {
-                textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-                textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
-            }
-        } else if (SearchSchoolActivity.schoolStation != null) {
-            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
-            textViewSchool.setText(" " + SearchSchoolActivity.schoolStation.getStationName() + "역 " + SearchSchoolActivity.schoolStation.getLineNum());
-        } else {
-            textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray2));
+          textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
+        }else {
             textViewSchool.setText(R.string.school_station_hint);
         }
     }
@@ -242,56 +241,12 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
-    private void getUserData() {
-        firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @SuppressLint("ResourceAsColor")
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                if (documentSnapshot.contains("homeStation")) {
-                                    homeStation = documentSnapshot.get("homeStation", Station.class);
-                                }
-                                if (documentSnapshot.contains("schoolStation")) {
-                                    schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                }
-
-                                String homeStationText = "";
-                                String schoolStationText = "";
-
-                                if (homeStation != null) {
-                                    homeStationText = homeStation.getStationName() + "역 " + homeStation.getLineNum();
-                                }
-                                if (schoolStation != null) {
-                                    schoolStationText = schoolStation.getStationName() + "역 " + schoolStation.getLineNum();
-                                }
-
-                                setFavoriteStationBinding.textViewHome.setTextColor(R.color.dark_gray);
-                                setFavoriteStationBinding.textViewSchool.setTextColor(R.color.dark_gray);
-                                setFavoriteStationBinding.textViewHome.setText(homeStationText);
-                                setFavoriteStationBinding.textViewSchool.setText(schoolStationText);
-
-                                setEditMode();
-                            }
-                        } else {
-                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
-                        }
-                    }
-                });
-    }
 
     // toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                SearchHomeActivity.homeStation = null;
-                SearchSchoolActivity.schoolStation = null;
                 finish();
                 return true;
             default:

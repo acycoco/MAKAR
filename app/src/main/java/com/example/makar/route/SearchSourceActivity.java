@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.makar.data.SearchAdapter;
+import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchSourceBinding;
 import com.example.makar.mypage.SetFavoriteStationActivity;
@@ -33,7 +33,7 @@ import java.util.List;
 
 public class SearchSourceActivity extends AppCompatActivity {
     ActivitySearchSourceBinding binding;
-    static Station sourceStation;
+    //static Station sourceStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +99,8 @@ public class SearchSourceActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
-                sourceStation = station;
+                SetRouteActivity.sourceStation = station;
+                Log.d("MAKARTEST", "SearchSource : Source = "+SetRouteActivity.sourceStation);
                 finish();
             }
         });
@@ -109,7 +110,7 @@ public class SearchSourceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.homeStation != null) {
-                    sourceStation = SetFavoriteStationActivity.homeStation;
+                    SetRouteActivity.sourceStation = SetFavoriteStationActivity.homeStation;
                     finish();
                 } else {
                     startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));
@@ -121,7 +122,8 @@ public class SearchSourceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.schoolStation != null) {
-                    sourceStation = SetFavoriteStationActivity.schoolStation;
+                    SetRouteActivity.sourceStation = SetFavoriteStationActivity.schoolStation;
+                    Log.d("MAKARTEST", "SearchSource : Source = "+SetRouteActivity.sourceStation);
                     finish();
                 } else {
                     startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));

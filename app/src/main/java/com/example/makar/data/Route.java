@@ -8,17 +8,41 @@ public class Route {
     private final int totalTime;
     private final int transitCount;
     private final List<SubRouteItem> subRouteItems;
-    private final List<BriefStatoion> briefRoute;
+    private final List<BriefStation> briefRoute;
+    private final Station sourceStation;
+    private final Station destinationStation;
 
-    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems, List<BriefStatoion> briefRoute) {
+    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems, List<BriefStation> briefRoute, Station sourceStation, Station destinationStation) {
         this.totalTime = totalTime;
         this.transitCount = transitCount;
         this.subRouteItems = subRouteItems;
         this.briefRoute = briefRoute;
+        this.sourceStation = sourceStation;
+        this.destinationStation = destinationStation;
+    }
+
+    public int getTotalTime() {
+        return totalTime;
+    }
+
+    public int getTransitCount() {
+        return transitCount;
     }
 
     public List<SubRouteItem> getRouteItems() {
         return subRouteItems;
+    }
+
+    public List<BriefStation> getBriefRoute() {
+        return briefRoute;
+    }
+
+    public Station getSourceStation() {
+        return sourceStation;
+    }
+
+    public Station getDestinationStation() {
+        return destinationStation;
     }
 
     public void setMakarTime(String makarTime) {

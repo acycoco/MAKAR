@@ -11,9 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.makar.R;
-import com.example.makar.data.SetAlarmTimeDialog;
+import com.example.makar.data.dialog.SetAlarmTimeDialog;
 import com.example.makar.main.MainActivity;
-import com.example.makar.main.dialog.SetMakarAlarmDialog;
 
 public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDialog {
     Context context;
@@ -21,7 +20,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
     private String[] timeArr = {"10", "20", "30", "40", "50", "60"};
 
     private Button positiveBtn, negativeBtn;
-    private String getOffAlarmTime = MainActivity.getOffAlarmTime;
+    private String getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
     public SetGetOffAlarmTimeDialog(@NonNull Context context) {
         super(context);
         this.context = context;
@@ -67,7 +66,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
 
     @Override
     public void sendDataToFirstDialog(String data) {
-        MainActivity.getOffAlarmTime = data;
+        MainActivity.user.setGetOffAlarmTime(data);
         SetGetOffAlarmDialog.getOffAlarmTime = data;
         SetGetOffAlarmDialog.setAlarmTimeBtn.setText(data+"분 전 알림");
     }

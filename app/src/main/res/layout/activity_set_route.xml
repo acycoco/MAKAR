@@ -12,97 +12,105 @@
     <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingHorizontal="20dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingVertical="20dp">
+            android:orientation="vertical"
 
-            <TextView
-                android:layout_width="wrap_content"
+            android:paddingHorizontal="20dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
-                android:text="출발역"
-                android:textColor="@color/black" />
+                android:paddingVertical="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:text="출발역"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/search_source_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@drawable/custom_button_gray"
+                    android:drawableStart="@drawable/ic_search"
+                    android:hint="  출발역을 입력하세요."
+                    android:paddingHorizontal="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="20dp"
+                    android:text="도착역"
+                    android:textColor="@color/black" />
+
+                <Button
+                    android:id="@+id/search_destination_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="43dp"
+                    android:background="@drawable/custom_button_gray"
+                    android:drawableStart="@drawable/ic_search"
+                    android:hint="  도착역을 입력하세요."
+                    android:paddingHorizontal="10dp"
+                    android:textAlignment="textStart"
+                    android:textColor="@color/gray"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
 
             <Button
-                android:id="@+id/search_source_button"
+                android:id="@+id/searchRouteBtn"
                 android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:background="@drawable/custom_button_gray"
-                android:drawableStart="@drawable/ic_search"
-                android:paddingHorizontal="10dp"
-                android:hint="  출발역을 입력하세요."
-                android:textAlignment="textStart"
-                android:textColor="@color/gray"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginEnd="20dp"
-                android:text="도착역"
-                android:textColor="@color/black" />
+                android:background="@drawable/custom_button_main"
+                android:text="경로찾기"
+                android:textColor="@color/white"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/search_destination_button"
-                android:layout_width="match_parent"
-                android:layout_height="43dp"
-                android:background="@drawable/custom_button_gray"
-                android:drawableStart="@drawable/ic_search"
-                android:paddingHorizontal="10dp"
-                android:hint="  도착역을 입력하세요."
-                android:textAlignment="textStart"
-                android:textColor="@color/gray"
-                android:textSize="14sp" />
-
-<!--            <androidx.appcompat.widget.SearchView-->
-            <!--                android:id="@+id/search_destination"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="100dp"-->
-            <!--                android:focusable="true"-->
-            <!--                android:padding="20dp"-->
-            <!--                app:iconifiedByDefault="false"-->
-            <!--                app:layout_constraintEnd_toEndOf="parent"-->
-            <!--                app:layout_constraintStart_toStartOf="parent"-->
-            <!--                app:layout_constraintTop_toTopOf="parent"-->
-            <!--                app:layout_constraintVertical_weight="1"-->
-            <!--                app:queryHint="도착역을 입력하세요" />-->
         </LinearLayout>
 
-        <Button
-            android:id="@+id/searchRouteBtn"
+        <View
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:background="@drawable/custom_button_main"
-            android:text="경로찾기"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:textStyle="bold" />
+            android:layout_height="8dp"
+            android:layout_marginTop="13dp"
+            android:background="@color/light_gray2" />
 
+        <!-- 경로찾기 리스트 -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/route_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
 
         <!--즐겨찾는 경로-->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
+            android:visibility="gone"
             tools:itemCount="5" />
 
         <!--최근 경로-->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             tools:itemCount="5" />
 
     </LinearLayout>

@@ -16,7 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-import com.example.makar.data.SearchAdapter;
+import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
 import com.example.makar.mypage.SetFavoriteStationActivity;
@@ -33,7 +33,6 @@ import java.util.List;
 
 public class SearchDestinationActivity extends AppCompatActivity {
     ActivitySearchDestinationBinding searchDestinationBinding;
-    static Station destinationStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,7 +97,8 @@ public class SearchDestinationActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
-                destinationStation = station;
+                SetRouteActivity.destinationStation = station;
+                Log.d("MAKARTEST", "SearchDestination : Destination = "+SetRouteActivity.destinationStation);
                 finish();
             }
         });
@@ -108,7 +108,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.homeStation != null) {
-                    destinationStation = SetFavoriteStationActivity.homeStation;
+                    SetRouteActivity.destinationStation = SetFavoriteStationActivity.homeStation;
                     finish();
                 } else {
                     startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
@@ -120,7 +120,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (SetFavoriteStationActivity.schoolStation != null) {
-                    destinationStation = SetFavoriteStationActivity.schoolStation;
+                    SetRouteActivity.destinationStation = SetFavoriteStationActivity.schoolStation;
                     finish();
                 } else {
                     startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
