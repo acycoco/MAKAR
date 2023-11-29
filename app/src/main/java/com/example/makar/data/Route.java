@@ -4,6 +4,7 @@ import java.util.List;
 
 public class Route {
 
+    private String makarTime;
     private final int totalTime;
     private final int transitCount;
     private final List<SubRouteItem> subRouteItems;
@@ -18,6 +19,10 @@ public class Route {
 
     public List<SubRouteItem> getRouteItems() {
         return subRouteItems;
+    }
+
+    public void setMakarTime(String makarTime) {
+        this.makarTime = makarTime;
     }
 
     @Override
