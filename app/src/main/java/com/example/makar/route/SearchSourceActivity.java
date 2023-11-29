@@ -110,7 +110,7 @@ public class SearchSourceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (user.getHomeStation() != null) {
-                    SetRouteActivity.sourceStation = user.getSourceStation();
+                    SetRouteActivity.sourceStation = user.getHomeStation();
                     finish();
                 } else {
                     startActivity(new Intent(SearchSourceActivity.this, SetFavoriteStationActivity.class));

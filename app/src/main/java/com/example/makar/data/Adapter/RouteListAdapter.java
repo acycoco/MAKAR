@@ -11,8 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
 import com.example.makar.databinding.RouteListRecyclerViewItemBinding;
-import com.example.makar.databinding.RouteRecyclerViewItemBinding;
-import com.example.makar.main.OnRouteListClickListener;
+import com.example.makar.route.OnRouteListClickListener;
 
 import java.util.List;
 
@@ -58,7 +57,7 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
             @Override
             public void onClick(View v) {
                 //선택된 route 넘겨줌
-                listener.onRouteClick(items.get(position));
+                listener.onListRouteClick(items.get(position));
             }
         });
     }

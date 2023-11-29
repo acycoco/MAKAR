@@ -1,7 +1,7 @@
-package com.example.makar.main;
+package com.example.makar.route;
 
 import com.example.makar.data.Route;
 
 public interface OnRouteListClickListener {
-    void onRouteClick(Route route);
+    void onListRouteClick(Route route);
 }

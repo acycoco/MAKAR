@@ -12,7 +12,6 @@ import com.example.makar.R;
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.LineNumImage;
 import com.example.makar.data.Route;
-import com.example.makar.data.SubRoute;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.route.OnRouteClickListener;
 
@@ -46,18 +45,13 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         return new ViewHolder(binding);
     }
 
-    public void setRoutes(List<Route> routes) {
-        this.items = routes;
-        notifyDataSetChanged();
-    }
-
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         route = items.get(position);
         lineNumImage.addLineNum();
         int size = route.getBriefRoute().size();
         sourceStation = route.getBriefRoute().get(0);
-        destinationStation = route.getBriefRoute().get(size-1);
+        destinationStation = route.getBriefRoute().get(size - 1);
         totalTime = String.valueOf(route.getTotalTime());
 
         if (size > 2) {

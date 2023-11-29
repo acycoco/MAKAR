@@ -27,6 +27,7 @@ import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
+import com.example.makar.route.OnRouteListClickListener;
 import com.example.makar.route.SetRouteActivity;
 import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
@@ -343,7 +344,7 @@ public class MainActivity extends AppCompatActivity {
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
-            public void onRouteClick(Route route) {
+            public void onListRouteClick(Route route) {
                 Log.d("MAKAR", route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
@@ -376,7 +377,7 @@ public class MainActivity extends AppCompatActivity {
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
-            public void onRouteClick(Route route) {
+            public void onListRouteClick(Route route) {
                 Log.d("MAKAR", route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
