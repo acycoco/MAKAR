@@ -151,12 +151,12 @@ public class SetRouteActivity extends AppCompatActivity {
     private void executeSearchRoute() {
         Log.d("dhdh", sourceStation.getStationName());
         Log.d("dhdh", destinationStation.getStationName());
-
         new Thread(() -> {
             try {
                 String routeJson = searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
                 System.out.println(routeJson);
                 resultList = parseRouteResponse(routeJson);
+                Log.d("dhdhdh", resultList.toString());
 
                 new Handler(Looper.getMainLooper()).post(() -> {
                     setRecyclerView();

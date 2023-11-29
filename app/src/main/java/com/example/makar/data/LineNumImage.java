@@ -19,7 +19,9 @@ public class LineNumImage {
         lineNumMap.put("7호선", R.drawable.ic_line7);
         lineNumMap.put("8호선", R.drawable.ic_line8);
         lineNumMap.put("9호선", R.drawable.ic_line9);
+        lineNumMap.put("104호선", R.drawable.ic_line_k);
         lineNumMap.put("경의중앙", R.drawable.ic_line_k);
+        lineNumMap.put("101호선", R.drawable.ic_line_a);
         lineNumMap.put("공항철도", R.drawable.ic_line_a);
     }
 }
