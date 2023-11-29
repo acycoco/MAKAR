@@ -26,6 +26,20 @@ public class BriefStation {
     }
 
     public String getLineNumToString() {
-        return lineNum + "호선";
+        if (lineNum == 101) {
+            return "공항철도";
+        } else if (lineNum == 104) {
+            return "경의중앙";
+        } else {
+            return lineNum + "호선";
+        }
+    }
+
+    public String briefToStationName() {
+        if (stationName.equals("서울역")) {
+            return stationName;
+        } else {
+            return stationName + "역";
+        }
     }
 }
