@@ -32,7 +32,6 @@ import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
 
-    public static Station schoolStation;
     ActivitySearchSchoolBinding searchSchoolBinding;
 
     @Override
@@ -99,7 +98,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
-                schoolStation = station;
+                SetFavoriteStationActivity.schoolStation = station;
                 finish();
             }
         });

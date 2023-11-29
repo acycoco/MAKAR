@@ -156,19 +156,17 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-//                                                        sourceStation = SearchSourceActivity.sourceStation;
-//                                                        destinationStation = SearchDestinationActivity.destinationStation;
-                                                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                                        documentSnapshot.getReference().update("sourceStation", sourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+//
+                                                        documentReference.update("sourceStation", sourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                             }
                                                         });
-                                                        documentSnapshot.getReference().update("destinationStation", destinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        documentReference.update("destinationStation", destinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                             }
                                                         });
                                                         executeSearchRoute();
