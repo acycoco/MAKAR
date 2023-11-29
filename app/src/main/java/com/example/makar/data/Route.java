@@ -3,6 +3,8 @@ package com.example.makar.data;
 import java.util.List;
 
 public class Route {
+
+    private String makarTime;
     private final int totalTime;
     private final int transitCount;
     private final List<SubRouteItem> subRouteItems;
@@ -41,6 +43,10 @@ public class Route {
 
     public Station getDestinationStation() {
         return destinationStation;
+    }
+
+    public void setMakarTime(String makarTime) {
+        this.makarTime = makarTime;
     }
 
     @Override

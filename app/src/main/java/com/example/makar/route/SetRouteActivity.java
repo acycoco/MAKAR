@@ -309,6 +309,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
+            route.setMakarTime("2023-11-25 14:36:30"); //TODO 막차시간 구하기 (막차시간 임시로 설정)
             routes.add(route);
         }
         return routes;
