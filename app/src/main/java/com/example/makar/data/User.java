@@ -14,7 +14,7 @@ public class User {
     int makarAlarmTime = 10;
     int getOffAlarmTime = 10;
     Route selectedRoute;
-    List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
+    List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
 
@@ -63,7 +63,13 @@ public class User {
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
     }
-
+    public void addFavoriteRoute(Route route) {
+        if (this.favoriteRouteArr.size() < 3) { // 즐겨찾기 리스트 크기가 3 미만일 때만 추가
+            this.favoriteRouteArr.add(route);
+        } else {
+            System.out.println("즐겨찾기 리스트가 꽉 찼습니다. 더 이상 추가할 수 없습니다.");
+        }
+    }
     public void setRouteStation(Station sourceStation, Station destinationStation) {
         this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;

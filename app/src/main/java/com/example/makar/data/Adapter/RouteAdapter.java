@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,6 +14,7 @@ import com.example.makar.data.BriefStation;
 import com.example.makar.data.LineNumImage;
 import com.example.makar.data.Route;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
+import com.example.makar.route.OnBookmarkClickListener;
 import com.example.makar.route.OnRouteClickListener;
 
 import java.util.List;
@@ -20,6 +22,8 @@ import java.util.List;
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
 
     private OnRouteClickListener listener;
+    private OnBookmarkClickListener bookmarkClickListener;
+
     private List<Route> items;
     private Context context;
     private Route route;
@@ -37,6 +41,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
     public void setOnRouteClickListener(OnRouteClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnBookmarkClickListener(OnBookmarkClickListener bookmarkClickListener) {
+        this.bookmarkClickListener = bookmarkClickListener;
     }
 
     @Override
@@ -86,10 +94,17 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         holder.binding.sourceStationTextView.setText(sourceStation.getStationName() + "역 >");
         holder.binding.destinationStationTextView.setText(destinationStation.getStationName() + "역");
 
-        holder.binding.routeRecyclerViewItem.setOnClickListener(new View.OnClickListener() {
+        holder.binding.routeList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onRouteClick(items.get(position));
+            }
+        });
+
+        holder.binding.favoriteRouteImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bookmarkClickListener.onBookmarkClick(items.get(position));
             }
         });
     }
@@ -105,6 +120,10 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         public ViewHolder(RouteRecyclerViewItemBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
+        }
+
+        public ViewHolder(View itemView) {
+            super(itemView);
         }
     }
 }

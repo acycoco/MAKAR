@@ -269,6 +269,15 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKARTEST", "MAIN: Home : " + user.getHomeStation());
                                 Log.d("MAKARTEST", "MAIN: School : " + user.getSchoolStation());
 
+                                try {
+                                    List<Route> favoriteRouteArr = new ArrayList<Route>();
+
+                                    favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
+                                } catch (Exception e) {
+                                    Log.e("MAKARrrr", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
+                                }
+                              
+
                                 //출발, 도착지 등록
 //                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
 //                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
@@ -277,6 +286,7 @@ public class MainActivity extends AppCompatActivity {
                                 user.setRouteStation(sourceStation, destinationStation);
                                 Route selectedRoute = SetRouteActivity.selectedRoute;
                                 user.setSelectedRoute(selectedRoute);
+
                                 Log.d("MAKAR", "MAIN: Source : " + user.getSourceStation());
                                 Log.d("MAKAR", "MAIN: Destination : " + user.getDestinationStation());
                                 Log.d("MAKAR", "MAIN: selectedRoute : " + user.getSelectedRoute());
@@ -284,13 +294,16 @@ public class MainActivity extends AppCompatActivity {
                                 //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKARTEST", "user.recentArr : " + user.getRecentRouteArr().toString());
-                                user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
+
+                                // user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
+                                Log.d("MAKARTEST", "user.favoriteRouteArr : " + user.getFavoriteRouteArr().toString());
 
                                 //막차, 하차 알림
                                 int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
                                 int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
                                 if (makarAlarmTime<=0) makarAlarmTime = 10;
                                 if (getoffAlarmTime<=0) getoffAlarmTime = 10;
+
                                 user.setMakarAlarmTime(makarAlarmTime);
                                 user.setGetOffAlarmTime(getoffAlarmTime);
                                 Log.d("MAKARTEST", "MakarAlarmTime : " + user.getMakarAlarmTime());

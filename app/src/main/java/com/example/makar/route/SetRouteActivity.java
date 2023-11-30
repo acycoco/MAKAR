@@ -33,6 +33,7 @@ import com.example.makar.data.TransferInfo;
 
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
+import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
@@ -43,6 +44,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -60,6 +62,7 @@ import java.util.Objects;
 public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
+    RouteRecyclerViewItemBinding recyclerViewItemBinding;
     public Button sourceBtn, destinationBtn;
 
     //임시 출발지, 목적지 변수
@@ -323,6 +326,7 @@ public class SetRouteActivity extends AppCompatActivity {
         adapter = new RouteAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        recyclerViewItemBinding = RouteRecyclerViewItemBinding.inflate(getLayoutInflater());
         adapter.setOnRouteClickListener(new OnRouteClickListener() {
             @Override
             public void onRouteClick(Route route) {
@@ -450,6 +454,80 @@ public class SetRouteActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(SetRouteActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
                                     Log.e("MAKAR", "Firestore에서 사용자 데이터 검색 중 오류 발생: " + task.getException().getMessage());
+                                }
+                            }
+                        });
+            }
+        });
+        adapter.setOnBookmarkClickListener(new OnBookmarkClickListener() {
+            @Override
+            public void onBookmarkClick(Route route) {
+                List<Route> favoriteRouteArr = user.getFavoriteRouteArr();
+
+                firebaseFirestore.collection("users")
+                        .whereEqualTo("userUId", LoginActivity.userUId)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if (task.isSuccessful()) {
+                                    QuerySnapshot querySnapshot = task.getResult();
+                                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                        // 값이 존재하는 경우, 해당 데이터를 수정
+                                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                        if (favoriteRouteArr != null && favoriteRouteArr.size() >= 3) {
+                                            Toast.makeText(SetRouteActivity.this, "최대 즐겨찾기 수를 초과하였습니다.", Toast.LENGTH_SHORT).show();
+                                        } else {
+                                            // favoriteRouteArr 저장
+                                            documentSnapshot.getReference().update("favoriteRouteArr", FieldValue.arrayUnion(route))
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                            if (task.isSuccessful()) {
+//                                                                user.addFavoriteRoute(route);
+                                                                recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
+                                                                Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentSnapshot.getId());
+                                                                Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
+                                                            } else {
+                                                                Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    } else {
+                                        // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
+                                        firebaseFirestore.collection("users")
+                                                .add(user)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                        if (favoriteRouteArr != null && favoriteRouteArr.size() >= 3) {
+                                                            Toast.makeText(SetRouteActivity.this, "최대 즐겨찾기 수를 초과하였습니다.", Toast.LENGTH_SHORT).show();
+                                                        } else {
+                                                            documentReference.update("favoriteRouteArr", route)
+                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()) {
+//                                                                                user.addFavoriteRoute(route);
+                                                                                recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
+                                                                                Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
+                                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
+                                                                                Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
+                                                                            } else {
+                                                                                Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
+                                                                            }
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                } else {
+                                    Toast.makeText(SetRouteActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
+                                    Log.e("MAKAR", "Firestore에서 즐겨찾기 설정 중 오류 발생: " + task.getException().getMessage());
                                 }
                             }
                         });
