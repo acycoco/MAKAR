@@ -51,7 +51,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
             holder.binding.lineImageView.setImageResource(R.drawable.ic_line0);
         }
 
-        holder.binding.lineTextView.setText(station.getStationName() + "역 " + station.getLineNum());
+        holder.binding.lineTextView.setText(station.getFullName());
         holder.binding.lineTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

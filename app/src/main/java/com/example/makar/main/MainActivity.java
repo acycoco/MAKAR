@@ -49,6 +49,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+
 import java.util.concurrent.TimeUnit;
 
 
@@ -76,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         //setRecyclerView(); //경로 관련 recyclerView set
-
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
-        return (int)(date.getTime() - currentTime.getTime());
+        return (int) (date.getTime() - currentTime.getTime());
     }
 
     private void setRouteUnset() {
@@ -273,14 +273,25 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKARTEST", "MAIN: Home : " + user.getHomeStation());
                                 Log.d("MAKARTEST", "MAIN: School : " + user.getSchoolStation());
 
+                                // TODO: 즐겨찾는 경로 불러오기 에러
                                 try {
                                     List<Route> favoriteRouteArr = new ArrayList<Route>();
 
                                     favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
+                                    Log.d("MAKAR_SUCCESS", "selectedRoute : " + favoriteRouteArr);
                                 } catch (Exception e) {
-                                    Log.e("MAKARrrr", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
+                                    Log.e("MAKAR_ERROR", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
                                 }
-                              
+
+                                // 설정한 경로 불러오기
+                                try {
+                                    Route selectedRoute;
+
+                                    selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
+                                    Log.d("MAKAR_SUCCESS", "selectedRoute : " + selectedRoute);
+                                } catch (Exception e) {
+                                    Log.e("MAKAR_ERROR", "selectedRoute 가져오는 중 오류 발생: " + e.getMessage());
+                                }
 
                                 //출발, 도착지 등록
 //                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
@@ -305,8 +316,8 @@ public class MainActivity extends AppCompatActivity {
                                 //막차, 하차 알림
                                 int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
                                 int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
-                                if (makarAlarmTime<=0) makarAlarmTime = 10;
-                                if (getoffAlarmTime<=0) getoffAlarmTime = 10;
+                                if (makarAlarmTime <= 0) makarAlarmTime = 10;
+                                if (getoffAlarmTime <= 0) getoffAlarmTime = 10;
 
                                 user.setMakarAlarmTime(makarAlarmTime);
                                 user.setGetOffAlarmTime(getoffAlarmTime);
@@ -334,7 +345,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
-                                    startNotification();
+//                                    startNotification();
                                     leftTime = 10;
 
                                     //막차, 하차 시간 설정
@@ -342,9 +353,9 @@ public class MainActivity extends AppCompatActivity {
                                     int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
                                     getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
 
-                                    Log.d("TIMETEST", "makarTime(Set) : "+makarTime);
-                                    Log.d("TIMETEST", "getOffTime(Set) : "+getOffTime);
-                                    Log.d("TIMETEST", "alarmTime(Set) : "+alarmTime);
+                                    Log.d("TIMETEST", "makarTime(Set) : " + makarTime);
+                                    Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
+                                    Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
 
 
                                     MainActivityChangeView.changeView(
@@ -364,12 +375,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     static public Date setAlarmTime(Date date, int alarmTime){
+
         Calendar cal = Calendar.getInstance();
         cal.setTime(date); //시간 설정
-        if(alarmTime >= 10) {
+        if (alarmTime >= 10) {
             cal.add(Calendar.MINUTE, alarmTime); //분 연산
             return new Date(String.valueOf(cal.getTime()));
-        }else{
+        } else {
             return new Date(String.valueOf(cal.getTime()));
         }
     }
