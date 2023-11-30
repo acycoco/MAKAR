@@ -23,7 +23,7 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String makarAlarmTime;
+    static int makarAlarmTime;
 
     public SetMakarAlarmDialog(@NonNull Context context) {
         super(context);
@@ -67,7 +67,7 @@ public class SetMakarAlarmDialog extends Dialog implements SetAlarmDialog {
               setMakarAlarmTimeDialog.show();
     }
 
-    public void sendDataToMainActivity(String data) {
+    public void sendDataToMainActivity(int data) {
         Task<QuerySnapshot> usersCollection = FirebaseFirestore.getInstance().collection("users")
                 .whereEqualTo("userUId", LoginActivity.userUId).get();
         usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

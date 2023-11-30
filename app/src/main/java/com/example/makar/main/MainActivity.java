@@ -50,10 +50,11 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-30 13:06:20"; //임시 막차 시간
-    private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
+    private Date makarTime; //임시 막차 시간
+    private Date getOffTime; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ActivityMainBinding mainBinding;
     public static User user = new User(LoginActivity.userUId);
 
@@ -157,8 +158,6 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
-        Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
-
     }
 
     //자주 가는 역 설정 다이얼로그
@@ -200,8 +199,7 @@ public class MainActivity extends AppCompatActivity {
         Date currentTime = new Date();
         Log.d("MAKAR", "currentTime : " + String.valueOf(currentTime));
 
-        //현재 시간과 막차 시간 - 알림 시간 비교
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        //현재 시간과 TimeString(막차시간) 비교
         Date specifiedDateTime;
         try {
             specifiedDateTime = sdf.parse(TimeString);
@@ -287,10 +285,10 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKARTEST", "user.recentArr : " + user.getRecentRouteArr().toString());
                                 user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
                                 //막차, 하차 알림
-                                String makarAlarmTime = documentSnapshot.get("makarAlarmTime", String.class);
-                                String getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", String.class);
-                                if (makarAlarmTime == null) makarAlarmTime = "10";
-                                if (getoffAlarmTime == null) getoffAlarmTime = "10";
+                                int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
+                                int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
+                                if (makarAlarmTime<=0) makarAlarmTime = 10;
+                                if (getoffAlarmTime<=0) getoffAlarmTime = 10;
                                 user.setMakarAlarmTime(makarAlarmTime);
                                 user.setGetOffAlarmTime(getoffAlarmTime);
                                 Log.d("MAKARTEST", "MakarAlarmTime : " + user.getMakarAlarmTime());
@@ -307,16 +305,23 @@ public class MainActivity extends AppCompatActivity {
                                             "",
                                             "");
                                     Log.d("MAKAR", "route is UnSet");
+
                                     //즐겨찾는 역 등록 다이얼로그
                                     setFavoriteStation();
+                                    //AlarmTime set
+                                    makarTime = new Date();
+                                    getOffTime = makarTime;
+                                    Log.d("TIMETEST", "makarTime(UnSet) : "+makarTime);
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
                                     leftTime = 10;
                                     startNotification();
 
-                                    //makarTimeString = ""; //막차 시간 설정
-                                    //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
+                                    //막차 시간 설정
+                                    makarTime = new Date();
+                                    int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
+                                    getOffTime = setTimeString(makarTime, alarmTime); //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
 
                                     MainActivityChangeView.changeView(
                                             mainBinding,
@@ -332,6 +337,10 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private Date setTimeString(Date date, int alarmTime){
+
     }
 
 

@@ -5,5 +5,5 @@ import android.widget.Button;
 
 public interface SetAlarmDialog {
     void showTimePickerDialog();
-    void sendDataToMainActivity(String data);
+    void sendDataToMainActivity(int data);
 }

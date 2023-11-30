@@ -20,7 +20,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
     private String[] timeArr = {"10", "20", "30", "40", "50", "60"};
 
     private Button positiveBtn, negativeBtn;
-    private String getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
+    private int getOffAlarmTime = MainActivity.user.getGetOffAlarmTime();
     public SetGetOffAlarmTimeDialog(@NonNull Context context) {
         super(context);
         this.context = context;
@@ -41,7 +41,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
         alarmTimePicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
-                getOffAlarmTime = timeArr[newVal];
+                getOffAlarmTime = Integer.parseInt(timeArr[newVal]);
             }
         });
 
@@ -65,7 +65,7 @@ public class SetGetOffAlarmTimeDialog extends Dialog implements SetAlarmTimeDial
     }
 
     @Override
-    public void sendDataToFirstDialog(String data) {
+    public void sendDataToFirstDialog(int data) {
         MainActivity.user.setGetOffAlarmTime(data);
         SetGetOffAlarmDialog.getOffAlarmTime = data;
         SetGetOffAlarmDialog.setAlarmTimeBtn.setText(data+"분 전 알림");
