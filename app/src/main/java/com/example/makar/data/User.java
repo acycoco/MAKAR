@@ -13,7 +13,7 @@ public class User {
     Station destinationStation;
     String makarAlarmTime = "10";
     String getOffAlarmTime = "10";
-    Route selecedRoute;
+    Route selectedRoute;
     List<Route> favoriteRouteArr = new ArrayList<>(); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
@@ -43,6 +43,10 @@ public class User {
         return destinationStation;
     }
 
+    public Route getSelectedRoute() {
+        return selectedRoute;
+    }
+
     public String getMakarAlarmTime() {
         return makarAlarmTime;
     }
@@ -65,8 +69,8 @@ public class User {
         this.destinationStation = destinationStation;
     }
 
-    public void setSelecedRoute(Route selecedRoute) {
-        this.selecedRoute = selecedRoute;
+    public void setSelectedRoute(Route selectedRoute) {
+        this.selectedRoute = selectedRoute;
     }
 
     public List<Route> getRecentRouteArr() {

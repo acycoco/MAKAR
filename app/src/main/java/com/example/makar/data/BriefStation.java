@@ -24,4 +24,8 @@ public class BriefStation {
                 ", lineNum=" + lineNum +
                 '}';
     }
+
+    public String getLineNumToString() {
+        return lineNum + "호선";
+    }
 }

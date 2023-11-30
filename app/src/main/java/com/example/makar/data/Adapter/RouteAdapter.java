@@ -70,8 +70,8 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
             holder.binding.transferStationTextView1.setVisibility(View.GONE);
         }
 
-        if (LineNumImage.lineNumMap.containsKey(route.getSourceStation().getLineNum())) {
-            holder.binding.sourceStationImageView.setImageResource(LineNumImage.lineNumMap.get(route.getSourceStation().getLineNum()));
+        if (LineNumImage.lineNumMap.containsKey(sourceStation.getLineNumToString())) {
+            holder.binding.sourceStationImageView.setImageResource(LineNumImage.lineNumMap.get(sourceStation.getLineNumToString()));
         } else {
             holder.binding.sourceStationImageView.setImageResource(R.drawable.ic_line0);
         }

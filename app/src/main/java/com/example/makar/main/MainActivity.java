@@ -49,8 +49,8 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-29 16:11:20"; //임시 막차 시간
-    private String getOffTimeString = "2023-11-29 16:13:50"; //임시 하차 시간
+    private String makarTimeString = "2023-11-29 21:27:20"; //임시 막차 시간
+    private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     private ActivityMainBinding mainBinding;
@@ -271,8 +271,11 @@ public class MainActivity extends AppCompatActivity {
                                 Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
                                 Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
                                 user.setRouteStation(sourceStation, destinationStation);
-                                Log.d("MAKARTEST", "MAIN: Source : "+user.getSourceStation());
-                                Log.d("MAKARTEST", "MAIN: Destination : "+user.getDestinationStation());
+//                                Route selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
+//                                user.setSelectedRoute(selectedRoute);
+                                Log.d("MAKAR", "MAIN: Source : "+user.getSourceStation());
+                                Log.d("MAKAR", "MAIN: Destination : "+user.getDestinationStation());
+                                Log.d("MAKAR", "MAIN: selectedRoute : "+user.getSelectedRoute());
 
                                 //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
@@ -303,7 +306,7 @@ public class MainActivity extends AppCompatActivity {
                                     isRouteSet = true;
                                     isGetOffSet = true;
                                     leftTime = 10;
-                                    startNotification();
+//                                    startNotification();
 
                                     //makarTimeString = ""; //막차 시간 설정
                                     //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
