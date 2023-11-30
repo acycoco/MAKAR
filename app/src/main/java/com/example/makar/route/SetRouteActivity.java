@@ -91,9 +91,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
         // 출발역, 도착역 데이터가 있다면 받아오기
         sourceStation = user.getSourceStation();
-        Log.d("MAKARTEST", "setRoute : Source : " + sourceStation);
         destinationStation = user.getDestinationStation();
-        Log.d("MAKARTEST", "setRoute : Destination : " + destinationStation);
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -160,9 +158,6 @@ public class SetRouteActivity extends AppCompatActivity {
 
                 new Handler(Looper.getMainLooper()).post(() -> {
                     setRecyclerView();
-                    //TODO: 경로를 눌렀을 때 recentArr에 추가
-                    /**추후 수정 필요**/
-//                    user.recentRouteArr.add(resultList.get(0));
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -370,7 +365,7 @@ public class SetRouteActivity extends AppCompatActivity {
                 Log.d("zz: B DestinationLineNum", targetDestinationLineNum);
 
                 db.collection("stations")
-                        .whereEqualTo("stationName", targetDestinationStationName)
+                        .whereEqualTo("odsayStationName", targetDestinationStationName)
                         .whereEqualTo("lineNum", targetDestinationLineNum)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -388,6 +383,7 @@ public class SetRouteActivity extends AppCompatActivity {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 // 검색 실패 시 처리
+                                Log.d("MAKARTEST", "find Destination fail");
                             }
                         });
 
@@ -406,7 +402,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                         // 값이 존재하는 경우, 해당 데이터를 수정
                                         DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                        //sourceStation 수정
+                                        //Station 수정
                                         documentSnapshot.getReference().update(
                                                 "sourceStation", briefToSourceStation,
                                                 "destinationStation", briefToDestinationStation,
