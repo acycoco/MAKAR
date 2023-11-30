@@ -263,7 +263,7 @@ public class SetRouteActivity extends AppCompatActivity {
             Date date = null;
             try {
                 //TODO 임시 막차 시간
-                date = sdf.parse("2023-11-30 20:20:00");
+                date = sdf.parse("2023-11-30 22:20:00");
             } catch (ParseException e) {
                 throw new RuntimeException(e);
             }

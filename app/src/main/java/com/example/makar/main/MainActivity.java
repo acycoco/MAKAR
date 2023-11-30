@@ -18,11 +18,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
-import com.example.makar.data.SubRouteItem;
 import com.example.makar.data.User;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
@@ -38,17 +36,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import java.util.concurrent.TimeUnit;
 
@@ -294,12 +288,13 @@ public class MainActivity extends AppCompatActivity {
                                 }
 
                                 //출발, 도착지 등록
-//                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
-//                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                Station sourceStation = SetRouteActivity.briefToSourceStation;
-                                Station destinationStation = SetRouteActivity.briefToDestinationStation;
+                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
+                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+//                                Station sourceStation = SetRouteActivity.briefToSourceStation;
+//                                Station destinationStation = SetRouteActivity.briefToDestinationStation;
                                 user.setRouteStation(sourceStation, destinationStation);
-                                Route selectedRoute = SetRouteActivity.selectedRoute;
+//                                Route selectedRoute = SetRouteActivity.selectedRoute;
+                                Route selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
                                 user.setSelectedRoute(selectedRoute);
 
                                 Log.d("MAKAR", "MAIN: Source : " + user.getSourceStation());
@@ -345,7 +340,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
-//                                    startNotification();
+                                    startNotification();
                                     leftTime = 10;
 
                                     //막차, 하차 시간 설정
