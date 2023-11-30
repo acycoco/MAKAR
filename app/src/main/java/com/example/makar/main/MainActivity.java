@@ -284,7 +284,9 @@ public class MainActivity extends AppCompatActivity {
                                 //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKARTEST", "user.recentArr : "+user.getRecentRouteArr().toString());
-                                user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
+                                Log.d("MAKARTEST", "user.favoriteRouteArr : "+user.getFavoriteRouteArr().toString());
+
+//                                user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
                                 //막차, 하차 알림
                                 String makarAlarmTime = documentSnapshot.get("makarAlarmTime", String.class);
                                 String getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", String.class);
