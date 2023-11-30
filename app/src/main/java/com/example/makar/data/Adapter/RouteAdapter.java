@@ -15,7 +15,9 @@ import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.route.listener.OnBookmarkClickListener;
 import com.example.makar.route.listener.OnRouteClickListener;
 
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> {
 
@@ -60,6 +62,11 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         destinationStation = route.getBriefRoute().get(size - 1);
         totalTime = String.valueOf(route.getTotalTime());
 
+        int makarTime = (int)TimeUnit.MILLISECONDS.toMinutes(route.getMakarTime().getTime() - new Date().getTime());
+        if(makarTime <= 0){
+            //TODO 예외처리 필요
+        }
+
         if (size > 2) {
             holder.binding.transferStationImageView1.setVisibility(View.VISIBLE);
             holder.binding.transferStationTextView1.setVisibility(View.VISIBLE);
@@ -91,6 +98,7 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
         holder.binding.totalTimeTextView.setText(totalTime + "분");
         holder.binding.sourceStationTextView.setText(sourceStation.getStationName() + "역 >");
         holder.binding.destinationStationTextView.setText(destinationStation.getStationName() + "역");
+        holder.binding.makarTextView.setText(makarTime +" 분 후 막차");
 
         holder.binding.routeList.setOnClickListener(new View.OnClickListener() {
             @Override

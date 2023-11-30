@@ -18,9 +18,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
+import com.example.makar.data.SubRouteItem;
 import com.example.makar.data.User;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
@@ -36,13 +38,17 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 
@@ -259,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                             QuerySnapshot querySnapshot = task.getResult();
                             if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                 DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+
                                 //즐겨찾는 역 등록
                                 Station homeStation = documentSnapshot.get("homeStation", Station.class);
                                 Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
@@ -289,7 +296,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKAR", "MAIN: selectedRoute : " + user.getSelectedRoute());
 
                                 //즐겨찾는 경로, 최근 경로 등록
-                                user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
+//                                user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKARTEST", "user.recentArr : " + user.getRecentRouteArr().toString());
 
                                 // user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
@@ -331,8 +338,7 @@ public class MainActivity extends AppCompatActivity {
                                     leftTime = 10;
 
                                     //막차, 하차 시간 설정
-                                    //임시 막차시간 - 현재로부터 5분 뒤
-                                    makarTime = setAlarmTime(new Date(), 5); //TODO 막차시간 수정 필요
+                                    makarTime = selectedRoute.getMakarTime();
                                     int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
                                     getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
 
@@ -357,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private Date setAlarmTime(Date date, int alarmTime){
+    static public Date setAlarmTime(Date date, int alarmTime){
         Calendar cal = Calendar.getInstance();
         cal.setTime(date); //시간 설정
         if(alarmTime >= 10) {

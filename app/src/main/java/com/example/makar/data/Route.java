@@ -1,11 +1,12 @@
 package com.example.makar.data;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Route {
 
-    private String makarTime;
+    private Date makarTime; //막차 시간
     private int totalTime;
     private int transitCount;
     private List<SubRouteItem> subRouteItems;
@@ -45,8 +46,9 @@ public class Route {
     public Station getDestinationStation() {
         return destinationStation;
     }
+    public Date getMakarTime(){return makarTime;}
 
-    public void setMakarTime(String makarTime) {
+    public void setMakarTime(Date makarTime) {
         this.makarTime = makarTime;
     }
 

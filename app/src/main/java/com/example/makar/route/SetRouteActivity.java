@@ -55,7 +55,10 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -253,7 +256,17 @@ public class SetRouteActivity extends AppCompatActivity {
 
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
-            route.setMakarTime("2023-11-25 14:36:30"); //TODO 막차시간 구하기 (막차시간 임시로 설정)
+
+            //TODO 막차시간 구하기 (막차시간 임시로 설정)
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            try {
+                //TODO 임시 막차 시간
+                date = sdf.parse("2023-11-30 20:20:00");
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
+            route.setMakarTime(date); //Date type으로 막차 오는 시간 입력 필요
             routes.add(route);
         }
         return routes;
