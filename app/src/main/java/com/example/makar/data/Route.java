@@ -1,6 +1,5 @@
 package com.example.makar.data;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class Route {
@@ -8,15 +7,15 @@ public class Route {
     private String makarTime;
     private int totalTime;
     private int transitCount;
-    private List<SubRouteItem> subRouteItems;
+    private List<SubRouteItem> routeItems;
     private List<BriefStation> briefRoute;
     private Station sourceStation;
     private Station destinationStation;
 
-    public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems, List<BriefStation> briefRoute, Station sourceStation, Station destinationStation) {
+    public Route(int totalTime, int transitCount, List<SubRouteItem> routeItems, List<BriefStation> briefRoute, Station sourceStation, Station destinationStation) {
         this.totalTime = totalTime;
         this.transitCount = transitCount;
-        this.subRouteItems = subRouteItems;
+        this.routeItems = routeItems;
         this.briefRoute = briefRoute;
         this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;
@@ -31,7 +30,7 @@ public class Route {
     }
 
     public List<SubRouteItem> getRouteItems() {
-        return subRouteItems;
+        return routeItems;
     }
 
     public List<BriefStation> getBriefRoute() {
@@ -55,7 +54,7 @@ public class Route {
         return "Route{" +
                 "totalTime=" + totalTime +
                 ", transitCount=" + transitCount +
-                ", subRouteItems=" + subRouteItems +
+                ", subRouteItems=" + routeItems +
                 ", briefRoute=" + briefRoute +
                 '}';
     }

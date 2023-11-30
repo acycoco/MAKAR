@@ -212,14 +212,14 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
 
         if (homeStation != null) {
-            textViewHome.setText(" " + homeStation.getStationName() + "역 " + homeStation.getLineNum());
+            textViewHome.setText(" " + homeStation.getFullName());
         }
        else {
             textViewHome.setText(R.string.home_station_hint);
         }
 
         if (schoolStation != null) {
-          textViewSchool.setText(" " + schoolStation.getStationName() + "역 " + schoolStation.getLineNum());
+          textViewSchool.setText(" " + schoolStation.getFullName());
         }else {
             textViewSchool.setText(R.string.school_station_hint);
         }

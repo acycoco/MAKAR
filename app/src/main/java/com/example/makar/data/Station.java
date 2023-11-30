@@ -70,6 +70,9 @@ public class Station {
         return odsayLaneType;
     }
 
+    public String getFullName() {
+        return stationName + "역 " + lineNum;
+    }
     @Override
     public String toString() {
         return "Station{" +

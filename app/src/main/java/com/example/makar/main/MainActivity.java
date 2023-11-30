@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 //        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
-        return (int)(date.getTime() - currentTime.getTime());
+        return (int) (date.getTime() - currentTime.getTime());
     }
 
     private void setRouteUnset() {
@@ -312,8 +312,8 @@ public class MainActivity extends AppCompatActivity {
                                 //막차, 하차 알림
                                 int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
                                 int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
-                                if (makarAlarmTime<=0) makarAlarmTime = 10;
-                                if (getoffAlarmTime<=0) getoffAlarmTime = 10;
+                                if (makarAlarmTime <= 0) makarAlarmTime = 10;
+                                if (getoffAlarmTime <= 0) getoffAlarmTime = 10;
 
                                 user.setMakarAlarmTime(makarAlarmTime);
                                 user.setGetOffAlarmTime(getoffAlarmTime);
@@ -341,7 +341,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
-                                    startNotification();
+//                                    startNotification();
                                     leftTime = 10;
 
                                     //막차, 하차 시간 설정
@@ -350,9 +350,9 @@ public class MainActivity extends AppCompatActivity {
                                     int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
                                     getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
 
-                                    Log.d("TIMETEST", "makarTime(Set) : "+makarTime);
-                                    Log.d("TIMETEST", "getOffTime(Set) : "+getOffTime);
-                                    Log.d("TIMETEST", "alarmTime(Set) : "+alarmTime);
+                                    Log.d("TIMETEST", "makarTime(Set) : " + makarTime);
+                                    Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
+                                    Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
 
 
                                     MainActivityChangeView.changeView(
@@ -371,13 +371,13 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private Date setAlarmTime(Date date, int alarmTime){
+    private Date setAlarmTime(Date date, int alarmTime) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date); //시간 설정
-        if(alarmTime >= 10) {
+        if (alarmTime >= 10) {
             cal.add(Calendar.MINUTE, alarmTime); //분 연산
             return new Date(String.valueOf(cal.getTime()));
-        }else{
+        } else {
             return new Date(String.valueOf(cal.getTime()));
         }
     }

@@ -1,5 +1,6 @@
 package com.example.makar.route;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -308,14 +309,14 @@ public class SetRouteActivity extends AppCompatActivity {
     private void setSearchViewText() {
         // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
-            sourceBtn.setText("  " + sourceStation.getStationName() + "역 " + sourceStation.getLineNum());
+            sourceBtn.setText("  " + sourceStation.getFullName());
         } else {
             sourceBtn.setText("");
         }
 
         // 서버에 도착역 저장했을 때
         if (destinationStation != null) {
-            destinationBtn.setText("  " + destinationStation.getStationName() + "역 " + destinationStation.getLineNum());
+            destinationBtn.setText("  " + destinationStation.getFullName());
         } else {
             destinationBtn.setText("");
         }
@@ -393,6 +394,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
                 user.getRecentRouteArr().add(resultList.get(0));
                 user.setSelectedRoute(selectedRoute);
+                Log.d("MAKAR_SET_ROUTE", selectedRoute.toString());
 
                 // 사용자를 식별해 데이터 저장
                 firebaseFirestore.collection("users")
@@ -485,7 +487,9 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
 //                                                                user.addFavoriteRoute(route);
+                                                                // TODO: 이미지 안 바뀜
                                                                 recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
+                                                                adapter.notifyDataSetChanged();
                                                                 Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
                                                                 Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentSnapshot.getId());
                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
@@ -512,7 +516,9 @@ public class SetRouteActivity extends AppCompatActivity {
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if (task.isSuccessful()) {
 //                                                                                user.addFavoriteRoute(route);
+                                                                                // TODO: 이미지 안 바뀜
                                                                                 recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
+                                                                                adapter.notifyDataSetChanged();
                                                                                 Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
                                                                                 Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
                                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
