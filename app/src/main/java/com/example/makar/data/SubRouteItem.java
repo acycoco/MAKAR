@@ -1,9 +1,11 @@
 package com.example.makar.data;
 
 public class SubRouteItem {
-    private final SubRoute subRoute;
-    private final TransferInfo transferInfo;
+    private SubRoute subRoute;
+    private TransferInfo transferInfo;
 
+    public SubRouteItem() {
+    }
     public SubRouteItem(SubRoute subpath, TransferInfo transferInfo) {
         this.subRoute = subpath;
         this.transferInfo = transferInfo;

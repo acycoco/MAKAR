@@ -1,9 +1,11 @@
 package com.example.makar.data;
 
 public class BriefStation {
-    private final String stationName;
-    private final int lineNum;
+    private String stationName;
+    private int lineNum;
 
+    public BriefStation() {
+    }
     public BriefStation(String stationName, int lineNum) {
         this.stationName = stationName;
         this.lineNum = lineNum;

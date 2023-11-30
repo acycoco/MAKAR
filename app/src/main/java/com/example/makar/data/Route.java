@@ -12,6 +12,8 @@ public class Route {
     private Station sourceStation;
     private Station destinationStation;
 
+    public Route() {
+    }
     public Route(int totalTime, int transitCount, List<SubRouteItem> routeItems, List<BriefStation> briefRoute, Station sourceStation, Station destinationStation) {
         this.totalTime = totalTime;
         this.transitCount = transitCount;

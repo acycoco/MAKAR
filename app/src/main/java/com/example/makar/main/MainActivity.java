@@ -25,7 +25,6 @@ import com.example.makar.data.User;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
-import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.OnRouteListClickListener;
 import com.example.makar.route.SetRouteActivity;
@@ -39,13 +38,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
@@ -73,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
         setActionBar();
         setToolBar();
         //setRecyclerView(); //경로 관련 recyclerView set
-
 
         mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
@@ -279,7 +275,7 @@ public class MainActivity extends AppCompatActivity {
                                     Log.e("MAKAR_ERROR", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
                                 }
 
-                                // TODO: 설정한 경로 불러오기 에러
+                                // 설정한 경로 불러오기
                                 try {
                                     Route selectedRoute;
 
