@@ -1,7 +1,6 @@
 package com.example.makar.data.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,8 @@ import com.example.makar.R;
 import com.example.makar.data.LineNumImage;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.SearchRecyclerViewItemBinding;
-import com.example.makar.route.OnItemClickListener;
+import com.example.makar.route.listener.OnItemClickListener;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder> {

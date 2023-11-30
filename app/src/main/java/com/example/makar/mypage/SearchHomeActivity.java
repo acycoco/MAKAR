@@ -18,7 +18,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchHomeBinding;
-import com.example.makar.route.OnItemClickListener;
+import com.example.makar.route.listener.OnItemClickListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;

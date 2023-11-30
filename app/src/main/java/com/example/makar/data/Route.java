@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Route {
 
-    private String makarTime;
+    private Date makarTime; //막차 시간
     private int totalTime;
     private int transitCount;
     private List<SubRouteItem> routeItems;
@@ -46,8 +46,9 @@ public class Route {
     public Station getDestinationStation() {
         return destinationStation;
     }
+    public Date getMakarTime(){return makarTime;}
 
-    public void setMakarTime(String makarTime) {
+    public void setMakarTime(Date makarTime) {
         this.makarTime = makarTime;
     }
 

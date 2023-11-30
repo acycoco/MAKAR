@@ -22,6 +22,7 @@ import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySearchDestinationBinding;
 import com.example.makar.main.MainActivity;
 import com.example.makar.mypage.SetFavoriteStationActivity;
+import com.example.makar.route.listener.OnItemClickListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
