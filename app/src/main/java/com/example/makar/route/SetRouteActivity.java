@@ -66,13 +66,13 @@ public class SetRouteActivity extends AppCompatActivity {
     public static Station sourceStation, destinationStation;
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     private User user = MainActivity.user;
-    public Route selectedRoute;
+    public static Route selectedRoute;
     public List<Route> resultList = new ArrayList<>();
 
     private RecyclerView recyclerView;
     private RouteAdapter adapter;
-    private Station briefToSourceStation;
-    private Station briefToDestinationStation;
+    public static Station briefToSourceStation;
+    public static Station briefToDestinationStation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -252,7 +252,6 @@ public class SetRouteActivity extends AppCompatActivity {
                 count++;
             }
 
-
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
             route.setMakarTime("2023-11-25 14:36:30"); //TODO 막차시간 구하기 (막차시간 임시로 설정)
@@ -332,19 +331,19 @@ public class SetRouteActivity extends AppCompatActivity {
         adapter.setOnRouteClickListener(new OnRouteClickListener() {
             @Override
             public void onRouteClick(Route route) {
-                Log.d("touch1", route.toString());
-                Log.d("touch1", route.getBriefRoute().get(0).getStationName());
-                Log.d("touch1", route.getBriefRoute().get(0).getLineNumToString());
+                selectedRoute = route;
 
                 // briefStation 객체 -> Station 객체
                 int briefRouteSize = route.getBriefRoute().size();
 
                 String targetSourceStationName = route.getBriefRoute().get(0).getStationName();
                 String targetSourceLineNum = route.getBriefRoute().get(0).getLineNumToString();
+                Log.d("zz: B SourceStationName", targetSourceStationName);
+                Log.d("zz: B SourceLineNum", targetSourceLineNum);
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("stations")
-                        .whereEqualTo("stationName", targetSourceStationName)
+                        .whereEqualTo("odsayStationName", targetSourceStationName)
                         .whereEqualTo("lineNum", targetSourceLineNum)
                         .get()
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -352,20 +351,23 @@ public class SetRouteActivity extends AppCompatActivity {
                             public void onSuccess(QuerySnapshot querySnapshot) {
                                 for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                                     Station station = documentSnapshot.toObject(Station.class);
-                                    Log.d("find", station.toString());
+                                    Log.d("zz: BTS", station.toString());
                                     briefToSourceStation = station;
+                                    Log.d("zz: BTS", String.valueOf(briefToSourceStation));
                                 }
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                // 검색 실패 시 처리
                             }
                         });
+                Log.d("zz: briefToSourceStation", String.valueOf(briefToSourceStation));
 
                 String targetDestinationStationName = route.getBriefRoute().get(briefRouteSize - 1).getStationName();
                 String targetDestinationLineNum = route.getBriefRoute().get(briefRouteSize - 1).getLineNumToString();
+                Log.d("zz: B DestinationStationName", targetDestinationStationName);
+                Log.d("zz: B DestinationLineNum", targetDestinationLineNum);
 
                 db.collection("stations")
                         .whereEqualTo("stationName", targetDestinationStationName)
@@ -374,14 +376,11 @@ public class SetRouteActivity extends AppCompatActivity {
                         .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                             @Override
                             public void onSuccess(QuerySnapshot querySnapshot) {
-                                // 쿼리 결과에서 문서를 가져옴
                                 for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
-                                    // Station 객체 생성 및 값 설정
                                     Station station = documentSnapshot.toObject(Station.class);
-                                    // 검색된 Station 정보 사용
-                                    // 예시: station.getStationCode(), station.getRailOpr(), 등등
-                                    Log.d("find", station.toString());
+                                    Log.d("RouteClick: BTS", station.toString());
                                     briefToDestinationStation = station;
+                                    Log.d("zz: BTS", String.valueOf(briefToDestinationStation));
                                 }
                             }
                         })
@@ -392,12 +391,6 @@ public class SetRouteActivity extends AppCompatActivity {
                             }
                         });
 
-                Log.d("touch1", route.getBriefRoute().get(briefRouteSize - 1).getStationName());
-
-                Log.d("touch", sourceStation.toString());
-                Log.d("touch", destinationStation.toString());
-
-                selectedRoute = route;
                 user.getRecentRouteArr().add(resultList.get(0));
                 user.setSelectedRoute(selectedRoute);
 
@@ -413,28 +406,20 @@ public class SetRouteActivity extends AppCompatActivity {
                                     if (querySnapshot != null && !querySnapshot.isEmpty()) {
                                         // 값이 존재하는 경우, 해당 데이터를 수정
                                         DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-
                                         //sourceStation 수정
-                                        documentSnapshot.getReference().update("sourceStation", briefToSourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        documentSnapshot.getReference().update(
+                                                "sourceStation", briefToSourceStation,
+                                                "destinationStation", briefToDestinationStation,
+                                                "selectedRoute", selectedRoute
+                                        ).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override
                                             public void onComplete(@NonNull Task<Void> task) {
-                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                            }
-                                        });
-                                        //destinationStation 수정
-                                        documentSnapshot.getReference().update("destinationStation", briefToDestinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                Log.d("find", user.getSourceStation().toString());
-                                                Log.d("find", user.getDestinationStation().toString());
-                                            }
-                                        });
-                                        documentSnapshot.getReference().update("selectedRoute", selectedRoute).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                            @Override
-                                            public void onComplete(@NonNull Task<Void> task) {
-                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되자었습니다. ID: " + documentSnapshot.getId());
-                                                Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getSelectedRoute());
+                                                if (task.isSuccessful()) {
+                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                    Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getSelectedRoute());
+                                                } else {
+                                                    Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
+                                                }
                                             }
                                         });
                                     } else {
@@ -445,31 +430,22 @@ public class SetRouteActivity extends AppCompatActivity {
                                                     @Override
                                                     public void onSuccess(DocumentReference documentReference) {
                                                         Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-                                                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                                        documentSnapshot.getReference().update("sourceStation", briefToSourceStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+
+                                                        documentReference.update(
+                                                                "sourceStation", briefToSourceStation,
+                                                                "destinationStation", briefToDestinationStation,
+                                                                "selectedRoute", selectedRoute
+                                                        ).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
                                                             public void onComplete(@NonNull Task<Void> task) {
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                                if (task.isSuccessful()) {
+                                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                                    Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getSelectedRoute());
+                                                                } else {
+                                                                    Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
+                                                                }
                                                             }
                                                         });
-                                                        documentSnapshot.getReference().update("destinationStation", briefToDestinationStation).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                            }
-                                                        });
-                                                        documentSnapshot.getReference().update("selectedRoute", selectedRoute).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                            }
-                                                        });
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 추가 중 오류 발생: " + e.getMessage());
                                                     }
                                                 });
                                     }

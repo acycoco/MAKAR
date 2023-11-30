@@ -268,11 +268,15 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKARTEST", "MAIN: School : "+user.getSchoolStation());
 
                                 //출발, 도착지 등록
-                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
-                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+//                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
+//                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                                Station sourceStation = SetRouteActivity.briefToSourceStation;
+                                Station destinationStation = SetRouteActivity.briefToDestinationStation;
                                 user.setRouteStation(sourceStation, destinationStation);
-//                                Route selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
-//                                user.setSelectedRoute(selectedRoute);
+                                Route selectedRoute = SetRouteActivity.selectedRoute;
+                                if (selectedRoute != null) {
+                                    user.setSelectedRoute(selectedRoute);
+                                }
                                 Log.d("MAKAR", "MAIN: Source : "+user.getSourceStation());
                                 Log.d("MAKAR", "MAIN: Destination : "+user.getDestinationStation());
                                 Log.d("MAKAR", "MAIN: selectedRoute : "+user.getSelectedRoute());
