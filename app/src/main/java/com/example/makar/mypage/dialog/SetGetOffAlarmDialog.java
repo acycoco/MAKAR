@@ -24,7 +24,7 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     private Context context;
     private Button positiveBtn, negativeBtn;
     static Button setAlarmTimeBtn;
-    static String getOffAlarmTime;
+    static int getOffAlarmTime;
 
     public SetGetOffAlarmDialog(@NonNull Context context) {
         super(context);
@@ -71,7 +71,7 @@ public class SetGetOffAlarmDialog extends Dialog implements SetAlarmDialog {
     }
 
     @Override
-    public void sendDataToMainActivity(String data) {
+    public void sendDataToMainActivity(int data) {
         Task<QuerySnapshot> usersCollection = FirebaseFirestore.getInstance().collection("users")
                 .whereEqualTo("userUId", LoginActivity.userUId).get();
         usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

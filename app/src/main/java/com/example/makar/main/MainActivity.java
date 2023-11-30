@@ -42,20 +42,21 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
 public class MainActivity extends AppCompatActivity {
     private int leftTime; //막차까지 남은 시간
-    private String makarTimeString = "2023-11-29 21:27:20"; //임시 막차 시간
-    private String getOffTimeString = "2023-11-10 13:59:50"; //임시 하차 시간
+    private Date makarTime; //임시 막차 시간
+    private Date getOffTime; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
+    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ActivityMainBinding mainBinding;
-    private static List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
-    //    public static List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
     public static User user = new User(LoginActivity.userUId);
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
 
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (isRouteSet) {
-                    leftTime = checkNotificationTime(makarTimeString);
+                    leftTime = checkNotificationTime(makarTime);
                     if (leftTime <= 0) {
                         //막차 시간 달성
                         setRouteUnset();
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
 
                         //경로는 설정되어있으나 시간 미달
-                        if (timeDifferenceMinutes == Integer.parseInt(user.getMakarAlarmTime())) {
+                        if (timeDifferenceMinutes == user.getMakarAlarmTime()) {
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 " + timeDifferenceMinutes + "분 남았습니다", MainActivity.this);
                         }
@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         changeMainTitleText(timeDifferenceMinutes);
                     }
                 } else if (isGetOffSet) {
-                    if (checkNotificationTime(getOffTimeString) < 0) {
-                        //현재 시간이 하차 시간이면 notification show
+                    if (checkNotificationTime(getOffTime) < 0) {
+                        //현재 시간이 하차 알림 시간이면 notification show
                         showNotification("MAKAR 하차 알림", "하차까지 " + user.getGetOffAlarmTime() + "분 남았습니다", MainActivity.this); //text 수정 필요, %d는 설정한 하차 알림 시간(10)
                         isGetOffSet = false;
                     }
@@ -158,15 +158,12 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
-        Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
-
     }
 
     //자주 가는 역 설정 다이얼로그
     private void setFavoriteStation() {
         //자주가는 역 설정X, 경로 설정X 일 때, 자주 가는 역 설정 다이얼로그 띄움
-        //TODO 자주가는 역 변수 수정 필요
-        if (SetFavoriteStationActivity.homeStation == null || SetFavoriteStationActivity.schoolStation == null) {
+        if (user.getHomeStation() == null || user.getSchoolStation() == null) {
             SetFavoriteStationDialog setFavoriteStationDialog = new SetFavoriteStationDialog(this);
             setFavoriteStationDialog.show();
         }
@@ -198,20 +195,20 @@ public class MainActivity extends AppCompatActivity {
      * 막차 알림 시간 측정
      **/
     //수정 필요
-    private int checkNotificationTime(String TimeString) {
+    private int checkNotificationTime(Date date) {
         Date currentTime = new Date();
         Log.d("MAKAR", "currentTime : " + String.valueOf(currentTime));
 
-        //현재 시간과 막차 시간 - 알림 시간 비교
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date specifiedDateTime;
-        try {
-            specifiedDateTime = sdf.parse(TimeString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
+//        //현재 시간과 TimeString(막차시간) 비교
+//        Date specifiedDateTime;
+//        try {
+//            specifiedDateTime = sdf.parse(TimeString);
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
+        return (int)(date.getTime() - currentTime.getTime());
     }
 
     private void setRouteUnset() {
@@ -220,7 +217,11 @@ public class MainActivity extends AppCompatActivity {
         //TODO 임시 출발지, 도착지 초기화
         SetRouteActivity.sourceStation = null;
         SetRouteActivity.destinationStation = null;
+        SetRouteActivity.briefToSourceStation = null;
+        SetRouteActivity.briefToDestinationStation = null;
+        SetRouteActivity.selectedRoute = null;
 
+        //선택된 루트, 출발역, 도착역 초기화
         deleteStation("sourceStation");
         deleteStation("destinationStation");
         updateUI(MainActivity.class);
@@ -238,6 +239,7 @@ public class MainActivity extends AppCompatActivity {
                     DocumentReference documentReference = documentSnapshot.getReference();
 
                     documentReference.update(path, null);
+                    documentReference.update("selectedRoute", null); //선택된 루트 초기화
                 } else {
                     Log.d("MAKAR", "Station 초기화 중 오류 발생");
                 }
@@ -274,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
                                 } catch (Exception e) {
                                     Log.e("MAKARrrr", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
                                 }
+                              
 
                                 //출발, 도착지 등록
 //                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
@@ -282,9 +285,8 @@ public class MainActivity extends AppCompatActivity {
                                 Station destinationStation = SetRouteActivity.briefToDestinationStation;
                                 user.setRouteStation(sourceStation, destinationStation);
                                 Route selectedRoute = SetRouteActivity.selectedRoute;
-                                if (selectedRoute != null) {
-                                    user.setSelectedRoute(selectedRoute);
-                                }
+                                user.setSelectedRoute(selectedRoute);
+
                                 Log.d("MAKAR", "MAIN: Source : " + user.getSourceStation());
                                 Log.d("MAKAR", "MAIN: Destination : " + user.getDestinationStation());
                                 Log.d("MAKAR", "MAIN: selectedRoute : " + user.getSelectedRoute());
@@ -292,14 +294,16 @@ public class MainActivity extends AppCompatActivity {
                                 //즐겨찾는 경로, 최근 경로 등록
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKARTEST", "user.recentArr : " + user.getRecentRouteArr().toString());
+
+                                // user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
                                 Log.d("MAKARTEST", "user.favoriteRouteArr : " + user.getFavoriteRouteArr().toString());
 
-//                                user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
                                 //막차, 하차 알림
-                                String makarAlarmTime = documentSnapshot.get("makarAlarmTime", String.class);
-                                String getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", String.class);
-                                if (makarAlarmTime == null) makarAlarmTime = "10";
-                                if (getoffAlarmTime == null) getoffAlarmTime = "10";
+                                int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
+                                int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
+                                if (makarAlarmTime<=0) makarAlarmTime = 10;
+                                if (getoffAlarmTime<=0) getoffAlarmTime = 10;
+
                                 user.setMakarAlarmTime(makarAlarmTime);
                                 user.setGetOffAlarmTime(getoffAlarmTime);
                                 Log.d("MAKARTEST", "MakarAlarmTime : " + user.getMakarAlarmTime());
@@ -316,14 +320,29 @@ public class MainActivity extends AppCompatActivity {
                                             "",
                                             "");
                                     Log.d("MAKAR", "route is UnSet");
+
+                                    //즐겨찾는 역 등록 다이얼로그
+                                    setFavoriteStation();
+
+                                    //막차, 하차 시간 현재로 설정
+                                    makarTime = new Date();
+                                    getOffTime = makarTime;
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
+                                    startNotification();
                                     leftTime = 10;
-//                                    startNotification();
 
-                                    //makarTimeString = ""; //막차 시간 설정
-                                    //getOffTimeString = ""; //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
+                                    //막차, 하차 시간 설정
+                                    //임시 막차시간 - 현재로부터 5분 뒤
+                                    makarTime = setAlarmTime(new Date(), 5); //TODO 막차시간 수정 필요
+                                    int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
+                                    getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
+
+                                    Log.d("TIMETEST", "makarTime(Set) : "+makarTime);
+                                    Log.d("TIMETEST", "getOffTime(Set) : "+getOffTime);
+                                    Log.d("TIMETEST", "alarmTime(Set) : "+alarmTime);
+
 
                                     MainActivityChangeView.changeView(
                                             mainBinding,
@@ -339,6 +358,17 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private Date setAlarmTime(Date date, int alarmTime){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date); //시간 설정
+        if(alarmTime >= 10) {
+            cal.add(Calendar.MINUTE, alarmTime); //분 연산
+            return new Date(String.valueOf(cal.getTime()));
+        }else{
+            return new Date(String.valueOf(cal.getTime()));
+        }
     }
 
 
@@ -378,18 +408,18 @@ public class MainActivity extends AppCompatActivity {
                             //Route에 출발지, 도착지만 따로 Station type으로 저장
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
+                            reference.update("selectedRoute", route);
                             reference.update("recentRouteArr", user.getRecentRouteArr());
                         }
                     }
                 });
-//                finish();
             }
         });
 
 
         //즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = mainBinding.favoriteRouteText;
-        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRouteArr);
+        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
@@ -409,7 +439,7 @@ public class MainActivity extends AppCompatActivity {
                             //Route에 출발지, 도착지만 따로 Station type으로 저장
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
-                            reference.update("favoriteRouteArr", favoriteRouteArr);
+                            reference.update("favoriteRouteArr", user.getFavoriteRouteArr());
 
                             //최근 경로에 해당 즐겨찾는 경로 추가
                             addRouteToList(user.getRecentRouteArr(), route);
@@ -417,7 +447,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-//                finish();
             }
         });
     }

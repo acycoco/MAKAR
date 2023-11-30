@@ -1,5 +1,5 @@
 package com.example.makar.data.dialog;
 
 public interface SetAlarmTimeDialog {
-    void sendDataToFirstDialog(String data);
+    void sendDataToFirstDialog(int data);
 }

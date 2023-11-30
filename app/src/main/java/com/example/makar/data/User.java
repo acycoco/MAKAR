@@ -11,8 +11,8 @@ public class User {
     Station schoolStation;
     Station sourceStation;
     Station destinationStation;
-    String makarAlarmTime = "10";
-    String getOffAlarmTime = "10";
+    int makarAlarmTime = 10;
+    int getOffAlarmTime = 10;
     Route selectedRoute;
     List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
@@ -47,11 +47,11 @@ public class User {
         return selectedRoute;
     }
 
-    public String getMakarAlarmTime() {
+    public int getMakarAlarmTime() {
         return makarAlarmTime;
     }
 
-    public String getGetOffAlarmTime() {
+    public int getGetOffAlarmTime() {
         return getOffAlarmTime;
     }
 
@@ -91,11 +91,11 @@ public class User {
         this.userUId = userUId;
     }
 
-    public void setMakarAlarmTime(String makarAlarmTime) {
+    public void setMakarAlarmTime(int makarAlarmTime) {
         this.makarAlarmTime = makarAlarmTime;
     }
 
-    public void setGetOffAlarmTime(String getOffAlarmTime) {
+    public void setGetOffAlarmTime(int getOffAlarmTime) {
         this.getOffAlarmTime = getOffAlarmTime;
     }
 
