@@ -1,16 +1,17 @@
 package com.example.makar.data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Route {
 
     private String makarTime;
-    private final int totalTime;
-    private final int transitCount;
-    private final List<SubRouteItem> subRouteItems;
-    private final List<BriefStation> briefRoute;
-    private final Station sourceStation;
-    private final Station destinationStation;
+    private int totalTime;
+    private int transitCount;
+    private List<SubRouteItem> subRouteItems;
+    private List<BriefStation> briefRoute;
+    private Station sourceStation;
+    private Station destinationStation;
 
     public Route(int totalTime, int transitCount, List<SubRouteItem> subRouteItems, List<BriefStation> briefRoute, Station sourceStation, Station destinationStation) {
         this.totalTime = totalTime;

@@ -62,6 +62,7 @@ import java.util.Objects;
 public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding setRouteBinding;
+    RouteRecyclerViewItemBinding recyclerViewItemBinding;
     public Button sourceBtn, destinationBtn;
 
     //임시 출발지, 목적지 변수
@@ -330,8 +331,7 @@ public class SetRouteActivity extends AppCompatActivity {
         adapter = new RouteAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        RouteRecyclerViewItemBinding binding;
-        binding = RouteRecyclerViewItemBinding.inflate(getLayoutInflater());
+        recyclerViewItemBinding = RouteRecyclerViewItemBinding.inflate(getLayoutInflater());
         adapter.setOnRouteClickListener(new OnRouteClickListener() {
             @Override
             public void onRouteClick(Route route) {
@@ -488,9 +488,10 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
-                                                                user.addFavoriteRoute(route);
+//                                                                user.addFavoriteRoute(route);
+                                                                recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
                                                                 Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
-                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentSnapshot.getId());
                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
                                                             } else {
                                                                 Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
@@ -514,9 +515,10 @@ public class SetRouteActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if (task.isSuccessful()) {
-                                                                                user.addFavoriteRoute(route);
+//                                                                                user.addFavoriteRoute(route);
+                                                                                recyclerViewItemBinding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
                                                                                 Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
-                                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                                                Log.d("MAKAR", "사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
                                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
                                                                             } else {
                                                                                 Log.d("MAKAR", "사용자 데이터 수정 실패: ", task.getException());
@@ -526,7 +528,6 @@ public class SetRouteActivity extends AppCompatActivity {
                                                         }
                                                     }
                                                 });
-                                        binding.favoriteRouteImageView.setImageResource(R.drawable.ic_star_line_filled);
                                     }
                                 } else {
                                     Toast.makeText(SetRouteActivity.this, R.string.set_favorite_error_toast_3, Toast.LENGTH_SHORT).show();
