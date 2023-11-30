@@ -9,4 +9,18 @@
         android:id="@+id/toolbar_set_favorite_route"
         layout="@layout/custom_toolbar" />
 
+    <TextView
+        android:id="@+id/empty_list_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="즐겨찾는 경로가 없습니다."
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/set_favorite_station_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

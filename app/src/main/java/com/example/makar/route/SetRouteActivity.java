@@ -467,7 +467,6 @@ public class SetRouteActivity extends AppCompatActivity {
             @Override
             public void onBookmarkClick(Route route) {
                 List<Route> favoriteRouteArr = user.getFavoriteRouteArr();
-                user.addFavoriteRoute(route);
 
                 firebaseFirestore.collection("users")
                         .whereEqualTo("userUId", LoginActivity.userUId)
@@ -483,12 +482,14 @@ public class SetRouteActivity extends AppCompatActivity {
                                         if (favoriteRouteArr != null && favoriteRouteArr.size() >= 3) {
                                             Toast.makeText(SetRouteActivity.this, "최대 즐겨찾기 수를 초과하였습니다.", Toast.LENGTH_SHORT).show();
                                         } else {
-                                            //sourceStation 수정
+                                            // favoriteRouteArr 저장
                                             documentSnapshot.getReference().update("favoriteRouteArr", FieldValue.arrayUnion(route))
                                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
+                                                                user.addFavoriteRoute(route);
+                                                                Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
                                                                 Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
                                                             } else {
@@ -513,6 +514,8 @@ public class SetRouteActivity extends AppCompatActivity {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if (task.isSuccessful()) {
+                                                                                user.addFavoriteRoute(route);
+                                                                                Toast.makeText(SetRouteActivity.this, "즐겨찾는 경로에 추가되었습니다", Toast.LENGTH_SHORT).show();
                                                                                 Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                                                 Log.d("MAKAR", "MAIN: 사용자 selectedRoute : " + user.getFavoriteRouteArr());
                                                                             } else {

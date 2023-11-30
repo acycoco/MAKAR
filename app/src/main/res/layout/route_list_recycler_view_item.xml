@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/source_station_image_view"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_line7" />
 
@@ -26,9 +26,28 @@
         tools:ignore="RtlSymmetry" />
 
     <ImageView
+        android:id="@+id/transfer_station_image_view1"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="7dp"
+        android:src="@drawable/ic_line7" />
+
+    <TextView
+        android:id="@+id/transfer_station_text_view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="남성역 >"
+        android:layout_gravity="center_vertical"
+        android:paddingStart="7dp"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        tools:ignore="RtlSymmetry" />
+
+    <ImageView
         android:id="@+id/destination_station_image_view"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
         android:src="@drawable/ic_line7" />
@@ -47,10 +66,10 @@
 
     <ImageView
         android:id="@+id/delete_image_view"
-        android:layout_width="25dp"
-        android:layout_height="25dp"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
-        android:src="@drawable/ic_line7" />
+        android:src="@drawable/ic_star_line_filled" />
 
 </LinearLayout>
