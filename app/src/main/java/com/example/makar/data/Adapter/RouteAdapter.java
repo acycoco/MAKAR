@@ -1,11 +1,9 @@
 package com.example.makar.data.Adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,8 +12,8 @@ import com.example.makar.data.BriefStation;
 import com.example.makar.data.LineNumImage;
 import com.example.makar.data.Route;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
-import com.example.makar.route.OnBookmarkClickListener;
-import com.example.makar.route.OnRouteClickListener;
+import com.example.makar.route.listener.OnBookmarkClickListener;
+import com.example.makar.route.listener.OnRouteClickListener;
 
 import java.util.List;
 

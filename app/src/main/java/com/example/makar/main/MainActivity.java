@@ -25,9 +25,8 @@ import com.example.makar.data.User;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
-import com.example.makar.mypage.SetFavoriteStationActivity;
 import com.example.makar.onboarding.LoginActivity;
-import com.example.makar.route.OnRouteListClickListener;
+import com.example.makar.route.listener.OnRouteListClickListener;
 import com.example.makar.route.SetRouteActivity;
 import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
@@ -39,13 +38,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
