@@ -269,14 +269,25 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKARTEST", "MAIN: Home : " + user.getHomeStation());
                                 Log.d("MAKARTEST", "MAIN: School : " + user.getSchoolStation());
 
+                                // TODO: 즐겨찾는 경로 불러오기 에러
                                 try {
                                     List<Route> favoriteRouteArr = new ArrayList<Route>();
 
                                     favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
+                                    Log.d("MAKAR_SUCCESS", "selectedRoute : " + favoriteRouteArr);
                                 } catch (Exception e) {
-                                    Log.e("MAKARrrr", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
+                                    Log.e("MAKAR_ERROR", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
                                 }
-                              
+
+                                // TODO: 설정한 경로 불러오기 에러
+                                try {
+                                    Route selectedRoute;
+
+                                    selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
+                                    Log.d("MAKAR_SUCCESS", "selectedRoute : " + selectedRoute);
+                                } catch (Exception e) {
+                                    Log.e("MAKAR_ERROR", "selectedRoute 가져오는 중 오류 발생: " + e.getMessage());
+                                }
 
                                 //출발, 도착지 등록
 //                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
