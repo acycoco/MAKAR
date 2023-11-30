@@ -42,6 +42,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        //getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
 
 
@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 if (isRouteSet) {
-                    leftTime = checkNotificationTime(makarTimeString);
+                    leftTime = checkNotificationTime(makarTime);
                     if (leftTime <= 0) {
                         //막차 시간 달성
                         setRouteUnset();
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
                         Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
 
                         //경로는 설정되어있으나 시간 미달
-                        if (timeDifferenceMinutes == Integer.parseInt(user.getMakarAlarmTime())) {
+                        if (timeDifferenceMinutes == user.getMakarAlarmTime()) {
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 " + timeDifferenceMinutes + "분 남았습니다", MainActivity.this);
                         }
@@ -135,8 +135,8 @@ public class MainActivity extends AppCompatActivity {
                         changeMainTitleText(timeDifferenceMinutes);
                     }
                 } else if (isGetOffSet) {
-                    if (checkNotificationTime(getOffTimeString) < 0) {
-                        //현재 시간이 하차 시간이면 notification show
+                    if (checkNotificationTime(getOffTime) < 0) {
+                        //현재 시간이 하차 알림 시간이면 notification show
                         showNotification("MAKAR 하차 알림", "하차까지 " + user.getGetOffAlarmTime() + "분 남았습니다", MainActivity.this); //text 수정 필요, %d는 설정한 하차 알림 시간(10)
                         isGetOffSet = false;
                     }
@@ -195,19 +195,20 @@ public class MainActivity extends AppCompatActivity {
      * 막차 알림 시간 측정
      **/
     //수정 필요
-    private int checkNotificationTime(String TimeString) {
+    private int checkNotificationTime(Date date) {
         Date currentTime = new Date();
         Log.d("MAKAR", "currentTime : " + String.valueOf(currentTime));
 
-        //현재 시간과 TimeString(막차시간) 비교
-        Date specifiedDateTime;
-        try {
-            specifiedDateTime = sdf.parse(TimeString);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
+//        //현재 시간과 TimeString(막차시간) 비교
+//        Date specifiedDateTime;
+//        try {
+//            specifiedDateTime = sdf.parse(TimeString);
+//        } catch (ParseException e) {
+//            throw new RuntimeException(e);
+//        }
+//        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
+        return (int)(date.getTime() - currentTime.getTime());
     }
 
     private void setRouteUnset() {
@@ -284,6 +285,7 @@ public class MainActivity extends AppCompatActivity {
                                 user.setRecentRouteArr((List<Route>) documentSnapshot.get("recentRouteArr"));
                                 Log.d("MAKARTEST", "user.recentArr : " + user.getRecentRouteArr().toString());
                                 user.setFavoriteRouteArr((List<Route>) documentSnapshot.get("favoriteRouteArr"));
+
                                 //막차, 하차 알림
                                 int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
                                 int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
@@ -308,20 +310,26 @@ public class MainActivity extends AppCompatActivity {
 
                                     //즐겨찾는 역 등록 다이얼로그
                                     setFavoriteStation();
-                                    //AlarmTime set
+
+                                    //막차, 하차 시간 현재로 설정
                                     makarTime = new Date();
                                     getOffTime = makarTime;
-                                    Log.d("TIMETEST", "makarTime(UnSet) : "+makarTime);
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
-                                    leftTime = 10;
                                     startNotification();
+                                    leftTime = 10;
 
-                                    //막차 시간 설정
-                                    makarTime = new Date();
+                                    //막차, 하차 시간 설정
+                                    //임시 막차시간 - 현재로부터 5분 뒤
+                                    makarTime = setAlarmTime(new Date(), 5); //TODO 막차시간 수정 필요
                                     int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
-                                    getOffTime = setTimeString(makarTime, alarmTime); //하차 시간 설정  (makarTimeString + 차 탑승 시간 - getOffAlarmTime)
+                                    getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
+
+                                    Log.d("TIMETEST", "makarTime(Set) : "+makarTime);
+                                    Log.d("TIMETEST", "getOffTime(Set) : "+getOffTime);
+                                    Log.d("TIMETEST", "alarmTime(Set) : "+alarmTime);
+
 
                                     MainActivityChangeView.changeView(
                                             mainBinding,
@@ -339,8 +347,15 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    private Date setTimeString(Date date, int alarmTime){
-
+    private Date setAlarmTime(Date date, int alarmTime){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date); //시간 설정
+        if(alarmTime >= 10) {
+            cal.add(Calendar.MINUTE, alarmTime); //분 연산
+            return new Date(String.valueOf(cal.getTime()));
+        }else{
+            return new Date(String.valueOf(cal.getTime()));
+        }
     }
 
 
@@ -419,7 +434,6 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
-//                finish();
             }
         });
     }
