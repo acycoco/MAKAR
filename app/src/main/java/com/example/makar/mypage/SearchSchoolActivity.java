@@ -44,6 +44,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
         setActivityUtil();
         setRecyclerView();
         setSearchView();
+        setListener();
 
         db = FirebaseFirestore.getInstance();
     }

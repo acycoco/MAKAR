@@ -170,6 +170,7 @@ public class SignupActivity extends AppCompatActivity {
                     FirebaseUser user = mAuth.getCurrentUser();
                     Toast.makeText(SignupActivity.this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show();
 
+                    mAuth.signOut();
                     //회원가입 성공 후 로그인뷰로 이동
                     updateUI(user);
                 } else {

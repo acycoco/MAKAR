@@ -64,15 +64,21 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
+        Log.d("makar main login teset", "useruid = "+LoginActivity.userUId);
 
         setActivityUtil();
         setButtonListener();
         setFavoriteStationDialog();
         createUser();
         Log.d("MAKAR_MAIN", user.toString());
-        getUserData();
 
+        //setRecyclerView(); //경로 관련 recyclerView set
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        getUserData();
         //setRecyclerView(); //경로 관련 recyclerView set
     }
 
@@ -139,60 +145,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * 비동기_막차알림 실행
-     **/
-    private void startNotification() {
-        Runnable runnable;
-        Handler handler = new Handler();
-
-        runnable = new Runnable() { //비동기
-            @Override
-            public void run() {
-                if (isRouteSet) {
-                    leftTime = checkNotificationTime(makarTime);
-                    if (leftTime <= 0) {
-                        //막차 시간 달성
-                        setRouteUnset();
-                        Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
-                    } else {
-                        //남은 시간 계산
-                        int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
-                        Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
-
-                        //경로는 설정되어있으나 시간 미달
-                        if (timeDifferenceMinutes == user.getMakarAlarmTime()) {
-                            //막차까지 남은 시간이 지정한 알림 시간이면 notification show
-                            showNotification("MAKAR 막차 알림", "막차까지 " + timeDifferenceMinutes + "분 남았습니다", MainActivity.this);
-                        }
-                        //title text 변경
-                        changeMainTitleText(timeDifferenceMinutes);
-                    }
-                } else if (isGetOffSet) {
-                    if (checkNotificationTime(getOffTime) < 0) {
-                        //현재 시간이 하차 알림 시간이면 notification show
-                        showNotification("MAKAR 하차 알림", "하차까지 " + user.getGetOffAlarmTime() + "분 남았습니다", MainActivity.this); //text 수정 필요, %d는 설정한 하차 알림 시간(10)
-                        isGetOffSet = false;
-                    }
-                }
-                //notification 이후 경로 설정 해제, runnable remove
-                else {
-                    handler.removeCallbacks(this);
-                    Log.d("MAKAR", "remove runnable");
-                    return;
-                }
-                handler.postDelayed(this, 10000); // 10초마다 체크
-            }
-        };
-        handler.post(runnable);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        getUserData();
-        //setRecyclerView(); //경로 관련 recyclerView set
-    }
 
     private void getUserData() {
         firebaseFirestore.collection("users")
@@ -279,6 +231,8 @@ public class MainActivity extends AppCompatActivity {
                                     //막차, 하차 시간 현재로 설정
                                     makarTime = new Date();
                                     getOffTime = makarTime;
+                                    //경로 초기화
+                                    setRouteUnset();
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
@@ -341,22 +295,58 @@ public class MainActivity extends AppCompatActivity {
         binding.mainTitleText.setText(spannableString);
     }
 
-    /**
-     * 막차 알림 시간 측정
-     **/
-    //수정 필요
+
+    //비동기_막차알림 실행
+    private void startNotification() {
+        Runnable runnable;
+        Handler handler = new Handler();
+
+        runnable = new Runnable() { //비동기
+            @Override
+            public void run() {
+                if (isRouteSet) {
+                    leftTime = checkNotificationTime(makarTime);
+                    if (leftTime <= 0) {
+                        //막차 시간 달성
+                        setRouteUnset();
+                        Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
+                    } else {
+                        //남은 시간 계산
+                        int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
+                        Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
+
+                        //경로는 설정되어있으나 시간 미달
+                        if (timeDifferenceMinutes == user.getMakarAlarmTime()) {
+                            //막차까지 남은 시간이 지정한 알림 시간이면 notification show
+                            showNotification("MAKAR 막차 알림", "막차까지 " + timeDifferenceMinutes + "분 남았습니다", MainActivity.this);
+                        }
+                        //title text 변경
+                        changeMainTitleText(timeDifferenceMinutes);
+                    }
+                } else if (isGetOffSet) {
+                    if (checkNotificationTime(getOffTime) < 0) {
+                        //현재 시간이 하차 알림 시간이면 notification show
+                        showNotification("MAKAR 하차 알림", "하차까지 " + user.getGetOffAlarmTime() + "분 남았습니다", MainActivity.this); //text 수정 필요, %d는 설정한 하차 알림 시간(10)
+                        isGetOffSet = false;
+                    }
+                }
+                //notification 이후 경로 설정 해제, runnable remove
+                else {
+                    handler.removeCallbacks(this);
+                    Log.d("MAKAR", "remove runnable");
+                    return;
+                }
+                handler.postDelayed(this, 10000); // 10초마다 체크
+            }
+        };
+        handler.post(runnable);
+    }
+
+
+    //막차 알림 시간 측정
     private int checkNotificationTime(Date date) {
         Date currentTime = new Date();
         Log.d("MAKAR", "currentTime : " + String.valueOf(currentTime));
-
-//        //현재 시간과 TimeString(막차시간) 비교
-//        Date specifiedDateTime;
-//        try {
-//            specifiedDateTime = sdf.parse(TimeString);
-//        } catch (ParseException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return (int) (specifiedDateTime.getTime() - currentTime.getTime());
         //밀리 초 차이 비교
         return (int) (date.getTime() - currentTime.getTime());
     }
@@ -374,8 +364,8 @@ public class MainActivity extends AppCompatActivity {
         //선택된 루트, 출발역, 도착역 초기화
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-        updateUI(MainActivity.class);
-        finish();
+       // updateUI(MainActivity.class);
+       // finish();
     }
 
     private void deleteStation(String path) {

@@ -83,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser != null) {
             //자동 로그인
             updateUI(currentUser);
+            Log.d("MAKAR_LOGIN", "AutoLogin userUid : "+userUId);
         }
     }
 
@@ -119,7 +120,6 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            intent.putExtra("uid", user.getUid());
             startActivity(intent);
             finish();
         }
