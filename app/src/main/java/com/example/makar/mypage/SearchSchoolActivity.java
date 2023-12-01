@@ -30,9 +30,8 @@ import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
     private ActivitySearchSchoolBinding binding;
-    private RecyclerView recyclerView;
     private SearchAdapter adapter;
-    private List<Station> resultList = new ArrayList<>();
+    private final List<Station> resultList = new ArrayList<>();
     private FirebaseFirestore db;
 
     @Override
@@ -42,6 +41,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setActivityUtil();
+        setListener();
         setRecyclerView();
         setSearchView();
         setListener();
@@ -69,12 +69,9 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
                 if (!newText.isEmpty()) {
                     CollectionReference collectionRef = db.collection("stations");
-
-                    //newText로 시작하는 모든 역 검색
                     Query query = collectionRef.orderBy("stationName")
                             .startAt(newText)
                             .endAt(newText + "\uf8ff");
-
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -86,11 +83,10 @@ public class SearchSchoolActivity extends AppCompatActivity {
                                 }
                                 adapter.notifyDataSetChanged();
                             } else {
-                                Log.d("MAKAR", "검색 중 오류 발생: ", task.getException());
+                                Log.d("MAKAR_SEARCH_SCHOOL", "검색 중 오류 발생: ", task.getException());
                             }
                         }
                     });
-
                 }
                 return true;
             }
@@ -99,7 +95,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
     // MARK: setRecyclerView()
     private void setRecyclerView() {
-        recyclerView = binding.searchSchoolRecyclerView;
+        RecyclerView recyclerView = binding.searchSchoolRecyclerView;
         adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

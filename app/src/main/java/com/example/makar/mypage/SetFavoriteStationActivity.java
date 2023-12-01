@@ -1,7 +1,6 @@
 package com.example.makar.mypage;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -35,10 +34,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     //임시 즐겨찾는 역
     public static Station homeStation, schoolStation;
     private Boolean editMode = false;
-
-    ActivitySetFavoriteStationBinding binding;
+    private ActivitySetFavoriteStationBinding binding;
     private User user = MainActivity.user;
-
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
 
     @Override
@@ -227,6 +224,13 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
     // MARK: toolbar
     public boolean onOptionsItemSelected(MenuItem item) {
-        return ActivityUtil.handleOptionsItemSelected(item, this);
-    }
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                homeStation = user.getHomeStation();
+                schoolStation = user.getSchoolStation();
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }    }
 }
