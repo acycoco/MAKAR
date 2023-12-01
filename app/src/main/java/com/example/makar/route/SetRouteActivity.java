@@ -72,7 +72,6 @@ public class SetRouteActivity extends AppCompatActivity {
     private User user = MainActivity.user;
     public static Route selectedRoute;
     public List<Route> resultList = new ArrayList<>();
-
     private RecyclerView recyclerView;
     private RouteAdapter adapter;
     public static Station briefToSourceStation;
@@ -81,16 +80,14 @@ public class SetRouteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         //TODO 앱이 시작화면에 초기화하는 코드 -> 나중에 옮겨야됨 (확실히 필요한지는 모르겠음)
 //        FirebaseApp.initializeApp(this);
 
-        binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
-
-        ActivityUtil.setActionBar(this, binding.toolbarSetRoute.getRoot());
-        ActivityUtil.setToolbar(binding.toolbarSetRoute, "경로 설정하기");
-        ActivityUtil.setHideKeyboard(binding.getRoot());
+        setActivityUtil();
+        setButtonListener();
         setRecyclerView();
 
         // 출발역, 도착역 데이터가 있다면 받아오기
@@ -115,7 +112,17 @@ public class SetRouteActivity extends AppCompatActivity {
 
         sourceBtn = binding.searchSourceButton;
         destinationBtn = binding.searchDestinationButton;
+    }
 
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
+        ActivityUtil.setActionBar(this, binding.toolbarSetRoute.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSetRoute, "경로 설정하기");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
+
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         sourceBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
         });
@@ -140,7 +147,6 @@ public class SetRouteActivity extends AppCompatActivity {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_4, Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     @Override
@@ -168,7 +174,6 @@ public class SetRouteActivity extends AppCompatActivity {
             }
         }).start();
     }
-
 
     private String searchRoute(double sourceX, double sourceY, double destinationX, double destinationY) throws IOException {
         String apiKey = BuildConfig.ODSAY_API_KEY;
@@ -267,11 +272,6 @@ public class SetRouteActivity extends AppCompatActivity {
             routes.add(route);
         }
         return routes;
-    }
-
-    // MARK: toolbar
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 
     private void setSearchViewText() {
@@ -507,5 +507,10 @@ public class SetRouteActivity extends AppCompatActivity {
                         });
             }
         });
+    }
+
+    // MARK: toolbar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }

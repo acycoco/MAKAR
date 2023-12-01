@@ -15,10 +15,14 @@ public class TimeTableActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityTimeTableBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarTimeTable.getRoot());
         ActivityUtil.setToolbar(binding.toolbarTimeTable, "시간표");
     }

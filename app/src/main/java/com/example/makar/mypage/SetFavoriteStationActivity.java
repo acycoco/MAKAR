@@ -47,19 +47,25 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        ActivityUtil.setActionBar(this, binding.toolbarSetFavoriteStation.getRoot());
-        ActivityUtil.setToolbar(binding.toolbarSetFavoriteStation, "자주 가는 역 설정");
-        ActivityUtil.setHideKeyboard(binding.getRoot());
+        setActivityUtil();
+        setButtonListener();
+        setEditMode();
 
         homeStation = user.getHomeStation();
         Log.d("MAKARTEST", "setFavoriteStation : home : " + homeStation);
         schoolStation = user.getSchoolStation();
         Log.d("MAKARTEST", "setFavoriteStation : school : " + schoolStation);
+    }
 
-        //즐겨찾는 역 유무에 따라 편집 모드 변경
-        setEditMode();
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
+        ActivityUtil.setActionBar(this, binding.toolbarSetFavoriteStation.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSetFavoriteStation, "자주 가는 역 설정");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
 
-
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         binding.homeSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchHomeActivity.class));
         });
@@ -202,6 +208,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
+    // MARK: setEditMode() - 즐겨찾는 역 유무에 따라 편집 모드 변경
     private void setEditMode() {
         if (homeStation == null && schoolStation == null) {
             editMode = true;

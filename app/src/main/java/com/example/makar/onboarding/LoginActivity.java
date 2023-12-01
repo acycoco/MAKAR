@@ -37,8 +37,18 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initFirebaseAuth();
-        ActivityUtil.setHideKeyboard(binding.getRoot());
+        
+        setActivityUtil();
+        setButtonListener();
+    }
 
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
+        ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
+
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         //로그인 버튼 리스너
         binding.loginBtn.setOnClickListener(view -> {
             email = binding.emailEditText.getText().toString();
@@ -74,7 +84,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    //기존 사용자 로그인
+    // MARK: 기존 사용자 로그인
     private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {

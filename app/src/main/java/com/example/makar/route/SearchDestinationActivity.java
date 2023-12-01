@@ -39,6 +39,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private SearchAdapter adapter;
     private List<Station> resultList = new ArrayList<>();
+    private FirebaseFirestore db;
     private User user = MainActivity.user;
 
     @Override
@@ -47,13 +48,23 @@ public class SearchDestinationActivity extends AppCompatActivity {
         binding = ActivitySearchDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        ActivityUtil.setActionBar(this, binding.toolbarSearchDestination.getRoot());
-        ActivityUtil.setToolbar(binding.toolbarSearchDestination, "도착역 입력");
-        ActivityUtil.setHideKeyboard(binding.getRoot());
+        setActivityUtil();
+        setListener();
         setSearchView();
         setRecyclerView();
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db = FirebaseFirestore.getInstance();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
+        ActivityUtil.setActionBar(this, binding.toolbarSearchDestination.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSearchDestination, "도착역 입력");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
+
+    // MARK: setListener()
+    private void setListener() {
         binding.searchViewDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -67,9 +78,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
                     CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("stationName")
-                            .startAt(newText)
-                            .endAt(newText + "\uf8ff");
+                    Query query = collectionRef.orderBy("stationName").startAt(newText).endAt(newText + "\uf8ff");
 
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -91,16 +100,6 @@ public class SearchDestinationActivity extends AppCompatActivity {
 
                 }
                 return true;
-            }
-        });
-
-        //recyclerView click listener
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(Station station) {
-                SetRouteActivity.destinationStation = station;
-                Log.d("MAKARTEST", "SearchDestination : Destination = " + SetRouteActivity.destinationStation);
-                finish();
             }
         });
 
@@ -134,8 +133,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
         });
     }
 
-
-    //searchView input 설정
+    // MARK: setSearchView()
     private void setSearchView() {
         SearchView searchView = binding.searchViewDestination;
         searchView.requestFocus();
@@ -144,15 +142,25 @@ public class SearchDestinationActivity extends AppCompatActivity {
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    // MARK: toolbar
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return ActivityUtil.handleOptionsItemSelected(item, this);
-    }
-
+    // MARK: setRecyclerView()
     private void setRecyclerView() {
         recyclerView = binding.searchDestinationRecyclerView;
         adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Station station) {
+                SetRouteActivity.destinationStation = station;
+                Log.d("MAKARTEST", "SearchDestination : Destination = " + SetRouteActivity.destinationStation);
+                finish();
+            }
+        });
+    }
+
+    // MARK: toolbar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }

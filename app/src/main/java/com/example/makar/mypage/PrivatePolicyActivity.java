@@ -17,13 +17,17 @@ public class PrivatePolicyActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityPrivatePolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setWebView();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarPrivatePolicy.getRoot());
         ActivityUtil.setToolbar(binding.toolbarPrivatePolicy, "개인정보 처리 방침");
-        setWebView(); //web setting
     }
 
     private void setWebView() {

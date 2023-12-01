@@ -21,9 +21,14 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
         binding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setWebView(); //web setting
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarOpenSourceLicense.getRoot());
         ActivityUtil.setToolbar(binding.toolbarOpenSourceLicense, "오픈소스 라이선스");
-        setWebView(); //web setting
     }
 
     private void setWebView() {

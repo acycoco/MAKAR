@@ -42,21 +42,31 @@ public class SearchSourceActivity extends AppCompatActivity {
     private SearchAdapter adapter;
     private List<Station> resultList = new ArrayList<>();
     private User user = MainActivity.user;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivitySearchSourceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        db = FirebaseFirestore.getInstance();
+
+        setActivityUtil();
+        setListener();
+        setSearchView();
+        setRecyclerView();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarSearchSource.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchSource, "출발역 입력");
         ActivityUtil.setHideKeyboard(binding.getRoot());
-        setSearchView();
-        setRecyclerView();
+    }
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+    // MARK: setListener()
+    private void setListener() {
         binding.searchViewSource.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -70,9 +80,7 @@ public class SearchSourceActivity extends AppCompatActivity {
                     CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("stationName")
-                            .startAt(newText)
-                            .endAt(newText + "\uf8ff");
+                    Query query = collectionRef.orderBy("stationName").startAt(newText).endAt(newText + "\uf8ff");
 
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -94,16 +102,6 @@ public class SearchSourceActivity extends AppCompatActivity {
 
                 }
                 return true;
-            }
-        });
-
-        //recyclerView click listener
-        adapter.setOnItemClickListener(new OnItemClickListener() {
-            @Override
-            public void onItemClick(Station station) {
-                SetRouteActivity.sourceStation = station;
-                Log.d("MAKARTEST", "SearchSource : Source = " + SetRouteActivity.sourceStation);
-                finish();
             }
         });
 
@@ -138,8 +136,7 @@ public class SearchSourceActivity extends AppCompatActivity {
         });
     }
 
-
-    //searchView input 설정
+    // MARK: setSearchView()
     private void setSearchView() {
         SearchView searchView = binding.searchViewSource;
         searchView.requestFocus();
@@ -148,15 +145,25 @@ public class SearchSourceActivity extends AppCompatActivity {
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
     }
 
-    // MARK: toolbar
-    public boolean onOptionsItemSelected(MenuItem item) {
-        return ActivityUtil.handleOptionsItemSelected(item, this);
-    }
-
+    // MARK: setRecyclerView()
     private void setRecyclerView() {
         recyclerView = binding.searchSourceRecyclerView;
         adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+
+        adapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onItemClick(Station station) {
+                SetRouteActivity.sourceStation = station;
+                Log.d("MAKARTEST", "SearchSource : Source = " + SetRouteActivity.sourceStation);
+                finish();
+            }
+        });
+    }
+
+    // MARK: toolbar
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }

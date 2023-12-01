@@ -22,9 +22,18 @@ public class MyPageActivity extends AppCompatActivity {
         binding = ActivityMyPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setButtonListener();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarMyPage.getRoot());
         ActivityUtil.setToolbar(binding.toolbarMyPage, "마이페이지");
+    }
 
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         binding.getOffSettingButton.setOnClickListener(view -> {
             setGetOffAlarm();
         });

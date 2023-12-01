@@ -31,31 +31,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchHomeActivity extends AppCompatActivity {
-    ActivitySearchHomeBinding binding;
+    private ActivitySearchHomeBinding binding;
+    private RecyclerView recyclerView;
+    private SearchAdapter adapter;
+    private List<Station> resultList = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivitySearchHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setSearchView();
+        setRecyclerView();
+        setListener();
+
+        db = FirebaseFirestore.getInstance();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarSearchHome.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchHome, "역 검색");
         ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
 
-        setSearchView(); //searchView request focus
-
-
-        //set recyclerView
-        RecyclerView recyclerView = binding.searchHomeRecyclerView;
-        List<Station> resultList = new ArrayList<>();
-        SearchAdapter adapter = new SearchAdapter(this, resultList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    // MARK: setListener()
+    private void setListener() {
         binding.searchViewHome.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -69,9 +73,7 @@ public class SearchHomeActivity extends AppCompatActivity {
                     CollectionReference collectionRef = db.collection("stations");
 
                     //newText로 시작하는 모든 역 검색
-                    Query query = collectionRef.orderBy("stationName")
-                            .startAt(newText)
-                            .endAt(newText + "\uf8ff");
+                    Query query = collectionRef.orderBy("stationName").startAt(newText).endAt(newText + "\uf8ff");
 
                     query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                         @Override
@@ -93,9 +95,15 @@ public class SearchHomeActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
 
+    // MARK: setRecyclerView()
+    private void setRecyclerView() {
+        recyclerView = binding.searchHomeRecyclerView;
+        adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
 
-        //recyclerView click listener
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
@@ -105,9 +113,8 @@ public class SearchHomeActivity extends AppCompatActivity {
         });
     }
 
-
-    //searchView input 설정
-    private void setSearchView(){
+    // MARK: setSearchView()
+    private void setSearchView() {
         SearchView searchView = binding.searchViewHome;
         searchView.requestFocus();
 

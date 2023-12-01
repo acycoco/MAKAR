@@ -1,7 +1,6 @@
 package com.example.makar.mypage;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,31 +29,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
-
-    ActivitySearchSchoolBinding binding;
+    private ActivitySearchSchoolBinding binding;
+    private RecyclerView recyclerView;
+    private SearchAdapter adapter;
+    private List<Station> resultList = new ArrayList<>();
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setRecyclerView();
+        setSearchView();
+
+        db = FirebaseFirestore.getInstance();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarSearchSchool.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchSchool, "역 검색");
         ActivityUtil.setHideKeyboard(binding.getRoot());
-        setSearchView(); //searchView request focus
+    }
 
-
-        //set RecyclerView
-        RecyclerView recyclerView = binding.searchSchoolRecyclerView;
-        List<Station> resultList = new ArrayList<>();
-        SearchAdapter adapter = new SearchAdapter(this, resultList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    // MARK: setListener()
+    private void setListener() {
         binding.searchViewSchool.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
@@ -92,8 +94,15 @@ public class SearchSchoolActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
 
-        //recyclerView click listener
+    // MARK: setRecyclerView()
+    private void setRecyclerView() {
+        recyclerView = binding.searchSchoolRecyclerView;
+        adapter = new SearchAdapter(this, resultList);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(Station station) {
@@ -103,7 +112,8 @@ public class SearchSchoolActivity extends AppCompatActivity {
         });
     }
 
-    private void setSearchView(){
+    // MARK: setSearchView()
+    private void setSearchView() {
         SearchView searchView = binding.searchViewSchool;
         searchView.requestFocus();
 

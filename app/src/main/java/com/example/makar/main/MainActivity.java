@@ -12,7 +12,6 @@ import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -107,7 +106,6 @@ public class MainActivity extends AppCompatActivity {
         //경로 설정 버튼 클릭 리스너
         binding.setRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
-
         });
     }
 
@@ -195,7 +193,6 @@ public class MainActivity extends AppCompatActivity {
         //string index 직접 접근해서 색 변경
         binding.mainTitleText.setText(spannableString);
     }
-
 
     /**
      * 막차 알림 시간 측정

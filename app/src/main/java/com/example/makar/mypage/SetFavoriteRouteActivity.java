@@ -38,15 +38,20 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         getFavoriteRouteArr();
         Log.d("dkdkkdkd", user.getFavoriteRouteArr().toString());
+
+        setActivityUtil();
+        setRecyclerView();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarSetFavoriteRoute.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSetFavoriteRoute, "즐겨찾는 경로 설정");
-        setRecyclerView();
     }
 
     private void getFavoriteRouteArr() {
@@ -78,7 +83,6 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
                     }
                 });
     }
-
 
     private void setRecyclerView() {
         recyclerView = binding.setFavoriteStationRecyclerView;

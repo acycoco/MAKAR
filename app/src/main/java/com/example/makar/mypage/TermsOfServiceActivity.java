@@ -17,13 +17,17 @@ public class TermsOfServiceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         binding = ActivityTermsOfServiceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setWebView();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarTermsOfService.getRoot());
         ActivityUtil.setToolbar(binding.toolbarTermsOfService, "서비스 이용약관");
-        setWebView(); //web setting
     }
 
     private void setWebView() {
