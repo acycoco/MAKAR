@@ -47,11 +47,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setActivityUtil();
         setButtonListener();
         setEditMode();
-
-        homeStation = user.getHomeStation();
-        Log.d("MAKARTEST", "setFavoriteStation : home : " + homeStation);
-        schoolStation = user.getSchoolStation();
-        Log.d("MAKARTEST", "setFavoriteStation : school : " + schoolStation);
     }
 
     // MARK: setActivityUtil()
@@ -104,22 +99,14 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                                             // 값이 존재하는 경우, 해당 데이터를 수정
                                             DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
 
-                                            //homeStation 수정
-                                            documentSnapshot.getReference().update("homeStation", homeStation).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            // MARK: 즐겨찾는 역 수정
+                                            documentSnapshot.getReference().update(
+                                                    "homeStation", homeStation,
+                                                    "schoolStation", schoolStation
+                                            ).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
-                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(@NonNull Exception e) {
-                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
-                                                }
-                                            });
-                                            //schoolStation 수정
-                                            documentSnapshot.getReference().update("schoolStation", schoolStation).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
+                                                    user.setFavoriteStation(homeStation, schoolStation);
                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -135,21 +122,22 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                         @Override
                                                         public void onSuccess(DocumentReference documentReference) {
-                                                            Log.d("MAKAR", "새로운 사용자 데이터가 Firestore에 추가되었습니다. ID: " + documentReference.getId());
-
-                                                            documentReference.update("homeStation", homeStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            // MARK: 즐겨찾는 역 등록
+                                                            documentReference.update(
+                                                                    "homeStation", homeStation,
+                                                                    "schoolStation", schoolStation
+                                                            ).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
+                                                                    user.setFavoriteStation(homeStation, schoolStation);
                                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                                 }
-                                                            });
-                                                            documentReference.update("schoolStation", schoolStation).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            }).addOnFailureListener(new OnFailureListener() {
                                                                 @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
+                                                                public void onFailure(@NonNull Exception e) {
+                                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
                                                                 }
                                                             });
-
                                                         }
                                                     })
                                                     .addOnFailureListener(new OnFailureListener() {
@@ -207,6 +195,9 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
     // MARK: setEditMode() - 즐겨찾는 역 유무에 따라 편집 모드 변경
     private void setEditMode() {
+        homeStation = user.getHomeStation();
+        schoolStation = user.getSchoolStation();
+
         if (homeStation == null && schoolStation == null) {
             editMode = true;
             binding.textViewHome.setText(R.string.home_station_hint);
@@ -232,5 +223,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }    }
+        }
+    }
 }
