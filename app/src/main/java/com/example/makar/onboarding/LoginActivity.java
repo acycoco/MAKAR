@@ -56,8 +56,6 @@ public class LoginActivity extends AppCompatActivity {
         //회원가입 버튼 리스너
         binding.signupBtn.setOnClickListener(view -> {
             startActivity(new Intent(LoginActivity.this, SignupActivity.class));
-            //회원가입 뷰로 넘어감
-            finish();
         });
     }
 
