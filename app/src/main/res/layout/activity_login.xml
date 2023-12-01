@@ -14,7 +14,7 @@
         android:src="@drawable/app_logo" />
 
     <EditText
-        android:id="@+id/email"
+        android:id="@+id/email_edit_text"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginVertical="13dp"
@@ -24,7 +24,7 @@
         android:textSize="16sp" />
 
     <EditText
-        android:id="@+id/password"
+        android:id="@+id/password_edit_text"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginBottom="30dp"

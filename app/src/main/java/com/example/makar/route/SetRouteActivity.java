@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.RouteAdapter;
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Station;
@@ -94,7 +95,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        setHideKeyBoard();
+        ActivityUtil.setHideKeyboard(setRouteBinding.getRoot());
         setRecyclerView();
 
         // 출발역, 도착역 데이터가 있다면 받아오기
@@ -271,28 +272,6 @@ public class SetRouteActivity extends AppCompatActivity {
             routes.add(route);
         }
         return routes;
-    }
-
-
-    //터치 시 키보드 내리기
-    private void setHideKeyBoard() {
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return false;
-            }
-        });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     // toolbar

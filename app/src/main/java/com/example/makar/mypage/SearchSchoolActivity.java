@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.databinding.ActivitySearchSchoolBinding;
@@ -43,7 +44,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        setHideKeyBoard();
+        ActivityUtil.setHideKeyboard(searchSchoolBinding.getRoot());
         setSearchView(); //searchView request focus
 
 
@@ -111,28 +112,6 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-    }
-
-
-    // 터치 이벤트가 발생시 키보드를 숨기기
-    private void setHideKeyBoard(){
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return false;
-            }
-        });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     //toolbar

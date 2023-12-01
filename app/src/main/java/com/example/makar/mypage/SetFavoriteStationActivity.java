@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.makar.R;
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
@@ -52,7 +53,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
         setActionBar(); //actionBar 변경
         setToolBar(); //toolBar 변경
-        setHideKeyBoard();
+        ActivityUtil.setHideKeyboard(setFavoriteStationBinding.getRoot());
 
         homeStation = user.getHomeStation();
         Log.d("MAKARTEST", "setFavoriteStation : home : " + homeStation);
@@ -181,26 +182,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         super.onStart();
         //즐겨찾는 역 텍스트 수정
         setFavoriteStationText();
-    }
-
-    private void setHideKeyBoard() {
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                hideKeyboard();
-                return false;
-            }
-        });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     @SuppressLint("ResourceAsColor")

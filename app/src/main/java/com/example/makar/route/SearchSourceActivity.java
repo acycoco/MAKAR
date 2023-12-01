@@ -16,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.SearchAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
@@ -51,7 +52,7 @@ public class SearchSourceActivity extends AppCompatActivity {
 
         setActionBar();
         setToolBar();
-        setHideKeyboard();
+        ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView();
         setRecyclerView();
 
@@ -145,22 +146,6 @@ public class SearchSourceActivity extends AppCompatActivity {
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(searchView, InputMethodManager.SHOW_IMPLICIT);
-    }
-
-    //키보드 내리기
-    private void setHideKeyboard() {
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                View view = getCurrentFocus();
-                if (view != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-                }
-                return false;
-            }
-        });
     }
 
     //toolbar

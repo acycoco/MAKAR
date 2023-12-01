@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.databinding.ActivitySignupBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -45,24 +46,26 @@ public class SignupActivity extends AppCompatActivity {
         initFirebaseAuth();
         setActionBar();
         setToolBar();
-        setHideKeyBoard();
-
+        ActivityUtil.setHideKeyboard(signUpBinding.getRoot());
 
         //email Listener
         signUpBinding.signupEmail.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 //이메일 유효성 검사
                 signupEmail = signUpBinding.signupEmail.getText().toString();
-                if(isValidEmail(signupEmail, emailPattern)){
+                if (isValidEmail(signupEmail, emailPattern)) {
                     //오류 해제
                     signUpBinding.signupEmail.setError(null);
-                }
-                else{
+                } else {
                     //format error 발생
                     signUpBinding.signupEmail.setError("올바른 이메일 주소를 입력하세요.");
                 }
@@ -73,13 +76,17 @@ public class SignupActivity extends AppCompatActivity {
         //Password Listener
         signUpBinding.signupPassword.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 signupPassword = signUpBinding.signupPassword.getText().toString();
-                if(signupPassword.length() < 8){
+                if (signupPassword.length() < 8) {
                     //최소 글자 수
                     signUpBinding.signupPassword.setError("8자 이상 입력해주세요");
                 }
@@ -89,9 +96,13 @@ public class SignupActivity extends AppCompatActivity {
         //PasswordCheck Listener
         signUpBinding.signupPasswordCheck.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
             @Override
             public void afterTextChanged(Editable s) {
                 signupPassword = signUpBinding.signupPassword.getText().toString();
@@ -112,7 +123,6 @@ public class SignupActivity extends AppCompatActivity {
         });
 
 
-
         //signupBtn Listener
         signUpBinding.signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,23 +131,19 @@ public class SignupActivity extends AppCompatActivity {
                 signupPassword = signUpBinding.signupPassword.getText().toString();
                 signupPasswordCheck = signUpBinding.signupPasswordCheck.getText().toString();
 
-                if(signupEmail.equals("") || !isValidEmail(signupEmail, emailPattern)){
+                if (signupEmail.equals("") || !isValidEmail(signupEmail, emailPattern)) {
                     //이메일 입력 공란
                     Toast.makeText(SignupActivity.this, "올바른 이메일을 입력해주세요", Toast.LENGTH_SHORT).show();
-                }
-                else if(signupPassword.equals("") || signupPassword.length() < 8){
+                } else if (signupPassword.equals("") || signupPassword.length() < 8) {
                     //비밀번호 입력 공란 || 텍스트 글자 수 8자 미만
                     Toast.makeText(SignupActivity.this, "8자 이상 비밀번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-                }
-                else if(signupPasswordCheck.equals("") || signupPasswordCheck.length() < 8){
+                } else if (signupPasswordCheck.equals("") || signupPasswordCheck.length() < 8) {
                     //비밀번호 확인 공란 || 텍스트 글자 수 8자 미만
                     Toast.makeText(SignupActivity.this, "비밀번호 확인란을 채워주세요", Toast.LENGTH_SHORT).show();
-                }
-                else if(!signupPassword.equals(signupPassword)){
+                } else if (!signupPassword.equals(signupPassword)) {
                     //비밀번호 확인 실패
                     Toast.makeText(SignupActivity.this, "비밀번호 확인에 실패했습니다", Toast.LENGTH_SHORT).show();
-                }
-                else{
+                } else {
                     //회원가입
                     createAccount(signupEmail, signupPassword);
                 }
@@ -200,28 +206,6 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-
-    private void setHideKeyBoard(){
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                // 터치 이벤트가 발생시 키보드를 숨기기
-                hideKeyboard();
-                return false;
-            }
-        });
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     // toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -234,17 +218,17 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
+    private void setToolBar() {
         signUpBinding.toolbarSignUp.toolbarText.setText("회원가입");
         signUpBinding.toolbarSignUp.toolbarImage.setVisibility(View.GONE);
         signUpBinding.toolbarSignUp.toolbarButton.setVisibility(View.GONE);
     }
 
-    private void setActionBar(){
+    private void setActionBar() {
         setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
 }
