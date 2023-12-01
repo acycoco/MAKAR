@@ -47,7 +47,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar(); //actionBar 변경
+        ActivityUtil.setActionBar(this, binding.toolbarSetFavoriteStation.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSetFavoriteStation, "자주 가는 역 설정");
         ActivityUtil.setHideKeyboard(binding.getRoot());
 
@@ -218,7 +218,6 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
-
     // toolbar
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -230,12 +229,4 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarSetFavoriteStation.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
 }

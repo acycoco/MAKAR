@@ -21,7 +21,7 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
         binding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarOpenSourceLicense.getRoot());
         ActivityUtil.setToolbar(binding.toolbarOpenSourceLicense, "오픈소스 라이선스");
         setWebView(); //web setting
     }
@@ -46,12 +46,5 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarOpenSourceLicense.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

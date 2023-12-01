@@ -50,8 +50,8 @@ public class SearchSourceActivity extends AppCompatActivity {
         binding = ActivitySearchSourceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
-        setToolBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSearchSource.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSearchSource, "출발역 입력");
         ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView();
         setRecyclerView();
@@ -158,19 +158,6 @@ public class SearchSourceActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setToolBar() {
-        binding.toolbarSearchSource.toolbarText.setText("출발역 입력");
-        binding.toolbarSearchSource.toolbarImage.setVisibility(View.GONE);
-        binding.toolbarSearchSource.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarSearchSource.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setRecyclerView() {

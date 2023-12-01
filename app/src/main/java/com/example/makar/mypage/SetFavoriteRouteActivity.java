@@ -44,7 +44,7 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
 
         getFavoriteRouteArr();
         Log.d("dkdkkdkd", user.getFavoriteRouteArr().toString());
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSetFavoriteRoute.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSetFavoriteRoute, "즐겨찾는 경로 설정");
         setRecyclerView();
     }
@@ -102,12 +102,5 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarSetFavoriteRoute.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

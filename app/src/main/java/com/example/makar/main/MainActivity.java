@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
 
-        setActionBar();
+        ActivityUtil.mainSetActionBar(this, binding.toolbarMain.getRoot());
         ActivityUtil.mainSetToolbar(binding.toolbarMain);
         //setRecyclerView(); //경로 관련 recyclerView set
 
@@ -379,12 +379,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             return new Date(String.valueOf(cal.getTime()));
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarMain.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
     }
 
     private void setRecyclerView() {

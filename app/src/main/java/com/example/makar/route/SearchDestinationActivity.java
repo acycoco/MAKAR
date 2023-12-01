@@ -47,7 +47,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
         binding = ActivitySearchDestinationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSearchDestination.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchDestination, "도착역 입력");
         ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView();
@@ -154,13 +154,6 @@ public class SearchDestinationActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarSearchDestination.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setRecyclerView() {

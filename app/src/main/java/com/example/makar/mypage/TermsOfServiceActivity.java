@@ -21,7 +21,7 @@ public class TermsOfServiceActivity extends AppCompatActivity {
         binding = ActivityTermsOfServiceBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarTermsOfService.getRoot());
         ActivityUtil.setToolbar(binding.toolbarTermsOfService, "서비스 이용약관");
         setWebView(); //web setting
     }
@@ -47,12 +47,5 @@ public class TermsOfServiceActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarTermsOfService.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

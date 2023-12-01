@@ -40,7 +40,7 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initFirebaseAuth();
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSignUp.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSignUp, "회원가입");
         ActivityUtil.setHideKeyboard(binding.getRoot());
 
@@ -207,12 +207,4 @@ public class SignupActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarSignUp.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
 }

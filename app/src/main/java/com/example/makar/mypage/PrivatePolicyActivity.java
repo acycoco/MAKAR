@@ -21,7 +21,7 @@ public class PrivatePolicyActivity extends AppCompatActivity {
         binding = ActivityPrivatePolicyBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarPrivatePolicy.getRoot());
         ActivityUtil.setToolbar(binding.toolbarPrivatePolicy, "개인정보 처리 방침");
         setWebView(); //web setting
     }
@@ -46,12 +46,5 @@ public class PrivatePolicyActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarPrivatePolicy.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

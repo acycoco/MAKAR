@@ -19,7 +19,7 @@ public class TimeTableActivity extends AppCompatActivity {
         binding = ActivityTimeTableBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarTimeTable.getRoot());
         ActivityUtil.setToolbar(binding.toolbarTimeTable, "시간표");
     }
 
@@ -33,12 +33,5 @@ public class TimeTableActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarTimeTable.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

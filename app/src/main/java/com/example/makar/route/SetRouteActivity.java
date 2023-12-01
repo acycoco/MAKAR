@@ -1,22 +1,17 @@
 package com.example.makar.route;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -67,7 +62,7 @@ import java.util.Objects;
 
 public class SetRouteActivity extends AppCompatActivity {
 
-    ActivitySetRouteBinding setRouteBinding;
+    ActivitySetRouteBinding binding;
     RouteRecyclerViewItemBinding recyclerViewItemBinding;
     public Button sourceBtn, destinationBtn;
 
@@ -90,12 +85,12 @@ public class SetRouteActivity extends AppCompatActivity {
         //TODO 앱이 시작화면에 초기화하는 코드 -> 나중에 옮겨야됨 (확실히 필요한지는 모르겠음)
 //        FirebaseApp.initializeApp(this);
 
-        setRouteBinding = ActivitySetRouteBinding.inflate(getLayoutInflater());
-        setContentView(setRouteBinding.getRoot());
+        binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        setActionBar();
-        setToolBar();
-        ActivityUtil.setHideKeyboard(setRouteBinding.getRoot());
+        ActivityUtil.setActionBar(this, binding.toolbarSetRoute.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSetRoute, "경로 설정하기");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
         setRecyclerView();
 
         // 출발역, 도착역 데이터가 있다면 받아오기
@@ -118,8 +113,8 @@ public class SetRouteActivity extends AppCompatActivity {
 //            }
 //        }).start();
 
-        sourceBtn = setRouteBinding.searchSourceButton;
-        destinationBtn = setRouteBinding.searchDestinationButton;
+        sourceBtn = binding.searchSourceButton;
+        destinationBtn = binding.searchDestinationButton;
 
         sourceBtn.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
@@ -130,7 +125,7 @@ public class SetRouteActivity extends AppCompatActivity {
         });
 
         //경로 찾기 버튼 클릭 리스너
-        setRouteBinding.searchRouteBtn.setOnClickListener(view -> {
+        binding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
             if (sourceStation != null && destinationStation != null && !Objects.equals(sourceStation.getStationName(), destinationStation.getOdsayStationName())) {
                 resultList.clear();
@@ -286,19 +281,6 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar() {
-        setRouteBinding.toolbarSetRoute.toolbarText.setText("경로 설정하기");
-        setRouteBinding.toolbarSetRoute.toolbarImage.setVisibility(View.GONE);
-        setRouteBinding.toolbarSetRoute.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(setRouteBinding.toolbarSetRoute.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
-    }
-
     private void setSearchViewText() {
         // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
@@ -316,7 +298,7 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
-        recyclerView = setRouteBinding.routeRecyclerView;
+        recyclerView = binding.routeRecyclerView;
         adapter = new RouteAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

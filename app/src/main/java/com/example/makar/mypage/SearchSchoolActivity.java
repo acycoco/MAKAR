@@ -40,7 +40,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
         binding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSearchSchool.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchSchool, "역 검색");
         ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView(); //searchView request focus
@@ -122,12 +122,5 @@ public class SearchSchoolActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(binding.toolbarSearchSchool.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

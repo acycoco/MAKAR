@@ -40,7 +40,7 @@ public class SearchHomeActivity extends AppCompatActivity {
         binding = ActivitySearchHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarSearchHome.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSearchHome, "역 검색");
         ActivityUtil.setHideKeyboard(binding.getRoot());
 
@@ -125,12 +125,5 @@ public class SearchHomeActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(binding.toolbarSearchHome.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
-        actionBar.setDisplayShowTitleEnabled(false);
     }
 }

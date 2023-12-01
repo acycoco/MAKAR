@@ -22,7 +22,7 @@ public class MyPageActivity extends AppCompatActivity {
         binding = ActivityMyPageBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        setActionBar();
+        ActivityUtil.setActionBar(this, binding.toolbarMyPage.getRoot());
         ActivityUtil.setToolbar(binding.toolbarMyPage, "마이페이지");
 
         binding.getOffSettingButton.setOnClickListener(view -> {
@@ -76,12 +76,5 @@ public class MyPageActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    private void setActionBar() {
-        setSupportActionBar(binding.toolbarMyPage.getRoot());
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }
