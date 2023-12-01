@@ -82,6 +82,8 @@ public class SetRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        sourceBtn = binding.searchSourceButton;
+        destinationBtn = binding.searchDestinationButton;
 
         //TODO 앱이 시작화면에 초기화하는 코드 -> 나중에 옮겨야됨 (확실히 필요한지는 모르겠음)
 //        FirebaseApp.initializeApp(this);
@@ -109,9 +111,6 @@ public class SetRouteActivity extends AppCompatActivity {
 //                databaseConverter.updateStationsCollection();
 //            }
 //        }).start();
-
-        sourceBtn = binding.searchSourceButton;
-        destinationBtn = binding.searchDestinationButton;
     }
 
     // MARK: setActivityUtil()
