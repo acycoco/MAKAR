@@ -3,6 +3,7 @@ package com.example.makar.mypage.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.Window;
 import android.widget.Button;
@@ -39,6 +40,11 @@ public class LogoutDialog extends Dialog {
             context.startActivity(new Intent(context, LoginActivity.class));
             FirebaseAuth.getInstance().signOut();
             dismiss();
+
+            SharedPreferences sharedPreferences = context.getSharedPreferences("Login", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.clear();
+            editor.commit();
         });
 
         negativeBtn.setOnClickListener(view -> {

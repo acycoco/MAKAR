@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -29,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private String email;
     private String password;
     private ActivityLoginBinding binding;
+    public static boolean isFirstLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +39,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         initFirebaseAuth();
-        
+
         setActivityUtil();
         setButtonListener();
     }
@@ -107,6 +109,15 @@ public class LoginActivity extends AppCompatActivity {
 
     void updateUI(FirebaseUser user) {
         if (user != null) {
+            SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
+            isFirstLogin = sharedPreferences.getBoolean("isFirstLogin", true);
+
+            if (isFirstLogin) {
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putBoolean("isFirstLogin", false); // 최초 로그인 여부 저장
+                editor.apply();
+            }
+
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
             intent.putExtra("uid", user.getUid());
             startActivity(intent);
