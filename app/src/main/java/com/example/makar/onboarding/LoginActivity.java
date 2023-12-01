@@ -112,11 +112,13 @@ public class LoginActivity extends AppCompatActivity {
         if (user != null) {
             SharedPreferences sharedPreferences = getSharedPreferences("Login", Context.MODE_PRIVATE);
             isFirstLogin = sharedPreferences.getBoolean("isFirstLogin", true);
+            Log.d("MAKAR_LOGIN", "자동 로그인 - isFirstLogin: " + isFirstLogin);
 
             if (isFirstLogin) {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putBoolean("isFirstLogin", false); // 최초 로그인 여부 저장
                 editor.apply();
+                Log.d("MAKAR_LOGIN", "최초 로그인 - isFirstLogin: " + isFirstLogin);
             }
 
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
