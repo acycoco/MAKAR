@@ -6,14 +6,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,7 +21,6 @@ import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteStationBinding;
 import com.example.makar.main.MainActivity;
 import com.example.makar.onboarding.LoginActivity;
-import com.example.makar.route.SetRouteActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,7 +36,7 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     public static Station homeStation, schoolStation;
     private Boolean editMode = false;
 
-    ActivitySetFavoriteStationBinding setFavoriteStationBinding;
+    ActivitySetFavoriteStationBinding binding;
     private User user = MainActivity.user;
 
     private FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -48,12 +44,12 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setFavoriteStationBinding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
-        setContentView(setFavoriteStationBinding.getRoot());
+        binding = ActivitySetFavoriteStationBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar(); //actionBar 변경
-        setToolBar(); //toolBar 변경
-        ActivityUtil.setHideKeyboard(setFavoriteStationBinding.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSetFavoriteStation, "자주 가는 역 설정");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
 
         homeStation = user.getHomeStation();
         Log.d("MAKARTEST", "setFavoriteStation : home : " + homeStation);
@@ -64,33 +60,33 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         setEditMode();
 
 
-        setFavoriteStationBinding.homeSearchButton.setOnClickListener(view -> {
+        binding.homeSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchHomeActivity.class));
         });
 
-        setFavoriteStationBinding.schoolSearchButton.setOnClickListener(view -> {
+        binding.schoolSearchButton.setOnClickListener(view -> {
             startActivity(new Intent(this, SearchSchoolActivity.class));
         });
 
-        setFavoriteStationBinding.textViewHome.setOnClickListener(view -> {
+        binding.textViewHome.setOnClickListener(view -> {
             if (editMode) {
                 startActivity(new Intent(this, SearchHomeActivity.class));
             }
         });
 
-        setFavoriteStationBinding.textViewSchool.setOnClickListener(view -> {
+        binding.textViewSchool.setOnClickListener(view -> {
             if (editMode) {
                 startActivity(new Intent(this, SearchSchoolActivity.class));
             }
         });
 
         //자주 가는 역 등록하기 버튼 클릭 리스너
-        setFavoriteStationBinding.setFavoriteStationBtn.setOnClickListener(view -> {
+        binding.setFavoriteStationBtn.setOnClickListener(view -> {
             if (!editMode) {
                 editMode = true;
-                setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
-                setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
-                setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
+                binding.setFavoriteStationBtn.setText("등록하기");
+                binding.homeSearchButton.setVisibility(View.VISIBLE);
+                binding.schoolSearchButton.setVisibility(View.VISIBLE);
             } else {
                 if (homeStation != null && schoolStation != null) {
                     firebaseFirestore.collection("users")
@@ -107,26 +103,27 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
                                             //homeStation 수정
                                             documentSnapshot.getReference().update("homeStation", homeStation).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                        @Override
-                                                        public void onSuccess(Void unused) {
-                                                            Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                        }
-                                                    }).addOnFailureListener(new OnFailureListener() {
-                                                        @Override
-                                                        public void onFailure(@NonNull Exception e) {
-                                                            Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
-                                                        }
-                                                    });
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                }
+                                            });
                                             //schoolStation 수정
                                             documentSnapshot.getReference().update("schoolStation", schoolStation).addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void unused) {
                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
-                                                }}).addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
-                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());
+                                                }
                                             });
                                         } else {
                                             // 값이 존재하지 않는 경우, 새로운 사용자 데이터 생성
@@ -186,22 +183,21 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
 
     @SuppressLint("ResourceAsColor")
     private void setFavoriteStationText() {
-        TextView textViewHome = setFavoriteStationBinding.textViewHome;
-        TextView textViewSchool = setFavoriteStationBinding.textViewSchool;
+        TextView textViewHome = binding.textViewHome;
+        TextView textViewSchool = binding.textViewSchool;
 
         textViewHome.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
         textViewSchool.setTextColor(ContextCompat.getColor(this, R.color.dark_gray));
 
         if (homeStation != null) {
             textViewHome.setText(" " + homeStation.getFullName());
-        }
-       else {
+        } else {
             textViewHome.setText(R.string.home_station_hint);
         }
 
         if (schoolStation != null) {
-          textViewSchool.setText(" " + schoolStation.getFullName());
-        }else {
+            textViewSchool.setText(" " + schoolStation.getFullName());
+        } else {
             textViewSchool.setText(R.string.school_station_hint);
         }
     }
@@ -209,16 +205,16 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
     private void setEditMode() {
         if (homeStation == null && schoolStation == null) {
             editMode = true;
-            setFavoriteStationBinding.textViewHome.setText(R.string.home_station_hint);
-            setFavoriteStationBinding.textViewSchool.setText(R.string.school_station_hint);
-            setFavoriteStationBinding.homeSearchButton.setVisibility(View.VISIBLE);
-            setFavoriteStationBinding.schoolSearchButton.setVisibility(View.VISIBLE);
-            setFavoriteStationBinding.setFavoriteStationBtn.setText("등록하기");
+            binding.textViewHome.setText(R.string.home_station_hint);
+            binding.textViewSchool.setText(R.string.school_station_hint);
+            binding.homeSearchButton.setVisibility(View.VISIBLE);
+            binding.schoolSearchButton.setVisibility(View.VISIBLE);
+            binding.setFavoriteStationBtn.setText("등록하기");
         } else {
             editMode = false;
-            setFavoriteStationBinding.homeSearchButton.setVisibility(View.GONE);
-            setFavoriteStationBinding.schoolSearchButton.setVisibility(View.GONE);
-            setFavoriteStationBinding.setFavoriteStationBtn.setText("수정하기");
+            binding.homeSearchButton.setVisibility(View.GONE);
+            binding.schoolSearchButton.setVisibility(View.GONE);
+            binding.setFavoriteStationBtn.setText("수정하기");
         }
     }
 
@@ -235,14 +231,8 @@ public class SetFavoriteStationActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar() {
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarText.setText("자주 가는 역 설정");
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarImage.setVisibility(View.GONE);
-        setFavoriteStationBinding.toolbarSetFavoriteStation.toolbarButton.setVisibility(View.GONE);
-    }
-
     private void setActionBar() {
-        setSupportActionBar(setFavoriteStationBinding.toolbarSetFavoriteStation.getRoot());
+        setSupportActionBar(binding.toolbarSetFavoriteStation.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

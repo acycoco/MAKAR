@@ -7,7 +7,7 @@
 
     <include
         android:id="@+id/toolbar_sign_up"
-        layout="@layout/custom_toolbar"/>
+        layout="@layout/custom_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,7 +17,6 @@
         android:paddingRight="20dp"
         android:paddingBottom="10dp">
 
-        <!--email-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -26,7 +25,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/signupEmail"
+            android:id="@+id/signupEmail_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
@@ -35,7 +34,6 @@
             android:maxLines="1"
             android:textSize="16sp" />
 
-        <!--비밀번호-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -44,7 +42,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/signupPassword"
+            android:id="@+id/signupPassword_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="30dp"
@@ -54,8 +52,6 @@
             android:maxLines="1"
             android:textSize="16sp" />
 
-
-        <!--비밀번호 확인-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -64,7 +60,7 @@
             android:textStyle="bold" />
 
         <EditText
-            android:id="@+id/signupPasswordCheck"
+            android:id="@+id/signupPasswordCheck_edit_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/password_check_signup_hint"
@@ -75,11 +71,10 @@
 
         <Space
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <!--signupBtn-->
-        <android.widget.Button
+        <Button
             android:id="@+id/signup_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -88,7 +83,7 @@
             android:backgroundTint="@color/main_color"
             android:text="@string/signup_confirm_button"
             android:textColor="@color/white"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
 </LinearLayout>

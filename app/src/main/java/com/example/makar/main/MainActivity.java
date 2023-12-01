@@ -10,7 +10,6 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    private ActivityMainBinding mainBinding;
+    private ActivityMainBinding binding;
     public static User user = new User(LoginActivity.userUId);
 
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -62,41 +62,41 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mainBinding = ActivityMainBinding.inflate(getLayoutInflater());
-        setContentView(mainBinding.getRoot());
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
 
         setActionBar();
-        setToolBar();
+        ActivityUtil.mainSetToolbar(binding.toolbarMain);
         //setRecyclerView(); //경로 관련 recyclerView set
 
-        mainBinding.toolbarMain.toolbarButton.setOnClickListener(view -> {
+        binding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
         });
 
         /**==경로 설정 Main==**/
         //시간표 버튼 클릭 리스너
-        mainBinding.timetableBtn.setOnClickListener(view -> {
+        binding.timetableBtn.setOnClickListener(view -> {
             updateUI(TimeTableActivity.class);
         });
 
         //막차 알림 설정 버튼 클릭 리스너
-        mainBinding.setAlarmBtn.setOnClickListener(view -> {
+        binding.setAlarmBtn.setOnClickListener(view -> {
             //현재 alarmTime을 다이얼로그에 넘김
             setMakarAlarm();
         });
 
         //경로 변경하기 버튼 클릭 리스너
-        mainBinding.changeRouteBtn.setOnClickListener(view -> {
+        binding.changeRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
         });
 
 
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너
-        mainBinding.setRouteBtn.setOnClickListener(view -> {
+        binding.setRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
 
         });
@@ -184,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
         spannableString.setSpan(foregroundColorSpan, 5,
                 5 + length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //string index 직접 접근해서 색 변경
-        mainBinding.mainTitleText.setText(spannableString);
+        binding.mainTitleText.setText(spannableString);
     }
 
 
@@ -324,7 +324,7 @@ public class MainActivity extends AppCompatActivity {
                                     isRouteSet = false;
                                     leftTime = 0;
                                     MainActivityChangeView.changeView(
-                                            mainBinding,
+                                            binding,
                                             isRouteSet,
                                             leftTime,
                                             "",
@@ -354,7 +354,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                                     MainActivityChangeView.changeView(
-                                            mainBinding,
+                                            binding,
                                             isRouteSet,
                                             leftTime,
                                             user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
@@ -369,7 +369,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    static public Date setAlarmTime(Date date, int alarmTime){
+    static public Date setAlarmTime(Date date, int alarmTime) {
 
         Calendar cal = Calendar.getInstance();
         cal.setTime(date); //시간 설정
@@ -381,20 +381,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
     private void setActionBar() {
-        setSupportActionBar(mainBinding.toolbarMain.getRoot());
+        setSupportActionBar(binding.toolbarMain.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
     }
 
-    private void setToolBar() {
-        mainBinding.toolbarMain.toolbarText.setVisibility(View.GONE);
-    }
-
     private void setRecyclerView() {
         //최근경로
-        RecyclerView recentRouteRecyclerView = mainBinding.recentRouteText;
+        RecyclerView recentRouteRecyclerView = binding.recentRouteText;
         RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, user.getRecentRouteArr());
         Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -428,7 +423,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //즐겨찾는 경로
-        RecyclerView favoriteRouteRecyclerView = mainBinding.favoriteRouteText;
+        RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteText;
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);

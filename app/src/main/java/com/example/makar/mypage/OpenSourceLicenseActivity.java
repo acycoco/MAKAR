@@ -5,37 +5,35 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
-import com.example.makar.R;
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.databinding.ActivityOpenSourceLicenseBinding;
 
 public class OpenSourceLicenseActivity extends AppCompatActivity {
-    ActivityOpenSourceLicenseBinding openSourceLicenseBinding;
+    ActivityOpenSourceLicenseBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        openSourceLicenseBinding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
-        setContentView(openSourceLicenseBinding.getRoot());
+        binding = ActivityOpenSourceLicenseBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
+        ActivityUtil.setToolbar(binding.toolbarOpenSourceLicense, "오픈소스 라이선스");
         setWebView(); //web setting
     }
 
-
-    private void setWebView(){
-        WebSettings webSettings = openSourceLicenseBinding.webViewOpenSourceLicense.getSettings();
+    private void setWebView() {
+        WebSettings webSettings = binding.webViewOpenSourceLicense.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 
-        openSourceLicenseBinding.webViewOpenSourceLicense.loadUrl("https://docs.google.com/document/d/e/2PACX-1vQ7Yca6G3aODYl_5uEJOoZ1RnSmwfDInh22CUlYfwTzsPwcVWiY6EuPqTJe-xdukRjOSviBEBuhDutX/pub");
-        openSourceLicenseBinding.webViewOpenSourceLicense.setWebViewClient(new WebViewClient());
+        binding.webViewOpenSourceLicense.loadUrl("https://docs.google.com/document/d/e/2PACX-1vQ7Yca6G3aODYl_5uEJOoZ1RnSmwfDInh22CUlYfwTzsPwcVWiY6EuPqTJe-xdukRjOSviBEBuhDutX/pub");
+        binding.webViewOpenSourceLicense.setWebViewClient(new WebViewClient());
     }
 
     //toolbar
@@ -50,14 +48,8 @@ public class OpenSourceLicenseActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarText.setText("오픈소스 라이선스");
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarImage.setVisibility(View.GONE);
-        openSourceLicenseBinding.toolbarOpenSourceLicense.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(openSourceLicenseBinding.toolbarOpenSourceLicense.getRoot());
+    private void setActionBar() {
+        setSupportActionBar(binding.toolbarOpenSourceLicense.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

@@ -4,16 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.example.makar.data.ActivityUtil;
@@ -34,22 +31,21 @@ public class SignupActivity extends AppCompatActivity {
     String signupPassword;
     String signupPasswordCheck;
     String emailPattern = "[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,4}";
-    ActivitySignupBinding signUpBinding;
-
+    ActivitySignupBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signUpBinding = ActivitySignupBinding.inflate(getLayoutInflater());
-        setContentView(signUpBinding.getRoot());
+        binding = ActivitySignupBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         initFirebaseAuth();
         setActionBar();
-        setToolBar();
-        ActivityUtil.setHideKeyboard(signUpBinding.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSignUp, "회원가입");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
 
         //email Listener
-        signUpBinding.signupEmail.addTextChangedListener(new TextWatcher() {
+        binding.signupEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -61,20 +57,19 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 //이메일 유효성 검사
-                signupEmail = signUpBinding.signupEmail.getText().toString();
+                signupEmail = binding.signupEmailEditText.getText().toString();
                 if (isValidEmail(signupEmail, emailPattern)) {
                     //오류 해제
-                    signUpBinding.signupEmail.setError(null);
+                    binding.signupEmailEditText.setError(null);
                 } else {
                     //format error 발생
-                    signUpBinding.signupEmail.setError("올바른 이메일 주소를 입력하세요.");
+                    binding.signupEmailEditText.setError("올바른 이메일 주소를 입력하세요.");
                 }
             }
         });
 
-
         //Password Listener
-        signUpBinding.signupPassword.addTextChangedListener(new TextWatcher() {
+        binding.signupPasswordEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -85,16 +80,16 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                signupPassword = signUpBinding.signupPassword.getText().toString();
+                signupPassword = binding.signupPasswordEditText.getText().toString();
                 if (signupPassword.length() < 8) {
                     //최소 글자 수
-                    signUpBinding.signupPassword.setError("8자 이상 입력해주세요");
+                    binding.signupPasswordEditText.setError("8자 이상 입력해주세요");
                 }
             }
         });
 
         //PasswordCheck Listener
-        signUpBinding.signupPasswordCheck.addTextChangedListener(new TextWatcher() {
+        binding.signupPasswordCheckEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             }
@@ -105,31 +100,30 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                signupPassword = signUpBinding.signupPassword.getText().toString();
-                signupPasswordCheck = signUpBinding.signupPasswordCheck.getText().toString();
+                signupPassword = binding.signupPasswordEditText.getText().toString();
+                signupPasswordCheck = binding.signupPasswordCheckEditText.getText().toString();
 
                 if (signupPasswordCheck.length() < 8) {
                     //최소 글자 수
-                    signUpBinding.signupPasswordCheck.setError("8자 이상 입력해주세요");
+                    binding.signupPasswordCheckEditText.setError("8자 이상 입력해주세요");
                 } else if (!(signupPassword.equals(signupPasswordCheck))) {
                     //비밀번호 확인 실패
-                    signUpBinding.signupPasswordCheck.setError("비밀번호 확인 실패");
+                    binding.signupPasswordCheckEditText.setError("비밀번호 확인 실패");
                 } else if (signupPassword.equals(signupPasswordCheck)) {
                     //비밀번호 확인 성공
                     //error 해제
-                    signUpBinding.signupPasswordCheck.setError(null);
+                    binding.signupPasswordCheckEditText.setError(null);
                 }
             }
         });
 
-
         //signupBtn Listener
-        signUpBinding.signupBtn.setOnClickListener(new View.OnClickListener() {
+        binding.signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signupEmail = signUpBinding.signupEmail.getText().toString();
-                signupPassword = signUpBinding.signupPassword.getText().toString();
-                signupPasswordCheck = signUpBinding.signupPasswordCheck.getText().toString();
+                signupEmail = binding.signupEmailEditText.getText().toString();
+                signupPassword = binding.signupPasswordEditText.getText().toString();
+                signupPasswordCheck = binding.signupPasswordCheckEditText.getText().toString();
 
                 if (signupEmail.equals("") || !isValidEmail(signupEmail, emailPattern)) {
                     //이메일 입력 공란
@@ -156,40 +150,36 @@ public class SignupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
     }
 
-
     //신규 사용자 가입
     private void createAccount(String email, String password) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d("signup", "Signup:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            Toast.makeText(SignupActivity.this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show();
+        mAuth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    Log.d("signup", "Signup:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    Toast.makeText(SignupActivity.this, "회원가입에 성공했습니다", Toast.LENGTH_SHORT).show();
 
-                            //회원가입 성공 후 로그인뷰로 이동
-                            updateUI(user);
-                        } else {
-                            //회원가입 실패
-                            //이미 존재하는 이메일 주소를 기입했을 경우
-                            if (task.getException() instanceof FirebaseAuthException) {
-                                FirebaseAuthException e = (FirebaseAuthException) task.getException();
-                                Log.e("signup", "errorcode : " + e.getErrorCode());
-                                if ("ERROR_EMAIL_ALREADY_IN_USE".equals(e.getErrorCode())) {
-                                    Log.d("signup", "existing email address");
-                                    Toast.makeText(SignupActivity.this, "이미 가입된 이메일 주소입니다.", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                Log.w("signup", "Signup:failure", task.getException());
-                                Toast.makeText(SignupActivity.this, "회원가입에 실패했습니다",
-                                        Toast.LENGTH_SHORT).show();
-                            }
+                    //회원가입 성공 후 로그인뷰로 이동
+                    updateUI(user);
+                } else {
+                    //회원가입 실패
+                    //이미 존재하는 이메일 주소를 기입했을 경우
+                    if (task.getException() instanceof FirebaseAuthException) {
+                        FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                        Log.e("signup", "errorcode : " + e.getErrorCode());
+                        if ("ERROR_EMAIL_ALREADY_IN_USE".equals(e.getErrorCode())) {
+                            Log.d("signup", "existing email address");
+                            Toast.makeText(SignupActivity.this, "이미 가입된 이메일 주소입니다.", Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.w("signup", "Signup:failure", task.getException());
+                        Toast.makeText(SignupActivity.this, "회원가입에 실패했습니다", Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            }
+        });
     }
-
 
     //이메일 유효성 검사
     private boolean isValidEmail(String email, String emailPattern) {
@@ -218,14 +208,8 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar() {
-        signUpBinding.toolbarSignUp.toolbarText.setText("회원가입");
-        signUpBinding.toolbarSignUp.toolbarImage.setVisibility(View.GONE);
-        signUpBinding.toolbarSignUp.toolbarButton.setVisibility(View.GONE);
-    }
-
     private void setActionBar() {
-        setSupportActionBar(signUpBinding.toolbarSignUp.getRoot());
+        setSupportActionBar(binding.toolbarSignUp.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

@@ -5,23 +5,22 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
-import com.example.makar.databinding.ActivitySignupBinding;
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.databinding.ActivityTimeTableBinding;
 
 public class TimeTableActivity extends AppCompatActivity {
-    ActivityTimeTableBinding timeTableBinding;
+    ActivityTimeTableBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        timeTableBinding = ActivityTimeTableBinding.inflate(getLayoutInflater());
-        setContentView(timeTableBinding.getRoot());
+        binding = ActivityTimeTableBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
+        ActivityUtil.setToolbar(binding.toolbarTimeTable, "시간표");
     }
 
     //toolbar
@@ -36,16 +35,10 @@ public class TimeTableActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        timeTableBinding.toolbarTimeTable.toolbarText.setText("시간표");
-        timeTableBinding.toolbarTimeTable.toolbarImage.setVisibility(View.GONE);
-        timeTableBinding.toolbarTimeTable.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(timeTableBinding.toolbarTimeTable.getRoot());
+    private void setActionBar() {
+        setSupportActionBar(binding.toolbarTimeTable.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayHomeAsUpEnabled (true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 }

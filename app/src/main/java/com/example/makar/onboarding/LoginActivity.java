@@ -28,12 +28,12 @@ public class LoginActivity extends AppCompatActivity {
     public static String userUId;
     private String email;
     private String password;
-
+    private ActivityLoginBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActivityLoginBinding binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         initFirebaseAuth();

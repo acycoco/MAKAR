@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -36,7 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchDestinationActivity extends AppCompatActivity {
-    ActivitySearchDestinationBinding searchDestinationBinding;
+    ActivitySearchDestinationBinding binding;
     private RecyclerView recyclerView;
     private SearchAdapter adapter;
     private List<Station> resultList = new ArrayList<>();
@@ -45,17 +44,17 @@ public class SearchDestinationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        searchDestinationBinding = ActivitySearchDestinationBinding.inflate(getLayoutInflater());
-        setContentView(searchDestinationBinding.getRoot());
+        binding = ActivitySearchDestinationBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
-        ActivityUtil.setHideKeyboard(searchDestinationBinding.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSearchDestination, "도착역 입력");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView();
         setRecyclerView();
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        searchDestinationBinding.searchViewDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchViewDestination.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -106,7 +105,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
         });
 
         //즐겨찾는 역 도착지로 설정
-        searchDestinationBinding.homeBtn.setOnClickListener(new View.OnClickListener() {
+        binding.homeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user.getHomeStation() != null) {
@@ -118,7 +117,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             }
         });
 
-        searchDestinationBinding.schoolBtn.setOnClickListener(new View.OnClickListener() {
+        binding.schoolBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (user.getSchoolStation() != null) {
@@ -130,7 +129,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
             }
         });
 
-        searchDestinationBinding.detailBtn.setOnClickListener(view -> {
+        binding.detailBtn.setOnClickListener(view -> {
             startActivity(new Intent(SearchDestinationActivity.this, SetFavoriteStationActivity.class));
         });
     }
@@ -138,7 +137,7 @@ public class SearchDestinationActivity extends AppCompatActivity {
 
     //searchView input 설정
     private void setSearchView() {
-        SearchView searchView = searchDestinationBinding.searchViewDestination;
+        SearchView searchView = binding.searchViewDestination;
         searchView.requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -157,21 +156,15 @@ public class SearchDestinationActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar() {
-        searchDestinationBinding.toolbarSearchDestination.toolbarText.setText("도착역 입력");
-        searchDestinationBinding.toolbarSearchDestination.toolbarImage.setVisibility(View.GONE);
-        searchDestinationBinding.toolbarSearchDestination.toolbarButton.setVisibility(View.GONE);
-    }
-
     private void setActionBar() {
-        setSupportActionBar(searchDestinationBinding.toolbarSearchDestination.getRoot());
+        setSupportActionBar(binding.toolbarSearchDestination.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     private void setRecyclerView() {
-        recyclerView = searchDestinationBinding.searchDestinationRecyclerView;
+        recyclerView = binding.searchDestinationRecyclerView;
         adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);

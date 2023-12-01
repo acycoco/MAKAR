@@ -6,51 +6,50 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.databinding.ActivityMyPageBinding;
 import com.example.makar.mypage.dialog.LogoutDialog;
 import com.example.makar.mypage.dialog.SetGetOffAlarmDialog;
 
 public class MyPageActivity extends AppCompatActivity {
 
-    ActivityMyPageBinding myPageBinding;
+    ActivityMyPageBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        myPageBinding = ActivityMyPageBinding.inflate(getLayoutInflater());
-        setContentView(myPageBinding.getRoot());
+        binding = ActivityMyPageBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
+        ActivityUtil.setToolbar(binding.toolbarMyPage, "마이페이지");
 
-
-        myPageBinding.getOffSettingButton.setOnClickListener(view -> {
+        binding.getOffSettingButton.setOnClickListener(view -> {
             setGetOffAlarm();
         });
 
-        myPageBinding.favoriteStationSettingButton.setOnClickListener(view -> {
+        binding.favoriteStationSettingButton.setOnClickListener(view -> {
             updateUI(SetFavoriteStationActivity.class);
         });
 
-        myPageBinding.favoriteRouteSettingButton.setOnClickListener(view -> {
+        binding.favoriteRouteSettingButton.setOnClickListener(view -> {
             updateUI(SetFavoriteRouteActivity.class);
         });
 
-        myPageBinding.termsOfServiceButton.setOnClickListener(view -> {
+        binding.termsOfServiceButton.setOnClickListener(view -> {
             updateUI(TermsOfServiceActivity.class);
         });
 
-        myPageBinding.privacyPolicyTextButton.setOnClickListener(view -> {
+        binding.privacyPolicyTextButton.setOnClickListener(view -> {
             updateUI(PrivatePolicyActivity.class);
         });
 
-        myPageBinding.openSourceUsageInformationButton.setOnClickListener(view -> {
+        binding.openSourceUsageInformationButton.setOnClickListener(view -> {
             updateUI(OpenSourceLicenseActivity.class);
         });
 
-        myPageBinding.logoutButton.setOnClickListener(view -> {
+        binding.logoutButton.setOnClickListener(view -> {
             LogoutDialog logoutDialog = new LogoutDialog(this);
             logoutDialog.show();
         });
@@ -79,14 +78,8 @@ public class MyPageActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        myPageBinding.toolbarMyPage.toolbarText.setText("마이페이지");
-        myPageBinding.toolbarMyPage.toolbarImage.setVisibility(View.GONE);
-        myPageBinding.toolbarMyPage.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(myPageBinding.toolbarMyPage.getRoot());
+    private void setActionBar() {
+        setSupportActionBar(binding.toolbarMyPage.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

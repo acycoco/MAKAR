@@ -11,18 +11,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.example.makar.data.Adapter.RouteAdapter;
+import com.example.makar.data.ActivityUtil;
 
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Route;
-import com.example.makar.data.Station;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteRouteBinding;
-import com.example.makar.databinding.RouteRecyclerViewItemBinding;
 import com.example.makar.main.MainActivity;
-import com.example.makar.main.MainActivityChangeView;
 import com.example.makar.onboarding.LoginActivity;
-import com.example.makar.route.SetRouteActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -37,19 +33,19 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
     private User user = MainActivity.user;
     private List<Route> favoriteRouteArr;
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-    ActivitySetFavoriteRouteBinding setFavoriteRouteBinding;
+    ActivitySetFavoriteRouteBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setFavoriteRouteBinding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
-        setContentView(setFavoriteRouteBinding.getRoot());
+        binding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         getFavoriteRouteArr();
         Log.d("dkdkkdkd", user.getFavoriteRouteArr().toString());
         setActionBar();
-        setToolBar();
+        ActivityUtil.setToolbar(binding.toolbarSetFavoriteRoute, "즐겨찾는 경로 설정");
         setRecyclerView();
     }
 
@@ -69,15 +65,15 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
                                     favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
 
                                     Log.d("MAKARTEST", "MAIN: favoriteRouteArr : " + favoriteRouteArr);
-                                    setFavoriteRouteBinding.emptyListText.setVisibility(View.GONE);
+                                    binding.emptyListText.setVisibility(View.GONE);
                                 }
                             } catch (Exception e) {
                                 Log.e("MAKAR", "getFavoriteRouteArr 오류: " + e.getMessage());
-                                setFavoriteRouteBinding.emptyListText.setVisibility(View.VISIBLE);
+                                binding.emptyListText.setVisibility(View.VISIBLE);
                             }
                         } else {
                             Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
-                            setFavoriteRouteBinding.emptyListText.setVisibility(View.VISIBLE);
+                            binding.emptyListText.setVisibility(View.VISIBLE);
                         }
                     }
                 });
@@ -85,12 +81,12 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
 
 
     private void setRecyclerView() {
-        recyclerView = setFavoriteRouteBinding.setFavoriteStationRecyclerView;
+        recyclerView = binding.setFavoriteStationRecyclerView;
         if (user.getFavoriteRouteArr() != null) {
             adapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
-            setFavoriteRouteBinding.emptyListText.setVisibility(View.GONE);
+            binding.emptyListText.setVisibility(View.GONE);
         } else {
-            setFavoriteRouteBinding.emptyListText.setVisibility(View.VISIBLE);
+            binding.emptyListText.setVisibility(View.VISIBLE);
         }
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
@@ -108,14 +104,8 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar() {
-        setFavoriteRouteBinding.toolbarSetFavoriteRoute.toolbarText.setText("즐겨찾는 경로 설정");
-        setFavoriteRouteBinding.toolbarSetFavoriteRoute.toolbarImage.setVisibility(View.GONE);
-        setFavoriteRouteBinding.toolbarSetFavoriteRoute.toolbarButton.setVisibility(View.GONE);
-    }
-
     private void setActionBar() {
-        setSupportActionBar(setFavoriteRouteBinding.toolbarSetFavoriteRoute.getRoot());
+        setSupportActionBar(binding.toolbarSetFavoriteRoute.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

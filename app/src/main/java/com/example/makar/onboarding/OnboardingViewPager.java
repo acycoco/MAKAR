@@ -32,6 +32,6 @@ public class OnboardingViewPager extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 3; // 페이지 개수
+        return 3;
     }
 }

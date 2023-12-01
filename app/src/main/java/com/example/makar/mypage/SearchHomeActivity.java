@@ -11,7 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -32,24 +31,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchHomeActivity extends AppCompatActivity {
-    ActivitySearchHomeBinding searchHomeBinding;
+    ActivitySearchHomeBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchHomeBinding = ActivitySearchHomeBinding.inflate(getLayoutInflater());
-        setContentView(searchHomeBinding.getRoot());
+        binding = ActivitySearchHomeBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
-        ActivityUtil.setHideKeyboard(searchHomeBinding.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSearchHome, "역 검색");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
 
         setSearchView(); //searchView request focus
 
 
         //set recyclerView
-        RecyclerView recyclerView = searchHomeBinding.searchHomeRecyclerView;
+        RecyclerView recyclerView = binding.searchHomeRecyclerView;
         List<Station> resultList = new ArrayList<>();
         SearchAdapter adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -57,7 +56,7 @@ public class SearchHomeActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        searchHomeBinding.searchViewHome.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchViewHome.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -109,7 +108,7 @@ public class SearchHomeActivity extends AppCompatActivity {
 
     //searchView input 설정
     private void setSearchView(){
-        SearchView searchView = searchHomeBinding.searchViewHome;
+        SearchView searchView = binding.searchViewHome;
         searchView.requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -128,14 +127,8 @@ public class SearchHomeActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        searchHomeBinding.toolbarSearchHome.toolbarText.setText("역 검색");
-        searchHomeBinding.toolbarSearchHome.toolbarButton.setVisibility(View.GONE);
-        searchHomeBinding.toolbarSearchHome.toolbarImage.setVisibility(View.GONE);
-    }
-
     private void setActionBar(){
-        setSupportActionBar(searchHomeBinding.toolbarSearchHome.getRoot());
+        setSupportActionBar(binding.toolbarSearchHome.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(false);

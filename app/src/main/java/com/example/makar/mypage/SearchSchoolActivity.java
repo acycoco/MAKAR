@@ -11,8 +11,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.example.makar.data.ActivityUtil;
@@ -33,23 +31,23 @@ import java.util.List;
 
 public class SearchSchoolActivity extends AppCompatActivity {
 
-    ActivitySearchSchoolBinding searchSchoolBinding;
+    ActivitySearchSchoolBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        searchSchoolBinding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
-        setContentView(searchSchoolBinding.getRoot());
+        binding = ActivitySearchSchoolBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
-        ActivityUtil.setHideKeyboard(searchSchoolBinding.getRoot());
+        ActivityUtil.setToolbar(binding.toolbarSearchSchool, "역 검색");
+        ActivityUtil.setHideKeyboard(binding.getRoot());
         setSearchView(); //searchView request focus
 
 
         //set RecyclerView
-        RecyclerView recyclerView = searchSchoolBinding.searchSchoolRecyclerView;
+        RecyclerView recyclerView = binding.searchSchoolRecyclerView;
         List<Station> resultList = new ArrayList<>();
         SearchAdapter adapter = new SearchAdapter(this, resultList);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -57,7 +55,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        searchSchoolBinding.searchViewSchool.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        binding.searchViewSchool.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -107,7 +105,7 @@ public class SearchSchoolActivity extends AppCompatActivity {
 
 
     private void setSearchView(){
-        SearchView searchView = searchSchoolBinding.searchViewSchool;
+        SearchView searchView = binding.searchViewSchool;
         searchView.requestFocus();
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -126,14 +124,8 @@ public class SearchSchoolActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        searchSchoolBinding.toolbarSearchSchool.toolbarText.setText("역 검색");
-        searchSchoolBinding.toolbarSearchSchool.toolbarImage.setVisibility(View.GONE);
-        searchSchoolBinding.toolbarSearchSchool.toolbarButton.setVisibility(View.GONE);
-    }
-
     private void setActionBar(){
-        setSupportActionBar(searchSchoolBinding.toolbarSearchSchool.getRoot());
+        setSupportActionBar(binding.toolbarSearchSchool.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);

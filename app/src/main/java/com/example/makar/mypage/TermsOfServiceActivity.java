@@ -5,35 +5,35 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
-import com.example.makar.R;
+import com.example.makar.data.ActivityUtil;
 import com.example.makar.databinding.ActivityTermsOfServiceBinding;
 
 public class TermsOfServiceActivity extends AppCompatActivity {
-    ActivityTermsOfServiceBinding termsOfServiceBinding;
+    ActivityTermsOfServiceBinding binding;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        termsOfServiceBinding = ActivityTermsOfServiceBinding.inflate(getLayoutInflater());
-        setContentView(termsOfServiceBinding.getRoot());
+        binding = ActivityTermsOfServiceBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         setActionBar();
-        setToolBar();
+        ActivityUtil.setToolbar(binding.toolbarTermsOfService, "서비스 이용약관");
         setWebView(); //web setting
     }
 
-    private void setWebView(){
-        WebSettings webSettings = termsOfServiceBinding.webViewTermsOfService.getSettings();
+    private void setWebView() {
+        WebSettings webSettings = binding.webViewTermsOfService.getSettings();
         webSettings.setJavaScriptEnabled(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setUseWideViewPort(true);
 
-        termsOfServiceBinding.webViewTermsOfService.loadUrl("https://docs.google.com/document/d/e/2PACX-1vRCzWR0UB4YI35JMZFiKsFP1yuJhoCHz52jdQuChF0gb9K0gVA9MyQogTyng0WzGxb9CeR7wrSvQGEU/pub");
-        termsOfServiceBinding.webViewTermsOfService.setWebViewClient(new WebViewClient());
+        binding.webViewTermsOfService.loadUrl("https://docs.google.com/document/d/e/2PACX-1vRCzWR0UB4YI35JMZFiKsFP1yuJhoCHz52jdQuChF0gb9K0gVA9MyQogTyng0WzGxb9CeR7wrSvQGEU/pub");
+        binding.webViewTermsOfService.setWebViewClient(new WebViewClient());
     }
 
 
@@ -49,14 +49,8 @@ public class TermsOfServiceActivity extends AppCompatActivity {
         }
     }
 
-    private void setToolBar(){
-        termsOfServiceBinding.toolbarTermsOfService.toolbarText.setText("서비스 이용약관");
-        termsOfServiceBinding.toolbarTermsOfService.toolbarImage.setVisibility(View.GONE);
-        termsOfServiceBinding.toolbarTermsOfService.toolbarButton.setVisibility(View.GONE);
-    }
-
-    private void setActionBar(){
-        setSupportActionBar(termsOfServiceBinding.toolbarTermsOfService.getRoot());
+    private void setActionBar() {
+        setSupportActionBar(binding.toolbarTermsOfService.getRoot());
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayShowTitleEnabled(false);
         actionBar.setDisplayHomeAsUpEnabled(true);
