@@ -92,15 +92,8 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    //toolbar
-    @Override
+    // MARK: toolbar
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }

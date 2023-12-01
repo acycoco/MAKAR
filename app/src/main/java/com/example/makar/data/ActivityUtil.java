@@ -1,6 +1,8 @@
 package com.example.makar.data;
 
+import android.app.Activity;
 import android.content.Context;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -50,6 +52,16 @@ public class ActivityUtil {
         ActionBar actionBar = activity.getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
+        }
+    }
+
+    public static boolean handleOptionsItemSelected(MenuItem item, Activity activity) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                activity.finish();
+                return true;
+            default:
+                return false;
         }
     }
 }

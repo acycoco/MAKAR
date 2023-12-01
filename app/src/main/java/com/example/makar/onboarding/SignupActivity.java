@@ -39,11 +39,21 @@ public class SignupActivity extends AppCompatActivity {
         binding = ActivitySignupBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        setActivityUtil();
+        setButtonListener();
+
         initFirebaseAuth();
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.setActionBar(this, binding.toolbarSignUp.getRoot());
         ActivityUtil.setToolbar(binding.toolbarSignUp, "회원가입");
         ActivityUtil.setHideKeyboard(binding.getRoot());
+    }
 
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         //email Listener
         binding.signupEmailEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -196,15 +206,8 @@ public class SignupActivity extends AppCompatActivity {
         }
     }
 
-    // toolbar
-    @Override
+    // MARK: toolbar
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }

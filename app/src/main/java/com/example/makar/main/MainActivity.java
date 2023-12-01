@@ -68,10 +68,20 @@ public class MainActivity extends AppCompatActivity {
         LoginActivity.userUId = FirebaseAuth.getInstance().getUid();
         //현재 사용자의 uid get
 
+        setActivityUtil();
+        setButtonListener();
+
+        //setRecyclerView(); //경로 관련 recyclerView set
+    }
+
+    // MARK: setActivityUtil()
+    private void setActivityUtil() {
         ActivityUtil.mainSetActionBar(this, binding.toolbarMain.getRoot());
         ActivityUtil.mainSetToolbar(binding.toolbarMain);
-        //setRecyclerView(); //경로 관련 recyclerView set
+    }
 
+    // MARK: setButtonListener()
+    private void setButtonListener() {
         binding.toolbarMain.toolbarButton.setOnClickListener(view -> {
             updateUI(MyPageActivity.class);
         });
@@ -92,7 +102,6 @@ public class MainActivity extends AppCompatActivity {
         binding.changeRouteBtn.setOnClickListener(view -> {
             updateUI(SetRouteActivity.class);
         });
-
 
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너

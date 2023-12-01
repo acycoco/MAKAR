@@ -36,15 +36,8 @@ public class PrivatePolicyActivity extends AppCompatActivity {
         binding.webViewPrivatePolicy.setWebViewClient(new WebViewClient());
     }
 
-    //toolbar
-    @Override
+    // MARK: toolbar
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                finish();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+        return ActivityUtil.handleOptionsItemSelected(item, this);
     }
 }
