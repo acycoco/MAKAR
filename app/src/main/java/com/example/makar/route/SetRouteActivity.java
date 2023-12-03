@@ -64,7 +64,6 @@ public class SetRouteActivity extends AppCompatActivity {
 
     ActivitySetRouteBinding binding;
     RouteRecyclerViewItemBinding recyclerViewItemBinding;
-    public Button sourceBtn, destinationBtn;
 
     //임시 출발지, 목적지 변수
     public static Station sourceStation, destinationStation;
@@ -82,8 +81,6 @@ public class SetRouteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivitySetRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        sourceBtn = binding.searchSourceButton;
-        destinationBtn = binding.searchDestinationButton;
 
         //TODO 앱이 시작화면에 초기화하는 코드 -> 나중에 옮겨야됨 (확실히 필요한지는 모르겠음)
 //        FirebaseApp.initializeApp(this);
@@ -122,11 +119,11 @@ public class SetRouteActivity extends AppCompatActivity {
 
     // MARK: setButtonListener()
     private void setButtonListener() {
-        sourceBtn.setOnClickListener(view -> {
+        binding.searchSourceButton.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchSourceActivity.class));
         });
 
-        destinationBtn.setOnClickListener(view -> {
+        binding.searchDestinationButton.setOnClickListener(view -> {
             startActivity(new Intent(SetRouteActivity.this, SearchDestinationActivity.class));
         });
 
@@ -276,16 +273,16 @@ public class SetRouteActivity extends AppCompatActivity {
     private void setSearchViewText() {
         // 서버에 출발역 저장했을 때
         if (sourceStation != null) {
-            sourceBtn.setText("  " + sourceStation.getFullName());
+            binding.searchSourceButton.setText("  " + sourceStation.getFullName());
         } else {
-            sourceBtn.setText("");
+            binding.searchSourceButton.setText("");
         }
 
         // 서버에 도착역 저장했을 때
         if (destinationStation != null) {
-            destinationBtn.setText("  " + destinationStation.getFullName());
+            binding.searchDestinationButton.setText("  " + destinationStation.getFullName());
         } else {
-            destinationBtn.setText("");
+            binding.searchDestinationButton.setText("");
         }
     }
 

@@ -232,7 +232,7 @@ public class MainActivity extends AppCompatActivity {
                                     makarTime = new Date();
                                     getOffTime = makarTime;
                                     //경로 초기화
-                                    setRouteUnset();
+                                    //setRouteUnset();
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
