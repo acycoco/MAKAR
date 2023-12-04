@@ -6,17 +6,26 @@ public class SubRouteItem {
 
     public SubRouteItem() {
     }
-    public SubRouteItem(SubRoute subpath, TransferInfo transferInfo) {
-        this.subRoute = subpath;
-        this.transferInfo = transferInfo;
+
+    public SubRouteItem(SubRoute subRoute) {
+        this.subRoute = subRoute;
     }
 
-    public SubRoute getSubPath() {
-        return subRoute;
+    public SubRouteItem(SubRoute subRoute, TransferInfo transferInfo) {
+        this.subRoute = subRoute;
+        this.transferInfo = transferInfo;
     }
 
     public TransferInfo getTransferInfo() {
         return transferInfo;
+    }
+
+    public SubRoute getSubRoute() {
+        return subRoute;
+    }
+
+    public void setTransferInfo(TransferInfo transferInfo) {
+        this.transferInfo = transferInfo;
     }
 
     @Override
