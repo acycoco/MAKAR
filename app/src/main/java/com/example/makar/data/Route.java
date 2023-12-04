@@ -49,6 +49,10 @@ public class Route {
     }
     public Date getMakarTime(){return makarTime;}
 
+    public void setTotalTime(int totalTime) {
+        this.totalTime = totalTime;
+    }
+
     public void setMakarTime(Date makarTime) {
         this.makarTime = makarTime;
     }
@@ -56,10 +60,13 @@ public class Route {
     @Override
     public String toString() {
         return "Route{" +
-                "totalTime=" + totalTime +
+                "makarTime=" + makarTime +
+                ", totalTime=" + totalTime +
                 ", transitCount=" + transitCount +
-                ", subRouteItems=" + routeItems +
+                ", routeItems=" + routeItems +
                 ", briefRoute=" + briefRoute +
+                ", sourceStation=" + sourceStation +
+                ", destinationStation=" + destinationStation +
                 '}';
     }
 }

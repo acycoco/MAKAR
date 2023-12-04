@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 
 import android.widget.Button;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
+import com.example.makar.TimeInfo;
 import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.RouteAdapter;
 import com.example.makar.data.BriefStation;
@@ -26,6 +26,7 @@ import com.example.makar.data.Route;
 import com.example.makar.data.SubRouteItem;
 import com.example.makar.data.RouteSearchResponse;
 import com.example.makar.data.SubRoute;
+import com.example.makar.data.SubwayStation;
 import com.example.makar.data.TransferInfo;
 
 import com.example.makar.data.User;
@@ -35,6 +36,7 @@ import com.example.makar.main.MainActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.listener.OnBookmarkClickListener;
 import com.example.makar.route.listener.OnRouteClickListener;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -44,6 +46,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.BufferedReader;
@@ -52,12 +55,16 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -75,6 +82,9 @@ public class SetRouteActivity extends AppCompatActivity {
     private RouteAdapter adapter;
     public static Station briefToSourceStation;
     public static Station briefToDestinationStation;
+
+    private static final int UPTOWN = 1;  //상행
+    private static final int DOWNTOWN = 2; //하행
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,9 +115,38 @@ public class SetRouteActivity extends AppCompatActivity {
 ////                databaseConverter.createUniqueStationExcelFile();
 ////                databaseConverter.validateOdsayStationsDataFromDB();
 ////                databaseConverter.modifyOdsayStationData();
-//                databaseConverter.updateStationsCollection();
+////                databaseConverter.updateStationsCollection();
+////                databaseConverter.readExcelFileAndSaveLineMap(2);
+////                databaseConverter.copyField("1", "2", "1신창");
+////                databaseConverter.copyFieldToAnotherDocument("1", "1", 5, "5하남검단산");
+////                databaseConverter.saveNewLine(1, "1", "2", "1신창");
+////                databaseConverter.saveReverseTransferInfo();
+//                databaseConverter.validateTransferInfo();
 //            }
 //        }).start();
+
+//        Calendar calendar = Calendar.getInstance();
+////
+//        System.out.println(calendar.getTime());
+//        calendar.add(Calendar.DAY_OF_MONTH, 1);
+//        System.out.println(calendar.getTime());
+//        calendar.set(Calendar.HOUR_OF_DAY, 25);
+//        calendar.set(Calendar.MINUTE, 20);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.MILLISECOND, 0);
+//
+//        // Date 객체 생성
+//        System.out.println(calendar.getTime());
+//
+//        Calendar.getInstance();
+//
+//        calendar.set(Calendar.HOUR_OF_DAY, 24);
+//        calendar.set(Calendar.MINUTE, 20);
+//        calendar.set(Calendar.SECOND, 0);
+//        calendar.set(Calendar.MILLISECOND, 0);
+//
+//        // Date 객체 생성
+//        System.out.println(calendar.getTime());
     }
 
     // MARK: setActivityUtil()
@@ -167,6 +206,10 @@ public class SetRouteActivity extends AppCompatActivity {
                 });
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (ExecutionException e) {
+                throw new RuntimeException(e);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
             }
         }).start();
     }
@@ -183,14 +226,7 @@ public class SetRouteActivity extends AppCompatActivity {
         urlBuilder.append("&SY=" + URLEncoder.encode(String.valueOf(sourceY), "UTF-8"));
         urlBuilder.append("&EX=" + URLEncoder.encode(String.valueOf(destinationX), "UTF-8"));
         urlBuilder.append("&EY=" + URLEncoder.encode(String.valueOf(destinationY), "UTF-8"));
-//        테스트 값 "x": 126.953991,
-//                "y": 37.495861,
-//                "x": 127.024521,
-//                "y": 37.504464,
-//        urlBuilder.append("?SX=" + URLEncoder.encode("126.9027279", "UTF-8"));
-//        urlBuilder.append("&SY=" + URLEncoder.encode("37.5349277", "UTF-8"));
-//        urlBuilder.append("&EX=" + URLEncoder.encode("126.9145430", "UTF-8"));
-//        urlBuilder.append("&EY=" + URLEncoder.encode("37.5499421", "UTF-8"));
+
         urlBuilder.append("&SearchPathType=" + URLEncoder.encode("1", "UTF-8")); //1:지하철
         urlBuilder.append("&apiKey=" + URLEncoder.encode(apiKey, "UTF-8"));
 
@@ -212,7 +248,7 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-    private List<Route> parseRouteResponse(String jsonResponse) throws IOException {
+    private List<Route> parseRouteResponse(String jsonResponse) throws IOException, ExecutionException, InterruptedException {
         ObjectMapper objectMapper = new ObjectMapper();
         RouteSearchResponse result = objectMapper.readValue(jsonResponse, RouteSearchResponse.class);
 
@@ -228,7 +264,10 @@ public class SetRouteActivity extends AppCompatActivity {
 
             int count = 1;
             //경로의 서브 경로 탐색
-            for (RouteSearchResponse.SubPath subPath : subPaths) {
+            for (int i = 0; i < subPaths.size(); i++) {
+
+                RouteSearchResponse.SubPath subPath = subPaths.get(i);
+//            for (RouteSearchResponse.SubPath subPath : subPaths) {
                 //도보타입일 경우는 skip
                 if (subPath.isWalkType()) {
                     continue;
@@ -242,32 +281,481 @@ public class SetRouteActivity extends AppCompatActivity {
                 int endStationCode = subPath.getEndID();
                 int wayCode = subPath.getWayCode();
                 SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
-                TransferInfo transferInfo = new TransferInfo(); //TODO 환승정보 만들어야됨 마지막인 경우는 null로 생성
+
                 briefRoute.add(new BriefStation(startStationName, lineNum));
                 if (count == pathInfo.getSubwayTransitCount()) {
                     briefRoute.add(new BriefStation(endStationName, lineNum));
                 }
                 //서브 경로 리스트에 추가
-                subRouteItems.add(new SubRouteItem(subRoute, transferInfo));
+                subRouteItems.add(new SubRouteItem(subRoute));
                 count++;
             }
 
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
 
-            //TODO 막차시간 구하기 (막차시간 임시로 설정)
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = null;
-            try {
-                //TODO 임시 막차 시간
-                date = sdf.parse("2023-11-30 22:20:00");
-            } catch (ParseException e) {
-                throw new RuntimeException(e);
+            int totalTime = 0;
+            for (int i = 0; i < route.getTransitCount(); i++) {
+                SubRouteItem subRouteItem = route.getRouteItems().get(i);
+                SubRoute currentSubRoute = route.getRouteItems().get(i).getSubRoute();
+                totalTime += currentSubRoute.getSectionTime();
+                if (i + 1 < route.getTransitCount()) {
+                    SubRoute nextSubRoute = route.getRouteItems().get(i + 1).getSubRoute();
+                    TransferInfo transferInfo = searchTransferInfo(currentSubRoute.getEndStationCode(), nextSubRoute.getStartStationCode());
+                    subRouteItem.setTransferInfo(transferInfo);
+                    totalTime += transferInfo.getTransferTime();
+                }
             }
-            route.setMakarTime(date); //Date type으로 막차 오는 시간 입력 필요
+
+            //환승 소요시간까지 합한 경로의 총 시간
+            route.setTotalTime(totalTime);
+
+
+            Calendar calendar = Calendar.getInstance();
+            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+            List<SubRouteItem> routeItems = route.getRouteItems();
+            Calendar takingTime = null;
+            //경로를 순회하면서 막차시간 구하기
+            for (int i = routeItems.size() - 1; i >= 0; i--) {
+
+                int sectionTime = 0;
+
+                SubRouteItem subRouteItem = routeItems.get(i);
+                SubRoute lastSubPath = subRouteItem.getSubRoute();
+                //startStation의 지하철 시간표 호출하기
+//                SubwayStation subwayStation = getSubwayStationAsync(lastSubPath.getStartStationCode(), lastSubPath.getWayCode()).get();
+                String responseSubwaySchedule = requestSubwaySchedule(lastSubPath.getStartStationCode(), lastSubPath.getWayCode());
+                SubwayStation subwayStation = parseSubwayScheduleResponse(responseSubwaySchedule, lastSubPath.getStartStationCode(), lastSubPath.getWayCode());
+//                SubwayStation subwayStation = parseSubwayScheduleResponse(resultSubwaySchedule, lastSubPath.getStartStationCode(), lastSubPath.getWayCode());
+
+                //막차시간 구하기(마지막 서브 경로 or 단일 서브 경로)
+                if (i == routeItems.size() - 1) {
+                    takingTime = computeLastMakarTime(dayOfWeek, subwayStation, lastSubPath.getLineNum(), lastSubPath.getWayCode(), lastSubPath.getStartStationCode(), lastSubPath.getEndStationCode());
+                    System.out.println("last makar" + takingTime.getTime());
+                }
+                //막차시간 구하기(마지막 서브경로가 아닌 경우)
+                else {
+                    sectionTime += subRouteItem.getSubRoute().getSectionTime();
+                    sectionTime += subRouteItem.getTransferInfo().getTransferTime();
+                    //환승시간 포함해서 걸린시간을 이후 서브 경로의 막차시간에서 빼준다.
+                    System.out.println("minus minute" + (-sectionTime));
+                    takingTime.add(Calendar.MINUTE, -sectionTime);
+                    System.out.println("뺀 결과 " + takingTime.getTime());
+                    //해당시간 이전보다 빠른 막차시간을 구한다.
+                    takingTime = computeTransferMakarTime(takingTime, dayOfWeek, subwayStation, lastSubPath.getLineNum(), lastSubPath.getWayCode(), lastSubPath.getStartStationCode(), lastSubPath.getEndStationCode());
+                    System.out.println("환승막차" + takingTime.getTime());
+                }
+
+            }
+            route.setMakarTime(takingTime.getTime());
+
             routes.add(route);
         }
+
+        System.out.println(routes);
         return routes;
+    }
+
+
+    private TransferInfo searchTransferInfo(int fromStationID, int toStationID) throws ExecutionException, InterruptedException {
+        CompletableFuture<TransferInfo> future = searchTransferInfoAsync(fromStationID, toStationID);
+
+        // 비동기 작업의 완료를 기다림
+        return future.get();
+    }
+
+    private CompletableFuture<TransferInfo> searchTransferInfoAsync(int fromStationID, int toStationID) {
+        CompletableFuture<TransferInfo> future = new CompletableFuture<>();
+
+        System.out.println("from " + fromStationID + "to " + toStationID);
+        firebaseFirestore.collection("transfer")
+                .whereEqualTo("fromStationID", fromStationID)
+                .whereEqualTo("toStationID", toStationID)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        QuerySnapshot result = task.getResult();
+                        if (result != null && !result.isEmpty()) {
+                            DocumentSnapshot documentSnapshot = result.getDocuments().get(0);
+                            int fromLine = ((Long) documentSnapshot.get("fromLine")).intValue();
+                            int toLine = ((Long) documentSnapshot.get("toLine")).intValue();
+                            String odsayStationName = (String) documentSnapshot.get("odsayStationName");
+                            int time = ((Long) documentSnapshot.get("time")).intValue();
+
+                            TransferInfo transferInfo = new TransferInfo(fromLine, toLine, odsayStationName, time);
+                            future.complete(transferInfo);
+                        } else {
+                            future.completeExceptionally(new IllegalStateException("No matching documents."));
+                        }
+                    } else {
+                        future.completeExceptionally(task.getException());
+                    }
+                });
+
+        return future;
+    }
+
+    private Calendar computeLastMakarTime(int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
+
+        SubwayStation.OrdList ordList = null;
+
+        //요일에 맞는 시간표 가져오기
+        if (dayOfWeek == Calendar.SATURDAY) {
+            ordList = subwayStation.getSatList();
+        } else if (dayOfWeek == Calendar.SUNDAY) {
+            ordList = subwayStation.getSunList();
+        } else {
+            ordList = subwayStation.getOrdList();
+        }
+
+        List<SubwayStation.OrdList.TimeDirection.TimeData> time = null;
+
+        //지하철 방면에 맞는 시간표 가져오기
+        if (wayCode == UPTOWN) {
+            time = ordList.getUp().getTime();
+        } else if (wayCode == DOWNTOWN) {
+            time = ordList.getDown().getTime();
+        } else {
+            Log.e("makar" , "waycode invalid error");
+        }
+
+        //매시간마다
+        for (int i = time.size() - 1; i >= 0; i--) {
+            SubwayStation.OrdList.TimeDirection.TimeData timeData = time.get(i);
+            String list = timeData.getList();
+            List<TimeInfo> timeInfos = TimeInfo.parseTimeString(list);
+
+            AtomicBoolean canGoInSubway = new AtomicBoolean(false);
+            List<CompletableFuture<Void>> tasks = new ArrayList<>();
+
+            AtomicReference<TimeInfo> result = new AtomicReference<>();
+            //분마다
+            for (int j = timeInfos.size() - 1; j >= 0; j--) {
+                TimeInfo timeInfo = timeInfos.get(j);
+
+                //해당 호선의 지하철 노선도 데이터 가져오기
+                CompletableFuture<Void> task = new CompletableFuture<>();
+                firebaseFirestore.collection("line_sequence")
+                        .whereEqualTo("odsayLaneType", odsayLaneType)
+                        .get()
+                        .addOnCompleteListener(taskSnapshot -> {
+                            if (taskSnapshot.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : taskSnapshot.getResult()) {
+
+                                    System.out.println(timeInfo.getMinute());
+                                    int startIndex = -1;
+                                    int endIndex = -1;
+                                    int terminalIndex = -1;
+
+                                    List<Map<String, Object>> stationList = new ArrayList<>();
+                                    if (wayCode == UPTOWN) {
+                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(UPTOWN));
+                                    } else if (wayCode == DOWNTOWN) {
+                                        stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
+                                    } else {
+                                        Log.e("makar" , "waycode invalid error");
+                                    }
+
+                                    //순회하면서 출발역, 도착역, 종착역의 index구하기
+                                    for (int k = 0; k < stationList.size(); k++) {
+                                        String stationName = (String) stationList.get(k).get("stationName");
+                                        if (stationName.equals(timeInfo.getTerminalStation())) {
+                                            terminalIndex = k;
+                                        }
+
+                                        int odsayStationID = ((Long) stationList.get(k).get("odsayLaneType")).intValue();
+                                        if (odsayStationID == startStationID) {
+                                            startIndex = k;
+                                        }
+
+                                        if (odsayStationID == endStationID) {
+                                            endIndex = k;
+                                        }
+                                    }
+
+                                    //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
+                                    if (startIndex < endIndex && endIndex < terminalIndex) {
+
+                                        System.out.println(timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
+                                        canGoInSubway.set(true);
+                                        result.set(timeInfo);
+                                        task.complete(null);
+                                        return;
+                                    }
+                                }
+                            }
+                            task.complete(null);
+                        });
+                tasks.add(task);
+                CompletableFuture<Void> allOf = CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]));
+                try {
+                    allOf.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                if (canGoInSubway.get()) {
+                    //현재 날짜
+                    Calendar calendar = Calendar.getInstance();
+
+                    int hour = time.get(i).getIdx();
+                    int minute = result.get().getMinute();
+                    if (hour >= 24) { //지하철 시간표에서 시간이 24, 25인 경우
+                        calendar.add(Calendar.DAY_OF_MONTH, 1);
+                        hour -= 24;
+                    }
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
+
+                    return calendar;
+                }
+
+            }
+
+
+        }
+        return null;
+    }
+
+
+    private Calendar computeTransferMakarTime(Calendar takingTime, int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
+
+        System.out.println("takingTime" + takingTime.get(Calendar.HOUR_OF_DAY) + "시" +
+                takingTime.get(Calendar.MINUTE) + "분 " +
+                startStationID + " 에서 " + endStationID + "로 가는 막차시간 구하기");
+        SubwayStation.OrdList ordList = null;
+
+        //요일에 맞는 시간표 가져오기
+        if (dayOfWeek == Calendar.SATURDAY) {
+            ordList = subwayStation.getSatList();
+        } else if (dayOfWeek == Calendar.SUNDAY) {
+            ordList = subwayStation.getSunList();
+        } else {
+            ordList = subwayStation.getOrdList();
+        }
+
+        List<SubwayStation.OrdList.TimeDirection.TimeData> time = null;
+
+        //지하철 방면에 맞는 시간표 가져오기
+        if (wayCode == UPTOWN) {
+            time = ordList.getUp().getTime();
+        } else if (wayCode == DOWNTOWN) {
+            time = ordList.getDown().getTime();
+        } else {
+            Log.e("makar" , "waycode invalid error");
+        }
+        int takingHour = takingTime.get(Calendar.HOUR_OF_DAY);
+        if (takingTime.get(Calendar.HOUR_OF_DAY) == 0) {
+            takingHour = 24;
+        } else if (takingTime.get(Calendar.HOUR_OF_DAY) == 1) {
+            takingHour = 25;
+        }
+
+        //매시간마다
+        for (int i = time.size() - 1; i >= 0; i--) {
+
+            SubwayStation.OrdList.TimeDirection.TimeData timeData = time.get(i);
+
+            //타야하는 시간보다 hour이 크면 skip
+            if (timeData.getIdx() > takingHour) {
+                continue;
+            }
+
+            String list = timeData.getList();
+            List<TimeInfo> timeInfos = TimeInfo.parseTimeString(list);
+
+            AtomicBoolean canGoInSubway = new AtomicBoolean(false);
+            List<CompletableFuture<Void>> tasks = new ArrayList<>();
+
+            AtomicReference<TimeInfo> result = new AtomicReference<>();
+            //분마다
+            for (int j = timeInfos.size() - 1; j >= 0; j--) {
+                TimeInfo timeInfo = timeInfos.get(j);
+
+                //타야하는 시간보다 minute가 크면 skip
+                if (timeData.getIdx() == takingHour && timeInfo.getMinute() > takingTime.get(Calendar.MINUTE)) {
+                    continue;
+                }
+                //해당 호선의 지하철 노선도 데이터 가져오기
+                CompletableFuture<Void> task = new CompletableFuture<>();
+                firebaseFirestore.collection("line_sequence")
+                        .whereEqualTo("odsayLaneType", odsayLaneType)
+                        .get()
+                        .addOnCompleteListener(taskSnapshot -> {
+                            if (taskSnapshot.isSuccessful()) {
+                                for (QueryDocumentSnapshot document : taskSnapshot.getResult()) {
+
+                                    System.out.println(timeInfo.getMinute());
+                                    int startIndex = -1;
+                                    int endIndex = -1;
+                                    int terminalIndex = -1;
+
+                                    List<Map<String, Object>> stationList = new ArrayList<>();
+                                    if (wayCode == UPTOWN) {
+                                        stationList = (List<Map<String, Object>>) document.get(String.valueOf(UPTOWN));
+                                    } else if (wayCode == DOWNTOWN) {
+                                        stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
+                                    } else {
+                                        Log.e("makar" , "waycode invalid error");
+                                    }
+
+                                    //순회하면서 출발역, 도착역, 종착역의 index구하기
+                                    for (int k = 0; k < stationList.size(); k++) {
+                                        String stationName = (String) stationList.get(k).get("stationName");
+                                        if (stationName.equals(timeInfo.getTerminalStation())) {
+                                            terminalIndex = k;
+                                        }
+
+                                        int odsayStationID = ((Long) stationList.get(k).get("odsayLaneType")).intValue();
+                                        if (odsayStationID == startStationID) {
+                                            startIndex = k;
+                                        }
+
+                                        if (odsayStationID == endStationID) {
+                                            endIndex = k;
+                                        }
+                                    }
+
+                                    //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
+                                    if (startIndex < endIndex && endIndex < terminalIndex) {
+
+                                        System.out.println(timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
+                                        canGoInSubway.set(true);
+                                        result.set(timeInfo);
+                                        task.complete(null);
+                                        return;
+                                    }
+                                }
+                            }
+                            task.complete(null);
+                        });
+                tasks.add(task);
+                CompletableFuture<Void> allOf = CompletableFuture.allOf(tasks.toArray(new CompletableFuture[0]));
+                try {
+                    allOf.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    e.printStackTrace();
+                }
+
+                if (canGoInSubway.get()) {
+                    Calendar calendar = Calendar.getInstance();
+
+                    int hour = time.get(i).getIdx();
+                    int minute = result.get().getMinute();
+                    if (hour >= 24) { //지하철 시간표에서 시간이 24, 25인 경우
+                        calendar.add(Calendar.DAY_OF_MONTH, 1);
+                        hour -= 24;
+                    }
+                    calendar.set(Calendar.HOUR_OF_DAY, hour);
+                    calendar.set(Calendar.MINUTE, minute);
+                    calendar.set(Calendar.SECOND, 0);
+                    calendar.set(Calendar.MILLISECOND, 0);
+
+                    return calendar;
+
+                }
+            }
+        }
+        return null;
+    }
+    private String requestSubwaySchedule(int stationID, int wayCode) throws
+            IOException {
+        String apiKey = BuildConfig.ODSAY_API_KEY;
+        if (apiKey == null) {
+            Log.e("MAKAR", "api key null");
+        }
+
+        //지하철역 전체 시간표 조회 api
+        StringBuilder urlBuilder = new StringBuilder("https://api.odsay.com/v1/api/subwayTimeTable");
+        urlBuilder.append("?stationID=" + URLEncoder.encode(String.valueOf(stationID), "UTF-8"));
+        urlBuilder.append("&wayCode=" + URLEncoder.encode(String.valueOf(wayCode), "UTF-8"));
+        urlBuilder.append("&showExpressTime=" + URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&sepExpressTime=" + URLEncoder.encode("1", "UTF-8"));
+        urlBuilder.append("&apiKey=" + URLEncoder.encode(apiKey, "UTF-8"));
+
+        URL url = new URL(urlBuilder.toString());
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        conn.setRequestMethod("GET");
+        conn.setRequestProperty("Content-type", "application/json");
+
+        try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            System.out.println(sb);
+            return sb.toString();
+        } finally {
+            conn.disconnect();
+        }
+    }
+
+    private SubwayStation parseSubwayScheduleResponse(String jsonResponse, int stationID, int wayCode) throws
+            IOException, ExecutionException, InterruptedException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JsonNode rootNode = objectMapper.readTree(jsonResponse);
+
+        JsonNode resultNode = rootNode.path("result");
+
+        return objectMapper.treeToValue(resultNode, SubwayStation.class);
+    }
+
+
+    private CompletableFuture<SubwayStation> getSubwayStationAsync(int stationID, int wayCode) {
+        String way = "";
+        if (wayCode == UPTOWN) {
+            way = "up";
+        } else if (wayCode == DOWNTOWN) {
+            way = "down";
+        }
+        CompletableFuture<SubwayStation> future = new CompletableFuture<>();
+
+        DocumentReference docRef = firebaseFirestore.collection("timetable").document(stationID + way);
+        docRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    SubwayStation subwayStation = document.toObject(SubwayStation.class);
+                    future.complete(subwayStation);
+                } else {
+                    try {
+                        String response = requestSubwaySchedule(stationID, wayCode);
+                        SubwayStation subwayStation = parseSubwayScheduleResponse(response, stationID, wayCode);
+                        saveTimeTable(subwayStation, stationID, wayCode);
+                    } catch (IOException | ExecutionException | InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                    future.completeExceptionally(new IllegalStateException("Document does not exist."));
+                }
+            } else {
+                future.completeExceptionally(task.getException());
+            }
+        });
+
+        return future;
+    }
+
+    private void saveTimeTable(SubwayStation subwayStation, int stationID, int wayCode) {
+        String way = "";
+        if (wayCode == UPTOWN) {
+            way = "up";
+        } else if (wayCode == DOWNTOWN) {
+            way = "down";
+        }
+        firebaseFirestore.collection("timetable")
+                .document(stationID + way)
+                .set(subwayStation)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Log.d("makar", "timetable save success");
+                    } else {
+                        Log.e("makar", "timetable save fail");
+                    }
+                });
     }
 
     private void setSearchViewText() {
