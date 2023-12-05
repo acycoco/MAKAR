@@ -43,12 +43,14 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/timetableBtn"
-                    android:layout_width="43dp"
+                    android:id="@+id/resetRouteBtn"
+                    android:layout_width="55dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/custom_button_timetable"
-                    android:text="시간표"
-                    android:textSize="10sp"
+                    android:text="경로 초기화"
+                    android:textSize="9sp"
+                    android:background="@drawable/custom_button_main"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
                     android:visibility="visible"
                     tools:ignore="SmallSp" />
             </LinearLayout>
