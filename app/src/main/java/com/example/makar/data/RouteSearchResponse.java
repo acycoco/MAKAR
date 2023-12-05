@@ -56,12 +56,19 @@ public class RouteSearchResponse {
         @JsonProperty("totalTime")
         private int totalTime;
 
+        @JsonProperty("mapObj")
+        private String mabObj;
+
         @JsonProperty("subwayTransitCount")
         private int subwayTransitCount;
 
 
         public int getTotalTime() {
             return totalTime;
+        }
+
+        public String getMabObj() {
+            return mabObj;
         }
 
         public int getSubwayTransitCount() {

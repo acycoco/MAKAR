@@ -61,10 +61,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.StringTokenizer;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -125,28 +128,6 @@ public class SetRouteActivity extends AppCompatActivity {
 //            }
 //        }).start();
 
-//        Calendar calendar = Calendar.getInstance();
-////
-//        System.out.println(calendar.getTime());
-//        calendar.add(Calendar.DAY_OF_MONTH, 1);
-//        System.out.println(calendar.getTime());
-//        calendar.set(Calendar.HOUR_OF_DAY, 25);
-//        calendar.set(Calendar.MINUTE, 20);
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.MILLISECOND, 0);
-//
-//        // Date 객체 생성
-//        System.out.println(calendar.getTime());
-//
-//        Calendar.getInstance();
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, 24);
-//        calendar.set(Calendar.MINUTE, 20);
-//        calendar.set(Calendar.SECOND, 0);
-//        calendar.set(Calendar.MILLISECOND, 0);
-//
-//        // Date 객체 생성
-//        System.out.println(calendar.getTime());
     }
 
     // MARK: setActivityUtil()
@@ -258,6 +239,11 @@ public class SetRouteActivity extends AppCompatActivity {
         //검색된 여러 경로 탐색
         for (RouteSearchResponse.Path path : paths) {
             RouteSearchResponse.Info pathInfo = path.getInfo();
+
+            //1~9호선이 아닌 경로가 포함되어있는 경우 경로에서 제외
+            if (isNotSubwayLineOneToNine(pathInfo.getMabObj())) {
+                continue;
+            }
             List<SubRouteItem> subRouteItems = new ArrayList<>();
             List<RouteSearchResponse.SubPath> subPaths = path.getSubPath();
             List<BriefStation> briefRoute = new ArrayList<>();
@@ -267,7 +253,6 @@ public class SetRouteActivity extends AppCompatActivity {
             for (int i = 0; i < subPaths.size(); i++) {
 
                 RouteSearchResponse.SubPath subPath = subPaths.get(i);
-//            for (RouteSearchResponse.SubPath subPath : subPaths) {
                 //도보타입일 경우는 skip
                 if (subPath.isWalkType()) {
                     continue;
@@ -661,6 +646,33 @@ public class SetRouteActivity extends AppCompatActivity {
         }
         return null;
     }
+
+    private boolean isNotSubwayLineOneToNine(String input) {
+
+        // 정규식을 사용하여 숫자 1~9인지 확인
+        Pattern pattern = Pattern.compile("^[1-9]$");
+
+        // @로 섹션 나누기
+        StringTokenizer sectionsTokenizer = new StringTokenizer(input, "@");
+        while (sectionsTokenizer.hasMoreTokens()) {
+            String section = sectionsTokenizer.nextToken();
+
+            // :로 값을 나누기
+            StringTokenizer valuesTokenizer = new StringTokenizer(section, ":");
+            if (valuesTokenizer.hasMoreTokens()) {
+                String firstValue = valuesTokenizer.nextToken();
+
+                // 정규식을 사용하여 숫자 1~9인지 확인
+                Matcher matcher = pattern.matcher(firstValue);
+                if (!matcher.matches()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
     private String requestSubwaySchedule(int stationID, int wayCode) throws
             IOException {
         String apiKey = BuildConfig.ODSAY_API_KEY;
