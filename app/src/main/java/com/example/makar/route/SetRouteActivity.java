@@ -244,19 +244,20 @@ public class SetRouteActivity extends AppCompatActivity {
             if (isNotSubwayLineOneToNine(pathInfo.getMabObj())) {
                 continue;
             }
+
             List<SubRouteItem> subRouteItems = new ArrayList<>();
             List<RouteSearchResponse.SubPath> subPaths = path.getSubPath();
             List<BriefStation> briefRoute = new ArrayList<>();
 
-            int count = 1;
             //경로의 서브 경로 탐색
             for (int i = 0; i < subPaths.size(); i++) {
 
                 RouteSearchResponse.SubPath subPath = subPaths.get(i);
-                //도보타입일 경우는 skip
+                //도보타입일 경우는 skip -> api결과에 환승 소요시간이 안나옴
                 if (subPath.isWalkType()) {
                     continue;
                 }
+
                 RouteSearchResponse.Lane lane = subPath.getLane().get(0);
                 int lineNum = lane.getLineNum();
                 int sectionTime = subPath.getSectionTime();
@@ -265,36 +266,24 @@ public class SetRouteActivity extends AppCompatActivity {
                 int startStationCode = subPath.getStartID();
                 int endStationCode = subPath.getEndID();
                 int wayCode = subPath.getWayCode();
-                SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
 
+                SubRoute subRoute = new SubRoute(startStationName, endStationName, startStationCode, endStationCode, lineNum, wayCode, sectionTime);
                 briefRoute.add(new BriefStation(startStationName, lineNum));
-                if (count == pathInfo.getSubwayTransitCount()) {
+
+                //마지막 서브 경로인 경우 도착역 정보도 추가
+                if (i == pathInfo.getSubwayTransitCount() - 1) {
                     briefRoute.add(new BriefStation(endStationName, lineNum));
                 }
+
                 //서브 경로 리스트에 추가
                 subRouteItems.add(new SubRouteItem(subRoute));
-                count++;
             }
 
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
 
             //환승소요시간을 포함해서 전체소요시간 구하기
-            int totalTime = 0;
-            for (int i = 0; i < route.getTransitCount(); i++) {
-                SubRouteItem subRouteItem = route.getRouteItems().get(i);
-                SubRoute currentSubRoute = route.getRouteItems().get(i).getSubRoute();
-                totalTime += currentSubRoute.getSectionTime();
-                if (i + 1 < route.getTransitCount()) {
-                    SubRoute nextSubRoute = route.getRouteItems().get(i + 1).getSubRoute();
-                    TransferInfo transferInfo = searchTransferInfo(currentSubRoute.getEndStationCode(), nextSubRoute.getStartStationCode());
-                    subRouteItem.setTransferInfo(transferInfo);
-                    totalTime += transferInfo.getTransferTime();
-                }
-            }
-
-            //환승 소요시간까지 합한 경로의 총 시간
-            route.setTotalTime(totalTime);
+            setTransferTimeInRoute(route);
             routes.add(route);
         }
 
@@ -303,6 +292,29 @@ public class SetRouteActivity extends AppCompatActivity {
         return routes;
     }
 
+
+    //환승소요시간을 포함해서 전체소요시간 구하기
+    private void setTransferTimeInRoute(Route route) throws ExecutionException, InterruptedException {
+        int totalTime = 0;
+        for (int i = 0; i < route.getTransitCount(); i++) {
+            SubRouteItem subRouteItem = route.getRouteItems().get(i);
+            SubRoute currentSubRoute = route.getRouteItems().get(i).getSubRoute();
+
+            totalTime += currentSubRoute.getSectionTime();
+
+            //현재서브 경로의 도착역과 다음 서브경로의 출발역으로 환승 소요시간을 DB에서 가져오기
+            if (i + 1 < route.getTransitCount()) {
+                SubRoute nextSubRoute = route.getRouteItems().get(i + 1).getSubRoute();
+                TransferInfo transferInfo = searchTransferInfo(currentSubRoute.getEndStationCode(), nextSubRoute.getStartStationCode());
+                subRouteItem.setTransferInfo(transferInfo);
+
+                totalTime += transferInfo.getTransferTime();
+            }
+        }
+
+        //환승 소요시간까지 합한 경로의 총 시간
+        route.setTotalTime(totalTime);
+    }
 
     //막차시간 구하기
     private void setMakarTimeInRoutes(List<Route> routes) throws IOException, ExecutionException, InterruptedException {
