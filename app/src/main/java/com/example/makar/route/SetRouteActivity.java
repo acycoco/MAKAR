@@ -279,6 +279,7 @@ public class SetRouteActivity extends AppCompatActivity {
             //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
 
+            //환승소요시간을 포함해서 전체소요시간 구하기
             int totalTime = 0;
             for (int i = 0; i < route.getTransitCount(); i++) {
                 SubRouteItem subRouteItem = route.getRouteItems().get(i);
@@ -294,7 +295,18 @@ public class SetRouteActivity extends AppCompatActivity {
 
             //환승 소요시간까지 합한 경로의 총 시간
             route.setTotalTime(totalTime);
+            routes.add(route);
+        }
 
+        //경로들의 막차시간 구하기
+        setMakarTimeInRoutes(routes);
+        return routes;
+    }
+
+
+    //막차시간 구하기
+    private void setMakarTimeInRoutes(List<Route> routes) throws IOException, ExecutionException, InterruptedException {
+        for (Route route : routes) {
 
             Calendar calendar = Calendar.getInstance();
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -323,6 +335,7 @@ public class SetRouteActivity extends AppCompatActivity {
                 else {
                     sectionTime += subRouteItem.getSubRoute().getSectionTime();
                     sectionTime += subRouteItem.getTransferInfo().getTransferTime();
+
                     //환승시간 포함해서 걸린시간을 이후 서브 경로의 막차시간에서 빼준다.
                     System.out.println("minus minute" + (-sectionTime));
                     takingTime.add(Calendar.MINUTE, -sectionTime);
@@ -334,14 +347,8 @@ public class SetRouteActivity extends AppCompatActivity {
 
             }
             route.setMakarTime(takingTime.getTime());
-
-            routes.add(route);
         }
-
-        System.out.println(routes);
-        return routes;
     }
-
 
     private TransferInfo searchTransferInfo(int fromStationID, int toStationID) throws ExecutionException, InterruptedException {
         CompletableFuture<TransferInfo> future = searchTransferInfoAsync(fromStationID, toStationID);
@@ -402,7 +409,7 @@ public class SetRouteActivity extends AppCompatActivity {
         } else if (wayCode == DOWNTOWN) {
             time = ordList.getDown().getTime();
         } else {
-            Log.e("makar" , "waycode invalid error");
+            Log.e("makar", "waycode invalid error");
         }
 
         //매시간마다
@@ -435,11 +442,11 @@ public class SetRouteActivity extends AppCompatActivity {
 
                                     List<Map<String, Object>> stationList = new ArrayList<>();
                                     if (wayCode == UPTOWN) {
-                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(UPTOWN));
+                                        stationList = (List<Map<String, Object>>) document.get(String.valueOf(UPTOWN));
                                     } else if (wayCode == DOWNTOWN) {
                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
                                     } else {
-                                        Log.e("makar" , "waycode invalid error");
+                                        Log.e("makar", "waycode invalid error");
                                     }
 
                                     //순회하면서 출발역, 도착역, 종착역의 index구하기
@@ -530,7 +537,7 @@ public class SetRouteActivity extends AppCompatActivity {
         } else if (wayCode == DOWNTOWN) {
             time = ordList.getDown().getTime();
         } else {
-            Log.e("makar" , "waycode invalid error");
+            Log.e("makar", "waycode invalid error");
         }
         int takingHour = takingTime.get(Calendar.HOUR_OF_DAY);
         if (takingTime.get(Calendar.HOUR_OF_DAY) == 0) {
@@ -584,7 +591,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                     } else if (wayCode == DOWNTOWN) {
                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
                                     } else {
-                                        Log.e("makar" , "waycode invalid error");
+                                        Log.e("makar", "waycode invalid error");
                                     }
 
                                     //순회하면서 출발역, 도착역, 종착역의 index구하기
