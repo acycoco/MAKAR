@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -287,6 +288,14 @@ public class MainActivity extends AppCompatActivity {
         resetRouteDialog.show();
     }
 
+    public void onResetRouteBtnClicked(){
+        //초기화 버튼을 누를 시 경로 초기화 실행
+        setRouteUnset();
+        Toast.makeText(this, R.string.reset_route_toast, Toast.LENGTH_SHORT).show();
+        updateUI(MainActivity.class);
+        finish();
+    }
+
     //메인 타이틀 텍스트 동적 변경
     private void changeMainTitleText(int minute) {
         int length = String.valueOf(minute).length();
@@ -371,8 +380,6 @@ public class MainActivity extends AppCompatActivity {
         //선택된 루트, 출발역, 도착역 초기화
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-       // updateUI(MainActivity.class);
-       // finish();
     }
 
     private void deleteStation(String path) {

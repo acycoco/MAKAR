@@ -1,7 +1,5 @@
 package com.example.makar.main.dialog;
 
-import static androidx.core.content.ContextCompat.startActivity;
-
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -13,16 +11,15 @@ import androidx.annotation.NonNull;
 
 import com.example.makar.R;
 import com.example.makar.main.MainActivity;
-import com.example.makar.mypage.SetFavoriteStationActivity;
 
 public class ResetRouteDialog extends Dialog {
     Button positiveBtn;
     Button negativeBtn;
-    Context context;
+    MainActivity mainActivity;
 
     public ResetRouteDialog(@NonNull Context context) {
         super(context);
-        this.context = context;
+        this.mainActivity = (MainActivity) context;
     }
 
     @Override
@@ -39,7 +36,7 @@ public class ResetRouteDialog extends Dialog {
 
         positiveBtn.setOnClickListener(view -> {
             //경로 초기화
-            .setRouteUnset();
+            mainActivity.onResetRouteBtnClicked();
             dismiss();
         });
 
