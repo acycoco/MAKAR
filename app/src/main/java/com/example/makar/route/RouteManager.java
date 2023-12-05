@@ -130,8 +130,6 @@ public class RouteManager {
         return routes;
     }
 
-
-
     private static boolean isNotSubwayLineOneToNine(String input) {
 
         // 정규식을 사용하여 숫자 1~9인지 확인
