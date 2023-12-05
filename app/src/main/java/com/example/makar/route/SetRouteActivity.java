@@ -89,6 +89,8 @@ public class SetRouteActivity extends AppCompatActivity {
     private static final int UPTOWN = 1;  //상행
     private static final int DOWNTOWN = 2; //하행
 
+    private static final int DEFAULT_TRANSFER_TIME = 4; //기본 환승 소요시간
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -275,11 +277,9 @@ public class SetRouteActivity extends AppCompatActivity {
                     briefRoute.add(new BriefStation(endStationName, lineNum));
                 }
 
-                //서브 경로 리스트에 추가
                 subRouteItems.add(new SubRouteItem(subRoute));
             }
 
-            //경로 리스트에 추가
             Route route = new Route(pathInfo.getTotalTime(), pathInfo.getSubwayTransitCount(), subRouteItems, briefRoute, sourceStation, destinationStation);
 
             //환승소요시간을 포함해서 전체소요시간 구하기
@@ -287,7 +287,7 @@ public class SetRouteActivity extends AppCompatActivity {
             routes.add(route);
         }
 
-        //경로들의 막차시간 구하기
+        //막차시간 구하기
         setMakarTimeInRoutes(routes);
         return routes;
     }
@@ -295,24 +295,32 @@ public class SetRouteActivity extends AppCompatActivity {
 
     //환승소요시간을 포함해서 전체소요시간 구하기
     private void setTransferTimeInRoute(Route route) throws ExecutionException, InterruptedException {
-        int totalTime = 0;
-        for (int i = 0; i < route.getTransitCount(); i++) {
-            SubRouteItem subRouteItem = route.getRouteItems().get(i);
-            SubRoute currentSubRoute = route.getRouteItems().get(i).getSubRoute();
 
+        int totalTime = 0;
+        List<SubRouteItem> routeItems = route.getRouteItems();
+        int transitCount = route.getTransitCount();
+
+        for (int i = 0; i < transitCount; i++) {
+            SubRouteItem subRouteItem = routeItems.get(i);
+            SubRoute currentSubRoute = subRouteItem.getSubRoute();
             totalTime += currentSubRoute.getSectionTime();
 
-            //현재서브 경로의 도착역과 다음 서브경로의 출발역으로 환승 소요시간을 DB에서 가져오기
-            if (i + 1 < route.getTransitCount()) {
-                SubRoute nextSubRoute = route.getRouteItems().get(i + 1).getSubRoute();
-                TransferInfo transferInfo = searchTransferInfo(currentSubRoute.getEndStationCode(), nextSubRoute.getStartStationCode());
-                subRouteItem.setTransferInfo(transferInfo);
+            if (i + 1 < transitCount) {
+                SubRoute nextSubRoute = routeItems.get(i + 1).getSubRoute();
+                CompletableFuture<TransferInfo> transferInfoFuture = searchTransferInfoAsync(currentSubRoute, nextSubRoute);
 
+                TransferInfo transferInfo;
+                try {
+                    transferInfo = transferInfoFuture.get();
+                } catch (InterruptedException | ExecutionException e) {
+                    // 에러 시 기본 환승 소요시간
+                    transferInfo = new TransferInfo(currentSubRoute.getLineNum(), nextSubRoute.getLineNum(), currentSubRoute.getEndStationName(), DEFAULT_TRANSFER_TIME);
+                }
+
+                subRouteItem.setTransferInfo(transferInfo);
                 totalTime += transferInfo.getTransferTime();
             }
         }
-
-        //환승 소요시간까지 합한 경로의 총 시간
         route.setTotalTime(totalTime);
     }
 
@@ -362,17 +370,12 @@ public class SetRouteActivity extends AppCompatActivity {
         }
     }
 
-    private TransferInfo searchTransferInfo(int fromStationID, int toStationID) throws ExecutionException, InterruptedException {
-        CompletableFuture<TransferInfo> future = searchTransferInfoAsync(fromStationID, toStationID);
-
-        // 비동기 작업의 완료를 기다림
-        return future.get();
-    }
-
-    private CompletableFuture<TransferInfo> searchTransferInfoAsync(int fromStationID, int toStationID) {
+    private CompletableFuture<TransferInfo> searchTransferInfoAsync(SubRoute currentSubRoute, SubRoute nextSubRoute) {
+        int fromStationID = currentSubRoute.getEndStationCode();
+        int toStationID = nextSubRoute.getStartStationCode();
         CompletableFuture<TransferInfo> future = new CompletableFuture<>();
 
-        System.out.println("from " + fromStationID + "to " + toStationID);
+        System.out.println("from " + fromStationID + " to " + toStationID);
         firebaseFirestore.collection("transfer")
                 .whereEqualTo("fromStationID", fromStationID)
                 .whereEqualTo("toStationID", toStationID)
@@ -390,7 +393,10 @@ public class SetRouteActivity extends AppCompatActivity {
                             TransferInfo transferInfo = new TransferInfo(fromLine, toLine, odsayStationName, time);
                             future.complete(transferInfo);
                         } else {
-                            future.completeExceptionally(new IllegalStateException("No matching documents."));
+                            // 조회결과가 없을 경우 기본 환승소요시간으로 생성
+                            TransferInfo defaultTransferInfo = new TransferInfo(currentSubRoute.getLineNum(),
+                                    nextSubRoute.getLineNum(), currentSubRoute.getEndStationName(), DEFAULT_TRANSFER_TIME);
+                            future.complete(defaultTransferInfo);
                         }
                     } else {
                         future.completeExceptionally(task.getException());
@@ -399,6 +405,7 @@ public class SetRouteActivity extends AppCompatActivity {
 
         return future;
     }
+
 
     private Calendar computeLastMakarTime(int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
 
