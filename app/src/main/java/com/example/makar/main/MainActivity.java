@@ -23,6 +23,7 @@ import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
+import com.example.makar.main.dialog.ResetRouteDialog;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
@@ -95,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /**==경로 설정 Main==**/
-        //시간표 버튼 클릭 리스너
-        binding.timetableBtn.setOnClickListener(view -> {
-            updateUI(TimeTableActivity.class);
+        //경로초기화 버튼 클릭 리스너
+        binding.resetRouteBtn.setOnClickListener(view -> {
+            resetRouteDialog();
         });
 
         //막차 알림 설정 버튼 클릭 리스너
@@ -278,6 +279,12 @@ public class MainActivity extends AppCompatActivity {
     private void setMakarAlarm() {
         SetMakarAlarmDialog setMakarAlarmDialog = new SetMakarAlarmDialog(this);
         setMakarAlarmDialog.show();
+    }
+
+    //경로 초기화 다이얼로그
+    private void resetRouteDialog(){
+        ResetRouteDialog resetRouteDialog = new ResetRouteDialog(this);
+        resetRouteDialog.show();
     }
 
     //메인 타이틀 텍스트 동적 변경
