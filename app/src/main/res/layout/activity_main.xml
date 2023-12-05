@@ -33,7 +33,7 @@
                     android:id="@+id/main_title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="경로를 설정해주세요"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -51,7 +51,7 @@
                     android:background="@drawable/custom_button_main"
                     android:textColor="@color/white"
                     android:textStyle="bold"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:ignore="SmallSp" />
             </LinearLayout>
 
@@ -86,7 +86,7 @@
                     android:id="@+id/main_destination_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="고속터미널"
+                    android:text="MAKAR"
                     android:textAlignment="center"
                     android:textSize="14sp"
                     android:textStyle="bold" />

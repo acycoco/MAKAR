@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private Date getOffTime; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ActivityMainBinding binding;
     public static User user = new User();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -99,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
         /**==경로 설정 Main==**/
         //경로초기화 버튼 클릭 리스너
         binding.resetRouteBtn.setOnClickListener(view -> {
-            resetRouteDialog();
+            resetRoute();
         });
 
         //막차 알림 설정 버튼 클릭 리스너
@@ -283,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //경로 초기화 다이얼로그
-    private void resetRouteDialog(){
+    private void resetRoute(){
         ResetRouteDialog resetRouteDialog = new ResetRouteDialog(this);
         resetRouteDialog.show();
     }
@@ -291,9 +290,15 @@ public class MainActivity extends AppCompatActivity {
     public void onResetRouteBtnClicked(){
         //초기화 버튼을 누를 시 경로 초기화 실행
         setRouteUnset();
+        isGetOffSet = false;
+
+        //user 객체 초기화
+        user.setSelectedRoute(null);
+        user.setRouteStation(null, null);
+
+        MainActivityChangeView.changeView(
+                binding, false, 0, "", "");
         Toast.makeText(this, R.string.reset_route_toast, Toast.LENGTH_SHORT).show();
-        updateUI(MainActivity.class);
-        finish();
     }
 
     //메인 타이틀 텍스트 동적 변경
