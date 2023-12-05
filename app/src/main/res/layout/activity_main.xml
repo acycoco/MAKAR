@@ -33,7 +33,7 @@
                     android:id="@+id/main_title_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=""
+                    android:text="경로를 설정해주세요"
                     android:textSize="24sp"
                     android:textStyle="bold" />
 
@@ -43,13 +43,15 @@
                     android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/timetableBtn"
-                    android:layout_width="43dp"
+                    android:id="@+id/resetRouteBtn"
+                    android:layout_width="55dp"
                     android:layout_height="25dp"
-                    android:background="@drawable/custom_button_timetable"
-                    android:text="시간표"
-                    android:textSize="10sp"
-                    android:visibility="visible"
+                    android:text="경로 초기화"
+                    android:textSize="9sp"
+                    android:background="@drawable/custom_button_main"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:visibility="gone"
                     tools:ignore="SmallSp" />
             </LinearLayout>
 
@@ -84,7 +86,7 @@
                     android:id="@+id/main_destination_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="고속터미널"
+                    android:text="MAKAR"
                     android:textAlignment="center"
                     android:textSize="14sp"
                     android:textStyle="bold" />

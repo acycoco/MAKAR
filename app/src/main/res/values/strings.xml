@@ -93,5 +93,7 @@
     <string name="logout_text_view">로그아웃 하시겠어요?</string>
     <string name="confirm_button">확인</string>
     <string name="cancel_button">취소</string>
+    <string name="reset_route_text">경로를\n초기화하시겠습니까?</string>
+    <string name="reset_route_toast">경로가 초기화되었습니다"</string>
 
 </resources>

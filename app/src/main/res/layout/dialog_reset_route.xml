@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:lines="2"
-        android:text="@string/favorite_station_text"
+        android:text="@string/reset_route_text"
         android:textAlignment="center"
         android:textSize="20sp"
         android:textStyle="bold" />
@@ -24,22 +24,23 @@
         android:layout_marginTop="20dp">
 
         <Button
-            android:id="@+id/close_set_favorite_station_btn"
+            android:id="@+id/close_reset_route_btn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
             android:background="@drawable/custom_button_white"
             android:text="닫기"
             android:textColor="@color/black"
             android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_marginEnd="15dp"
+            />
 
         <Button
-            android:id="@+id/set_favorite_station_btn"
+            android:id="@+id/reset_route_btn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_main"
-            android:text="등록"
+            android:text="초기화"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />

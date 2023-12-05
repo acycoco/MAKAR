@@ -3,13 +3,13 @@ package com.example.makar.data;
 
 public class SubRoute {
 
-    private final String startStationName;
-    private final String endStationName;
-    private final int startStationCode;
-    private final int endStationCode;
-    private final int lineNum;
-    private final int wayCode;
-    private final int sectionTime;
+    private String startStationName;
+    private String endStationName;
+    private int startStationCode;
+    private int endStationCode;
+    private int lineNum;
+    private int wayCode;
+    private int sectionTime;
 
     public SubRoute(String startStationName, String endStationName, int startStationCode, int endStationCode, int lineNum, int wayCode, int sectionTime) {
         this.startStationName = startStationName;
@@ -19,6 +19,10 @@ public class SubRoute {
         this.lineNum = lineNum;
         this.wayCode = wayCode;
         this.sectionTime = sectionTime;
+    }
+
+    public SubRoute(){
+
     }
 
     public String getStartStationName() {

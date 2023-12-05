@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,6 +24,7 @@ import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
+import com.example.makar.main.dialog.ResetRouteDialog;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
 import com.example.makar.R;
@@ -53,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
     private Date getOffTime; //임시 하차 시간
     public static Boolean isRouteSet = false; //막차 알림을 위한 플래그
     public static Boolean isGetOffSet = false; //하차 알림을 위한 플래그
-    private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private ActivityMainBinding binding;
     public static User user = new User();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
@@ -95,9 +96,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         /**==경로 설정 Main==**/
-        //시간표 버튼 클릭 리스너
-        binding.timetableBtn.setOnClickListener(view -> {
-            updateUI(TimeTableActivity.class);
+        //경로초기화 버튼 클릭 리스너
+        binding.resetRouteBtn.setOnClickListener(view -> {
+            resetRoute();
         });
 
         //막차 알림 설정 버튼 클릭 리스너
@@ -280,6 +281,26 @@ public class MainActivity extends AppCompatActivity {
         setMakarAlarmDialog.show();
     }
 
+    //경로 초기화 다이얼로그
+    private void resetRoute(){
+        ResetRouteDialog resetRouteDialog = new ResetRouteDialog(this);
+        resetRouteDialog.show();
+    }
+
+    public void onResetRouteBtnClicked(){
+        //초기화 버튼을 누를 시 경로 초기화 실행
+        setRouteUnset();
+        isGetOffSet = false;
+
+        //user 객체 초기화
+        user.setSelectedRoute(null);
+        user.setRouteStation(null, null);
+
+        MainActivityChangeView.changeView(
+                binding, false, 0, "", "");
+        Toast.makeText(this, R.string.reset_route_toast, Toast.LENGTH_SHORT).show();
+    }
+
     //메인 타이틀 텍스트 동적 변경
     private void changeMainTitleText(int minute) {
         int length = String.valueOf(minute).length();
@@ -364,8 +385,6 @@ public class MainActivity extends AppCompatActivity {
         //선택된 루트, 출발역, 도착역 초기화
         deleteStation("sourceStation");
         deleteStation("destinationStation");
-       // updateUI(MainActivity.class);
-       // finish();
     }
 
     private void deleteStation(String path) {
