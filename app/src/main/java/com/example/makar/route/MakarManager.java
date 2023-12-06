@@ -3,10 +3,14 @@ package com.example.makar.route;
 import android.util.Log;
 
 import com.example.makar.TimeInfo;
+import com.example.makar.data.Route;
+import com.example.makar.data.SubRoute;
+import com.example.makar.data.SubRouteItem;
 import com.example.makar.data.SubwayStation;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -16,12 +20,49 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
-public class MarkarManager {
+public class MakarManager {
+
     private static final int UPTOWN = 1;  //상행
     private static final int DOWNTOWN = 2; //하행
 
+    private final ApiManager apiManager;
 
-    public static Calendar computeLastMakarTime(int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
+    public MakarManager(ApiManager apiManager) {
+        this.apiManager = apiManager;
+    }
+
+    //경로 정보와 지하철 시간표를 활용하여 막차 시간을 계산한다.
+    public Calendar computeMakarTime(Route route, int dayOfWeek) throws IOException, ExecutionException, InterruptedException {
+        List<SubRouteItem> routeItems = route.getRouteItems();
+        Calendar takingTime = null;
+
+        // 경로를 거꾸로 순회하면서 막차 시간 구하기
+        for (int i = routeItems.size() - 1; i >= 0; i--) {
+            SubRouteItem subRouteItem = routeItems.get(i);
+            SubRoute lastSubRoute = subRouteItem.getSubRoute();
+
+            //startStation의 지하철 시간표 호출하기
+            SubwayStation subwayStation = apiManager.requestSubwaySchedule(lastSubRoute.getStartStationCode(), lastSubRoute.getWayCode());
+
+            //마지막 서브 경로 or 단일 서브 경로인 경우
+            if (i == routeItems.size() - 1) {
+                takingTime = computeLastMakarTime(dayOfWeek, subwayStation, lastSubRoute.getLineNum(), lastSubRoute.getWayCode(), lastSubRoute.getStartStationCode(), lastSubRoute.getEndStationCode());
+                Log.d( "makar", "last makar" + takingTime.getTime());
+            } else {
+                int sectionTime = subRouteItem.getSubRoute().getSectionTime();
+                sectionTime += subRouteItem.getTransferInfo().getTransferTime();
+                takingTime.add(Calendar.MINUTE, -sectionTime);
+
+                // 환승시간을 포함하여 이후 서브 경로의 막차 시간 구하기
+                takingTime = computeTransferMakarTime(takingTime, dayOfWeek, subwayStation, lastSubRoute.getLineNum(), lastSubRoute.getWayCode(), lastSubRoute.getStartStationCode(), lastSubRoute.getEndStationCode());
+                Log.d( "makar", "환승막차 " + takingTime.getTime());
+            }
+        }
+
+        return takingTime;
+    }
+
+    public Calendar computeLastMakarTime(int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         SubwayStation.OrdList ordList = getOrdListByDayOfWeek(dayOfWeek, subwayStation);
@@ -83,7 +124,7 @@ public class MarkarManager {
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
                                     if (startIndex < endIndex && endIndex < terminalIndex) {
 
-                                        System.out.println(timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
+                                        Log.d("makar", timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
@@ -126,7 +167,7 @@ public class MarkarManager {
         return null;
     }
 
-    public static Calendar computeTransferMakarTime(Calendar takingTime, int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
+    public Calendar computeTransferMakarTime(Calendar takingTime, int dayOfWeek, SubwayStation subwayStation, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         System.out.println("takingTime" + takingTime.get(Calendar.HOUR_OF_DAY) + "시" +
@@ -246,7 +287,7 @@ public class MarkarManager {
 
 
     //요일에 맞는 시간표 가져오기
-    private static SubwayStation.OrdList getOrdListByDayOfWeek(int dayOfWeek, SubwayStation subwayStation) {
+    private SubwayStation.OrdList getOrdListByDayOfWeek(int dayOfWeek, SubwayStation subwayStation) {
         if (dayOfWeek == Calendar.SATURDAY) {
             return subwayStation.getSatList();
         } else if (dayOfWeek == Calendar.SUNDAY) {
@@ -257,7 +298,7 @@ public class MarkarManager {
     }
 
     //지하철 방면에 맞는 시간표 가져오기
-    private static List<SubwayStation.OrdList.TimeDirection.TimeData> getTimeByWayCode(int wayCode, SubwayStation.OrdList ordList) {
+    private List<SubwayStation.OrdList.TimeDirection.TimeData> getTimeByWayCode(int wayCode, SubwayStation.OrdList ordList) {
         if (wayCode == UPTOWN) {
             return ordList.getUp().getTime();
         } else if (wayCode == DOWNTOWN) {
@@ -267,7 +308,7 @@ public class MarkarManager {
         }
     }
 
-    private static int getTakingHour(Calendar takingTime) {
+    private int getTakingHour(Calendar takingTime) {
         int takingHour = takingTime.get(Calendar.HOUR_OF_DAY);
         if (takingTime.get(Calendar.HOUR_OF_DAY) == 0) {
             takingHour = 24;
@@ -277,11 +318,11 @@ public class MarkarManager {
         return takingHour;
     }
 
-    private static boolean isBeforeTakingHour(SubwayStation.OrdList.TimeDirection.TimeData timeData, Calendar takingTime) {
+    private boolean isBeforeTakingHour(SubwayStation.OrdList.TimeDirection.TimeData timeData, Calendar takingTime) {
         return timeData.getIdx() > getTakingHour(takingTime);
     }
 
-    private static boolean isBeforeTakingTime(SubwayStation.OrdList.TimeDirection.TimeData timeData, TimeInfo timeInfo, Calendar takingTime) {
+    private boolean isBeforeTakingTime(SubwayStation.OrdList.TimeDirection.TimeData timeData, TimeInfo timeInfo, Calendar takingTime) {
         return (timeData.getIdx() == getTakingHour(takingTime) && timeInfo.getMinute() > takingTime.get(Calendar.MINUTE));
     }
 
