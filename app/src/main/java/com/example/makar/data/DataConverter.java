@@ -52,6 +52,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataConverter {
+    //db에 데이터를 저장하고 검증하는 클래스
     private final Context context;
     private final FirebaseFirestore db;
 
@@ -102,24 +103,6 @@ public class DataConverter {
     }
 
 
-    private int getType(String type) {
-        if (type.matches("\\d+")) {
-            return Integer.parseInt(type);
-        }
-        if (type.equals("공항철도")) {
-            return 101;
-        }
-        if (type.equals("경의중앙선")) {
-            return 104;
-        }
-        if (type.equals("우이신설선") || type.equals("수인분당선") || type.equals("경춘선") ||
-                type.equals("신분당선") || type.equals("김포공항드라이브") || type.equals("인천1")) {
-            return -1;
-        }
-        return -2;
-    }
-
-
     public void saveReverseTransferInfo() {
         db.collection("transfer")
                 .get()
@@ -132,7 +115,7 @@ public class DataConverter {
                                 for (QueryDocumentSnapshot document : querySnapshot) {
                                     // 각 문서의 fromLine, toLine 값을 가져오기
                                     int fromLine = ((Long) document.get("fromLine")).intValue();
-                                    int toLine = ((Long)document.get("toLine")).intValue();
+                                    int toLine = ((Long) document.get("toLine")).intValue();
                                     String stationName = (String) document.get("odsayStationName");
 //                                    System.out.println("확인" + stationName + fromLine + " " + toLine);
                                     // 서로 반대인 경우가 존재하는지 확인
@@ -190,6 +173,107 @@ public class DataConverter {
         // 서로 반대인 경우가 존재하지 않음
         return false;
     }
+
+
+    public void validateLineSequences2() {
+        db.collection("line_sequence")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+
+                                Object sourceValue = document.get("1");
+
+                                if (sourceValue instanceof List) {
+                                    List<?> sourceList = (List<?>) sourceValue;
+
+                                    for (Object obj : sourceList) {
+                                        if (obj instanceof LineStationInfo) {
+                                            LineStationInfo lineStationInfo = (LineStationInfo) obj;
+                                            if (containsWhitespaceOrParentheses(lineStationInfo.getStationName())) {
+                                                Log.d("data", lineStationInfo.getStationName() + " contains whitespace or parentheses");
+                                            }
+                                        } else {
+                                            HashMap<?, ?> obj1 = (HashMap<?, ?>) obj;
+                                            if (containsWhitespaceOrParentheses((String) obj1.get("stationName"))) {
+                                                Log.e("data", (String) obj1.get("stationName")+ " contains whitespace or parentheses");
+                                            }
+                                            Log.d("data", (String) obj1.get("stationName")+ " 확인완료");
+                                        }
+                                    }
+                                } else {
+                                    Log.d("MAKAR", "No such document");
+                                }
+
+                                sourceValue = document.get("2");
+                                if (sourceValue instanceof List) {
+                                    List<?> sourceList = (List<?>) sourceValue;
+
+                                    for (Object obj : sourceList) {
+                                        if (obj instanceof LineStationInfo) {
+                                            LineStationInfo lineStationInfo = (LineStationInfo) obj;
+                                            if (containsWhitespaceOrParentheses(lineStationInfo.getStationName())) {
+                                                Log.d("data", lineStationInfo.getStationName() + " contains whitespace or parentheses");
+                                            }
+                                        } else {
+                                            HashMap<?, ?> obj1 = (HashMap<?, ?>) obj;
+                                            if (containsWhitespaceOrParentheses((String) obj1.get("stationName"))) {
+                                                Log.e("data", (String) obj1.get("stationName")+ " contains whitespace or parentheses");
+                                            }
+                                            Log.d("data", (String) obj1.get("stationName")+ " 확인완료");
+                                        }
+                                    }
+                                } else {
+                                    Log.d("MAKAR", "No such document");
+                                }
+                            }
+                        }
+                    }
+                });
+    }
+
+    public void validateLineSequences33(String documentName) {
+        DocumentReference docRef = db.collection("line_sequence").document(documentName);
+
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // 원본 필드의 값을 가져와서
+                        Object sourceValue = document.get("1");
+
+                        if (sourceValue instanceof List) {
+                            List<?> sourceList = (List<?>) sourceValue;
+
+                            for (Object obj : sourceList) {
+                                if (obj instanceof LineStationInfo) {
+                                    LineStationInfo lineStationInfo = (LineStationInfo) obj;
+                                    if (containsWhitespaceOrParentheses(lineStationInfo.getStationName())) {
+                                        Log.d("data", lineStationInfo.getStationName() + " contains whitespace or parentheses");
+                                    }
+                                } else {
+                                    HashMap<?, ?> obj1 = (HashMap<?, ?>) obj;
+                                    if (containsWhitespaceOrParentheses((String) obj1.get("stationName"))) {
+                                        Log.e("data", (String) obj1.get("stationName")+ " contains whitespace or parentheses");
+                                    }
+                                    Log.d("data", (String) obj1.get("stationName")+ " 확인완료");
+                                }
+                            }
+                        } else {
+                            Log.d("MAKAR", "No such document");
+                        }
+                    } else {
+                        Log.d("MAKAR", "get failed with ", task.getException());
+                    }
+                }
+            }
+        });
+    }
+
 
 
     public void validateTransferInfo() {
@@ -472,6 +556,10 @@ public class DataConverter {
 
     }
 
+    public boolean containsWhitespaceOrParentheses(String input) {
+        // 공백이나 괄호를 포함하는지 여부를 확인
+        return input != null && input.contains(" ") || input.contains("(") || input.contains(")");
+    }
 
     private void searchOdsayCode(String newDocumentName, String destinationField, int code) {
         db.collection("line_sequence").document(newDocumentName)
@@ -514,7 +602,7 @@ public class DataConverter {
                                                             DocumentSnapshot stationDocument = task.getResult().getDocuments().get(0);
                                                             String stationName = stationDocument.getString("odsayStationName");
                                                             int lineNum = stationDocument.getLong("odsayStationID").intValue();
-                                                            LineStationInfo lineStationInfo = new LineStationInfo(stationName, lineNum);
+                                                            LineStationInfo lineStationInfo = new LineStationInfo(lineNum, stationName);
                                                             // briefStations 리스트에 추가
                                                             briefStations.put(idx, lineStationInfo);
 

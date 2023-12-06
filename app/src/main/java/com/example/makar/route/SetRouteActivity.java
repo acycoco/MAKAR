@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.makar.R;
 import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.RouteAdapter;
+import com.example.makar.data.DataConverter;
 import com.example.makar.data.Station;
 import com.example.makar.data.Route;
 import com.example.makar.data.User;
@@ -105,7 +106,9 @@ public class SetRouteActivity extends AppCompatActivity {
 ////                databaseConverter.copyFieldToAnotherDocument("1", "1", 5, "5하남검단산");
 ////                databaseConverter.saveNewLine(1, "1", "2", "1신창");
 ////                databaseConverter.saveReverseTransferInfo();
-//                databaseConverter.validateTransferInfo();
+////                databaseConverter.validateTransferInfo();
+//                databaseConverter.validateLineSequences2();
+////                databaseConverter.validateLineSequences33("1신창");
 //            }
 //        }).start();
 

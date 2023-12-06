@@ -2,12 +2,12 @@ package com.example.makar.data;
 
 public class  LineStationInfo {
 
+    private int odsayLaneType;
     private String stationName;
-    private int odsayStationID ;
 
-    public LineStationInfo(String stationName, int odsayStationID) {
+    public LineStationInfo(int odsayLaneType, String stationName) {
+        this.odsayLaneType = odsayLaneType;
         this.stationName = stationName;
-        this.odsayStationID = odsayStationID;
     }
 
     public String getStationName() {
@@ -18,19 +18,19 @@ public class  LineStationInfo {
         this.stationName = stationName;
     }
 
-    public int getOdsayStationID() {
-        return odsayStationID;
+    public int getOdsayLaneType() {
+        return odsayLaneType;
     }
 
-    public void setOdsayStationID(int odsayStationID) {
-        this.odsayStationID = odsayStationID;
+    public void setOdsayLaneType(int odsayLaneType) {
+        this.odsayLaneType = odsayLaneType;
     }
 
     @Override
     public String toString() {
         return "LineStationInfo{" +
-                "stationName='" + stationName + '\'' +
-                ", odsayStationID=" + odsayStationID +
+                "odsayLaneType=" + odsayLaneType +
+                ", stationName='" + stationName + '\'' +
                 '}';
     }
 }
