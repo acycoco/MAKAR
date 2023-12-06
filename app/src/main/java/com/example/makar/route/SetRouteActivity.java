@@ -26,6 +26,7 @@ import com.example.makar.main.MainActivity;
 import com.example.makar.onboarding.LoginActivity;
 import com.example.makar.route.listener.OnBookmarkClickListener;
 import com.example.makar.route.listener.OnRouteClickListener;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -59,6 +60,10 @@ public class SetRouteActivity extends AppCompatActivity {
     public static Station briefToSourceStation;
     public static Station briefToDestinationStation;
 
+    private ApiManager apiManager;
+    private MakarManager makarManager;
+    private TransferManager transferManager;
+    private RouteManager routeManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +81,11 @@ public class SetRouteActivity extends AppCompatActivity {
         // 출발역, 도착역 데이터가 있다면 받아오기
         sourceStation = user.getSourceStation();
         destinationStation = user.getDestinationStation();
+
+        apiManager = new ApiManager(new ObjectMapper());
+        makarManager = new MakarManager(apiManager);
+        transferManager = new TransferManager();
+        routeManager = new RouteManager(apiManager, makarManager, transferManager);
 
         //역 엑셀 파일을 db에 올리는 코드 (db초기화 시에만 씀)
 //        DataConverter databaseConverter = new DataConverter(this);
@@ -148,9 +158,7 @@ public class SetRouteActivity extends AppCompatActivity {
         Log.d("dhdh", destinationStation.getStationName());
         new Thread(() -> {
             try {
-                String routeJson = RouteManager.searchRoute(sourceStation.getX(), sourceStation.getY(), destinationStation.getX(), destinationStation.getY());
-                System.out.println(routeJson);
-                resultList = RouteManager.parseRouteResponse(routeJson, sourceStation, destinationStation);
+                resultList = routeManager.getRoutes(sourceStation, destinationStation);
                 Log.d("dhdhdh", resultList.toString());
 
                 new Handler(Looper.getMainLooper()).post(() -> {
