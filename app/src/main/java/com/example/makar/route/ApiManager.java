@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.makar.BuildConfig;
 import com.example.makar.data.RouteSearchResponse;
-import com.example.makar.data.SubwayStation;
+import com.example.makar.data.SubwaySchedule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -45,7 +45,7 @@ public class ApiManager {
     }
 
     //지하철 시간표 api호출
-    public SubwayStation requestSubwaySchedule(int stationID, int wayCode) throws IOException {
+    public SubwaySchedule requestSubwaySchedule(int stationID, int wayCode) throws IOException {
         String endpoint = "https://api.odsay.com/v1/api/subwayTimeTable";
         Map<String, String> params = new HashMap<>();
         params.put("stationID", String.valueOf(stationID));
@@ -89,10 +89,10 @@ public class ApiManager {
         return objectMapper.readValue(jsonResponse, RouteSearchResponse.class);
     }
 
-    private SubwayStation parseSubwayScheduleResponse(String jsonResponse) throws IOException {
+    private SubwaySchedule parseSubwayScheduleResponse(String jsonResponse) throws IOException {
         JsonNode rootNode = objectMapper.readTree(jsonResponse);
         JsonNode resultNode = rootNode.path("result");
 
-        return objectMapper.treeToValue(resultNode, SubwayStation.class);
+        return objectMapper.treeToValue(resultNode, SubwaySchedule.class);
     }
 }
