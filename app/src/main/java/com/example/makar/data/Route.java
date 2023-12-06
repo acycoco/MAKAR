@@ -47,7 +47,9 @@ public class Route {
     public Station getDestinationStation() {
         return destinationStation;
     }
-    public Date getMakarTime(){return makarTime;}
+    public Date getMakarTime() {
+        return makarTime;
+    }
 
     public void setTotalTime(int totalTime) {
         this.totalTime = totalTime;
