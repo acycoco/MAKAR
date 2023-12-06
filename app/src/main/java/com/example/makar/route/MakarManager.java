@@ -144,20 +144,39 @@ public class MakarManager {
 
                 if (canGoInSubway.get()) {
                     //현재 날짜
-                    Calendar calendar = Calendar.getInstance();
+                    Calendar nowCalendar = Calendar.getInstance();
+                    Calendar makarCalendar = Calendar.getInstance();
 
-                    int hour = time.get(i).getIdx();
-                    int minute = result.get().getMinute();
-                    if (hour >= 24) { //지하철 시간표에서 시간이 24, 25인 경우
-                        calendar.add(Calendar.DAY_OF_MONTH, 1);
-                        hour -= 24;
+                    int makarHour = time.get(i).getIdx();
+                    int makarMinute = result.get().getMinute();
+
+                    int nowHour = nowCalendar.get(Calendar.HOUR_OF_DAY);
+                    int nowMinute = nowCalendar.get(Calendar.MINUTE);
+
+                    //막차시간이 시간표 상 24, 25인 경우
+                    if (makarHour >= 24) {
+                        makarHour -= 24;
+                        Log.d("makar" , "minus 24");
+                        //현재 시간이 오전 3시를 넘으면
+                        if (nowHour >= 3) {
+                            //하루를 더함
+                            makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                            Log.d("makar" , "nowHour 3 over");
+                        }
+                        //현재 시간이 오전 12시 ~ 오전 2시(새벽)면 하루를 안더함
                     }
-                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, 0);
-                    calendar.set(Calendar.MILLISECOND, 0);
 
-                    return calendar;
+                    makarCalendar.set(Calendar.HOUR_OF_DAY, makarHour);
+                    makarCalendar.set(Calendar.MINUTE, makarMinute);
+                    makarCalendar.set(Calendar.SECOND, 0);
+                    makarCalendar.set(Calendar.MILLISECOND, 0);
+
+                    //막차시간이 이미 지나간 경우 하루를 더함
+                    if (nowCalendar.after(makarCalendar)) {
+                        makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        Log.d("makar" , "makar is over");
+                    }
+                    return makarCalendar;
                 }
 
             }
@@ -264,22 +283,42 @@ public class MakarManager {
                 }
 
                 if (canGoInSubway.get()) {
-                    Calendar calendar = Calendar.getInstance();
+                    //현재 날짜
+                    Calendar nowCalendar = Calendar.getInstance();
+                    Calendar makarCalendar = Calendar.getInstance();
 
-                    int hour = time.get(i).getIdx();
-                    int minute = result.get().getMinute();
-                    if (hour >= 24) { //지하철 시간표에서 시간이 24, 25인 경우
-                        calendar.add(Calendar.DAY_OF_MONTH, 1);
-                        hour -= 24;
+                    int makarHour = time.get(i).getIdx();
+                    int makarMinute = result.get().getMinute();
+
+                    int nowHour = nowCalendar.get(Calendar.HOUR_OF_DAY);
+                    int nowMinute = nowCalendar.get(Calendar.MINUTE);
+
+                    //막차시간이 시간표 상 24, 25인 경우
+                    if (makarHour >= 24) {
+                        makarHour -= 24;
+                        Log.d("makar" , "minus 24");
+                        //현재 시간이 오전 3시를 넘으면
+                        if (nowHour >= 3) {
+                            //하루를 더함
+                            makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                            Log.d("makar" , "nowHour 3 over");
+                        }
+                        //현재 시간이 오전 12시 ~ 오전 2시면 하루를 안더함
                     }
-                    calendar.set(Calendar.HOUR_OF_DAY, hour);
-                    calendar.set(Calendar.MINUTE, minute);
-                    calendar.set(Calendar.SECOND, 0);
-                    calendar.set(Calendar.MILLISECOND, 0);
 
-                    return calendar;
+                    makarCalendar.set(Calendar.HOUR_OF_DAY, makarHour);
+                    makarCalendar.set(Calendar.MINUTE, makarMinute);
+                    makarCalendar.set(Calendar.SECOND, 0);
+                    makarCalendar.set(Calendar.MILLISECOND, 0);
 
+                    //막차시간이 이미 지나간 경우 하루를 더함
+                    if (nowCalendar.after(makarCalendar)) {
+                        makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
+                        Log.d("makar" , "makar is over");
+                    }
+                    return makarCalendar;
                 }
+
             }
         }
         return null;
