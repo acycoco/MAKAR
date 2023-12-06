@@ -2,14 +2,11 @@ package com.example.makar.data;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.google.firebase.firestore.FieldValue;
-import com.google.firebase.firestore.PropertyName;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class SubwayStation {
+public class SubwaySchedule {
 
     String stationName;
     int stationID;
@@ -92,19 +89,19 @@ public class SubwayStation {
         this.OrdList = ordList;
     }
 
-    public SubwayStation.OrdList getSatList() {
+    public SubwaySchedule.OrdList getSatList() {
         return satList;
     }
 
-    public void setSatList(SubwayStation.OrdList satList) {
+    public void setSatList(SubwaySchedule.OrdList satList) {
         this.satList = satList;
     }
 
-    public SubwayStation.OrdList getSunList() {
+    public SubwaySchedule.OrdList getSunList() {
         return sunList;
     }
 
-    public void setSunList(SubwayStation.OrdList sunList) {
+    public void setSunList(SubwaySchedule.OrdList sunList) {
         this.sunList = sunList;
     }
 
