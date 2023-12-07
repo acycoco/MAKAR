@@ -453,7 +453,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void setRecyclerView() {
         //최근경로
-        RecyclerView recentRouteRecyclerView = binding.recentRouteText;
+        RecyclerView recentRouteRecyclerView = binding.recentRouteRecyclerView;
         RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, user.getRecentRouteArr());
         Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -487,7 +487,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         //즐겨찾는 경로
-        RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteText;
+        RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
