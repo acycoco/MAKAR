@@ -50,10 +50,12 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-auth")
     implementation("com.google.firebase:firebase-firestore")
+    // Microsoft Office(ex.엑셀) 파일 포맷을 읽고 쓰는 라이브러리
     implementation("org.apache.poi:poi-ooxml:3.9")
     implementation("androidx.annotation:annotation:1.6.0")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    //json 파싱 라이브러리
     implementation("com.fasterxml.jackson.core:jackson-databind:2.12.4")
     implementation("com.google.firebase:firebase-database:20.3.0")
 

@@ -78,7 +78,6 @@ public class ApiManager {
             while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
-            System.out.println(sb);
             return sb.toString();
         } finally {
             conn.disconnect();

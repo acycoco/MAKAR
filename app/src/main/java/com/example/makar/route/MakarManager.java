@@ -13,6 +13,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -36,6 +37,7 @@ public class MakarManager {
         List<SubRouteItem> routeItems = route.getRouteItems();
         Calendar takingTime = null;
 
+        List<Date> makarTimes = new ArrayList<>();
         // 경로를 거꾸로 순회하면서 막차 시간 구하기
         for (int i = routeItems.size() - 1; i >= 0; i--) {
             SubRouteItem subRouteItem = routeItems.get(i);
@@ -47,7 +49,6 @@ public class MakarManager {
             //마지막 서브 경로 or 단일 서브 경로인 경우
             if (i == routeItems.size() - 1) {
                 takingTime = computeLastMakarTime(dayOfWeek, subwaySchedule, lastSubRoute.getLineNum(), lastSubRoute.getWayCode(), lastSubRoute.getStartStationCode(), lastSubRoute.getEndStationCode());
-                Log.d( "makar", "last makar" + takingTime.getTime());
             } else {
                 int sectionTime = subRouteItem.getSubRoute().getSectionTime();
                 sectionTime += subRouteItem.getTransferInfo().getTransferTime();
@@ -55,9 +56,13 @@ public class MakarManager {
 
                 // 환승시간을 포함하여 이후 서브 경로의 막차 시간 구하기
                 takingTime = computeTransferMakarTime(takingTime, dayOfWeek, subwaySchedule, lastSubRoute.getLineNum(), lastSubRoute.getWayCode(), lastSubRoute.getStartStationCode(), lastSubRoute.getEndStationCode());
-                Log.d( "makar", "환승막차 " + takingTime.getTime());
+
             }
+            Log.d("makar", "막차시간 계산 : " + lastSubRoute.getStartStationName() + "->" + lastSubRoute.getEndStationName()
+                    + " " + lastSubRoute.getWayCode() + "방면 막차 " + takingTime.getTime());
+            makarTimes.add(0, takingTime.getTime());
         }
+        Log.d("makar", "막차시간 리스트 : " + makarTimes);
 
         return takingTime;
     }
@@ -156,12 +161,10 @@ public class MakarManager {
                     //막차시간이 시간표 상 24, 25인 경우
                     if (makarHour >= 24) {
                         makarHour -= 24;
-                        Log.d("makar" , "minus 24");
                         //현재 시간이 오전 3시를 넘으면
                         if (nowHour >= 3) {
                             //하루를 더함
                             makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                            Log.d("makar" , "nowHour 3 over");
                         }
                         //현재 시간이 오전 12시 ~ 오전 2시(새벽)면 하루를 안더함
                     }
@@ -174,7 +177,6 @@ public class MakarManager {
                     //막차시간이 이미 지나간 경우 하루를 더함
                     if (nowCalendar.after(makarCalendar)) {
                         makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        Log.d("makar" , "makar is over");
                     }
                     return makarCalendar;
                 }
@@ -189,9 +191,6 @@ public class MakarManager {
     public Calendar computeTransferMakarTime(Calendar takingTime, int dayOfWeek, SubwaySchedule subwaySchedule, int odsayLaneType, int wayCode, int startStationID, int endStationID) {
 
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-        System.out.println("takingTime" + takingTime.get(Calendar.HOUR_OF_DAY) + "시" +
-                takingTime.get(Calendar.MINUTE) + "분 " +
-                startStationID + " 에서 " + endStationID + "로 가는 막차시간 구하기");
 
         SubwaySchedule.OrdList ordList = getOrdListByDayOfWeek(dayOfWeek, subwaySchedule);
         List<SubwaySchedule.OrdList.TimeDirection.TimeData> time = getTimeByWayCode(wayCode, ordList);
@@ -230,7 +229,6 @@ public class MakarManager {
                             if (taskSnapshot.isSuccessful()) {
                                 for (QueryDocumentSnapshot document : taskSnapshot.getResult()) {
 
-                                    System.out.println(timeInfo.getMinute());
                                     int startIndex = -1;
                                     int endIndex = -1;
                                     int terminalIndex = -1;
@@ -264,7 +262,6 @@ public class MakarManager {
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
                                     if (startIndex < endIndex && endIndex < terminalIndex) {
 
-                                        System.out.println(timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
@@ -296,12 +293,10 @@ public class MakarManager {
                     //막차시간이 시간표 상 24, 25인 경우
                     if (makarHour >= 24) {
                         makarHour -= 24;
-                        Log.d("makar" , "minus 24");
                         //현재 시간이 오전 3시를 넘으면
                         if (nowHour >= 3) {
                             //하루를 더함
                             makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                            Log.d("makar" , "nowHour 3 over");
                         }
                         //현재 시간이 오전 12시 ~ 오전 2시면 하루를 안더함
                     }
@@ -314,7 +309,6 @@ public class MakarManager {
                     //막차시간이 이미 지나간 경우 하루를 더함
                     if (nowCalendar.after(makarCalendar)) {
                         makarCalendar.add(Calendar.DAY_OF_MONTH, 1);
-                        Log.d("makar" , "makar is over");
                     }
                     return makarCalendar;
                 }

@@ -1,5 +1,7 @@
 package com.example.makar.route;
 
+import android.util.Log;
+
 import com.example.makar.data.SubRoute;
 import com.example.makar.data.TransferInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -17,6 +19,8 @@ public class TransferManager {
         this.firebaseFirestore = FirebaseFirestore.getInstance();
     }
     public CompletableFuture<TransferInfo> searchTransferInfoAsync(SubRoute currentSubRoute, SubRoute nextSubRoute) {
+        Log.d("makar", "환승소요시간 검색 : " + currentSubRoute.getEndStationName() + " "
+                + currentSubRoute.getLineNum() + "->" + nextSubRoute.getLineNum());
         int fromStationID = currentSubRoute.getEndStationCode();
         int toStationID = nextSubRoute.getStartStationCode();
         CompletableFuture<TransferInfo> future = new CompletableFuture<>();
