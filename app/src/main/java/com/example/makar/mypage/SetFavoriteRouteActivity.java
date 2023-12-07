@@ -25,7 +25,7 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RouteListAdapter adapter;
     private User user = MainActivity.user;
-    private List<Route> favoriteRoutes = new ArrayList<>();
+    private List<Route> favoriteRoutes = MainActivity.favoriteRoutes;
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     ActivitySetFavoriteRouteBinding binding;
 
@@ -39,22 +39,9 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute2" + user.getFavoriteRoute2().toString());
         Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute3" + user.getFavoriteRoute3().toString());
 
-        createFavoriteRouteArr();
         Log.d("MAKAR_SET_FAVORITE_ROUTE", "arr" + favoriteRoutes.toString());
         setActivityUtil();
         setRecyclerView();
-    }
-
-    private void createFavoriteRouteArr() {
-        if (user.getFavoriteRoute1() != null) {
-            favoriteRoutes.add(user.getFavoriteRoute1());
-            if (user.getFavoriteRoute2() != null) {
-                favoriteRoutes.add((user.getFavoriteRoute2()));
-                if (user.getFavoriteRoute3() != null) {
-                    favoriteRoutes.add(user.getSelectedRoute());
-                }
-            }
-        }
     }
 
     // MARK: setActivityUtil()

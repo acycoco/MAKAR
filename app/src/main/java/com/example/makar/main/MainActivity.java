@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static User user = new User();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    public static List<Route> favoriteRoutes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Log.d("makar main login teset", "useruid = "+LoginActivity.userUId);
+        Log.d("makar main login teset", "useruid = " + LoginActivity.userUId);
 
         setActivityUtil();
         setButtonListener();
@@ -147,7 +148,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-
     private void getUserData() {
         firebaseFirestore.collection("users")
                 .whereEqualTo("userUId", LoginActivity.userUId)
@@ -197,6 +197,8 @@ public class MainActivity extends AppCompatActivity {
                                 user.setFavoriteRoute3(favoriteRoute3);
                                 // 설정한 경로 local에 잘 저장됐는지 확인
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute3 : " + user.getFavoriteRoute3());
+
+                                createFavoriteRoutes();
 
                                 // TODO: 즐겨찾는 경로 불러오기 에러
                                 // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRouteArr
@@ -251,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
                                     getOffTime = makarTime;
                                     //경로 초기화
                                     //setRouteUnset();
-                                    if(selectedRoute != null){
+                                    if (selectedRoute != null) {
                                         Toast.makeText(MainActivity.this, "경로 설정 중 오류가 발생했습니다\n다시 시도해주세요", Toast.LENGTH_SHORT).show();
                                     }
                                 } else {
@@ -269,12 +271,12 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
                                     Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
 
-                                    if(alarmTime < 10){
+                                    if (alarmTime < 10) {
                                         //탑승시간보다 하차 알림 시간이 이전일 경우 경로 초기화
                                         Toast.makeText(MainActivity.this, "열차 탑승 시간이 하차 알림 시간보다 짧습니다", Toast.LENGTH_SHORT).show();
                                         setRouteUnset();
                                         isGetOffSet = false;
-                                    }else{
+                                    } else {
                                         MainActivityChangeView.changeView(
                                                 binding,
                                                 isRouteSet,
@@ -293,6 +295,22 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    private void createFavoriteRoutes() {
+        if (favoriteRoutes.size() < 3) {
+            if (user.getFavoriteRoute1() != null) {
+                favoriteRoutes.add(user.getFavoriteRoute1());
+                if (user.getFavoriteRoute2() != null) {
+                    favoriteRoutes.add((user.getFavoriteRoute2()));
+                    if (user.getFavoriteRoute3() != null) {
+                        favoriteRoutes.add(user.getSelectedRoute());
+                    }
+                }
+            }
+        }
+
+        setRecyclerView();
+    }
+
     // MARK: 최초 로그인시에만 자주 가는 역 설정 다이얼로그
     private void setFavoriteStationDialog() {
         if (LoginActivity.isFirstLogin && user.getHomeStation() == null && user.getSchoolStation() == null) {
@@ -309,12 +327,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //경로 초기화 다이얼로그
-    private void resetRoute(){
+    private void resetRoute() {
         ResetRouteDialog resetRouteDialog = new ResetRouteDialog(this);
         resetRouteDialog.show();
     }
 
-    public void onResetRouteBtnClicked(){
+    public void onResetRouteBtnClicked() {
         //초기화 버튼을 누를 시 경로 초기화 실행
         setRouteUnset();
         isGetOffSet = false;
@@ -485,10 +503,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        //즐겨찾는 경로
+        // MARK: 즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
-        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
+        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {

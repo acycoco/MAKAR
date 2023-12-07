@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/source_station_image_view"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical"
         android:src="@drawable/ic_line7" />
 
@@ -22,13 +22,13 @@
         android:paddingStart="7dp"
         android:text="숭실대입구 >"
         android:textColor="@color/black"
-        android:textSize="17sp"
+        android:textSize="14sp"
         tools:ignore="RtlSymmetry" />
 
     <ImageView
         android:id="@+id/transfer_station_image_view1"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
         android:src="@drawable/ic_line7" />
@@ -37,17 +37,17 @@
         android:id="@+id/transfer_station_text_view1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="남성역 >"
         android:layout_gravity="center_vertical"
         android:paddingStart="7dp"
+        android:text="남성역 >"
         android:textColor="@color/black"
-        android:textSize="17sp"
+        android:textSize="14sp"
         tools:ignore="RtlSymmetry" />
 
     <ImageView
         android:id="@+id/destination_station_image_view"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
         android:src="@drawable/ic_line7" />
@@ -56,18 +56,18 @@
         android:id="@+id/destination_station_text_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="남성역"
-        android:layout_weight="1"
         android:layout_gravity="center_vertical"
+        android:layout_weight="1"
         android:paddingStart="7dp"
+        android:text="남성역"
         android:textColor="@color/black"
-        android:textSize="17sp"
+        android:textSize="14sp"
         tools:ignore="RtlSymmetry" />
 
     <ImageView
-        android:id="@+id/delete_image_view"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:id="@+id/bookmark_image_view"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
         android:src="@drawable/ic_star_line_filled" />

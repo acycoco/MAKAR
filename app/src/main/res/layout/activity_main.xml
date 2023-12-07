@@ -154,7 +154,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="17dp"
                     android:paddingHorizontal="15dp"
                     android:text="즐겨찾는 경로"
                     android:textStyle="bold" />
@@ -164,7 +164,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:paddingHorizontal="15dp"
+                    android:paddingHorizontal="5dp"
+                    android:scrollbarAlwaysDrawVerticalTrack="false"
                     android:textSize="14sp"
                     android:visibility="visible"
                     tools:itemCount="3" />
@@ -186,7 +187,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="17dp"
                     android:paddingHorizontal="15dp"
                     android:text="최근 경로"
                     android:textStyle="bold" />
@@ -196,7 +197,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
-                    android:paddingHorizontal="15dp"
+                    android:paddingHorizontal="5dp"
+                    android:scrollbarAlwaysDrawVerticalTrack="false"
                     android:textSize="14sp"
                     android:visibility="visible"
                     tools:itemCount="3" />
