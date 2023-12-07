@@ -265,6 +265,7 @@ public class MainActivity extends AppCompatActivity {
                                                 user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
                                                 user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                         Log.d("MAKAR", "route is Set");
+                                        showNotification("TEST", "TEST", MainActivity.this);
                                     }
                                 }
                             }
