@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static User user = new User();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+    public static List<Route> favoriteRoutes = new ArrayList<>();
+    public static List<Route> recentRoutes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,18 +200,25 @@ public class MainActivity extends AppCompatActivity {
                                 // 설정한 경로 local에 잘 저장됐는지 확인
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute3 : " + user.getFavoriteRoute3());
 
-                                // TODO: 즐겨찾는 경로 불러오기 에러
-                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRouteArr
-                                try {
-                                    List<Route> favoriteRouteArr = new ArrayList<Route>();
-                                    favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
-                                    Log.d("MAKAR_MAIN_SUCCESS", "favoriteRouteArr : " + favoriteRouteArr);
-                                    user.setFavoriteRouteArr(favoriteRouteArr);
-                                    // 즐겨찾는 경로 local에 잘 저장됐는지 확인
-                                    Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getFavoriteRouteArr());
-                                } catch (Exception e) {
-                                    Log.e("MAKAR_MAIN_ERROR", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
-                                }
+                                createFavoriteRoutes();
+
+                                // MARK: 최근 경로 불러와서 저장 - recentRoutes
+                                Route recentRoute1 = documentSnapshot.get("recentRoute1", Route.class);
+                                user.setRecentRoute1(recentRoute1);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute1 : " + user.getRecentRoute1());
+
+                                Route recentRoute2 = documentSnapshot.get("recentRoute2", Route.class);
+                                user.setRecentRoute2(recentRoute2);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute2 : " + user.getRecentRoute2());
+
+                                Route recentRoute3 = documentSnapshot.get("recentRoute3", Route.class);
+                                user.setRecentRoute3(recentRoute3);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute3 : " + user.getRecentRoute3());
+
+                                createRecentRoutes();
 
                                 // TODO: 최근 경로 불러오기 에러
                                 // MARK: 최근 경로 불러와서 저장 - recentRouteArr
@@ -259,6 +268,7 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
+                                    startNotification();
                                     leftTime = 10;
                                     if(!notiflag) {
                                         notiflag = true;
@@ -275,12 +285,12 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
                                     Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
 
-                                    if(alarmTime < 10){
+                                    if (alarmTime < 10) {
                                         //탑승시간보다 하차 알림 시간이 이전일 경우 경로 초기화
                                         Toast.makeText(MainActivity.this, "열차 탑승 시간이 하차 알림 시간보다 짧습니다", Toast.LENGTH_SHORT).show();
                                         setRouteUnset();
                                         isGetOffSet = false;
-                                    }else{
+                                    } else {
                                         MainActivityChangeView.changeView(
                                                 binding,
                                                 isRouteSet,
@@ -288,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
                                                 user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
                                                 user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                         Log.d("MAKAR", "route is Set");
+                                        showNotification("TEST", "TEST", MainActivity.this);
                                     }
                                 }
                             }
@@ -296,6 +307,38 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void createFavoriteRoutes() {
+        if (favoriteRoutes.size() < 3) {
+            if (user.getFavoriteRoute1() != null) {
+                favoriteRoutes.add(user.getFavoriteRoute1());
+                if (user.getFavoriteRoute2() != null) {
+                    favoriteRoutes.add((user.getFavoriteRoute2()));
+                    if (user.getFavoriteRoute3() != null) {
+                        favoriteRoutes.add(user.getFavoriteRoute3());
+                    }
+                }
+            }
+        }
+
+        setRecyclerView();
+    }
+
+    private void createRecentRoutes() {
+        if (recentRoutes.size() < 3) {
+            if (user.getRecentRoute1() != null) {
+                recentRoutes.add(user.getRecentRoute1());
+                if (user.getRecentRoute2() != null) {
+                    recentRoutes.add((user.getRecentRoute2()));
+                    if (user.getRecentRoute3() != null) {
+                        recentRoutes.add(user.getRecentRoute3());
+                    }
+                }
+            }
+        }
+
+        setRecyclerView();
     }
 
     // MARK: 최초 로그인시에만 자주 가는 역 설정 다이얼로그
@@ -314,12 +357,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //경로 초기화 다이얼로그
-    private void resetRoute(){
+    private void resetRoute() {
         ResetRouteDialog resetRouteDialog = new ResetRouteDialog(this);
         resetRouteDialog.show();
     }
 
-    public void onResetRouteBtnClicked(){
+    public void onResetRouteBtnClicked() {
         //초기화 버튼을 누를 시 경로 초기화 실행
         setRouteUnset();
         isGetOffSet = false;
@@ -363,11 +406,6 @@ public class MainActivity extends AppCompatActivity {
                         //막차 시간 달성
                         setRouteUnset();
                         Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
-                        notiflag = false;
-                        makarnotiflag = false;
-                        updateUI(MainActivity.class);
-                        finish();
-                        Toast.makeText(MainActivity.this, "MAKAR: 막차 시간이 되었습니다", Toast.LENGTH_SHORT).show();
                     } else {
                         //남은 시간 계산
                         int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
@@ -463,10 +501,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
-        //최근경로
-        RecyclerView recentRouteRecyclerView = binding.recentRouteText;
-        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, user.getRecentRouteArr());
-        Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
+        // MARK: 최근 경로
+        RecyclerView recentRouteRecyclerView = binding.recentRouteRecyclerView;
+        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRoutes);
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
@@ -496,10 +533,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        //즐겨찾는 경로
-        RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteText;
-        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
+        // MARK: 즐겨찾는 경로
+        RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
+        RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {

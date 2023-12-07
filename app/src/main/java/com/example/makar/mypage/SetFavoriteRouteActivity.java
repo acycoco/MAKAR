@@ -1,7 +1,5 @@
 package com.example.makar.mypage;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -18,20 +16,16 @@ import com.example.makar.data.Route;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteRouteBinding;
 import com.example.makar.main.MainActivity;
-import com.example.makar.onboarding.LoginActivity;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SetFavoriteRouteActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RouteListAdapter adapter;
     private User user = MainActivity.user;
-    private List<Route> favoriteRouteArr;
+    private List<Route> favoriteRoutes = MainActivity.favoriteRoutes;
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     ActivitySetFavoriteRouteBinding binding;
 
@@ -41,9 +35,11 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         binding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        getFavoriteRouteArr();
-        Log.d("dkdkkdkd", user.getFavoriteRouteArr().toString());
+        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute1" + user.getFavoriteRoute1().toString());
+        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute2" + user.getFavoriteRoute2().toString());
+        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute3" + user.getFavoriteRoute3().toString());
 
+        Log.d("MAKAR_SET_FAVORITE_ROUTE", "arr" + favoriteRoutes.toString());
         setActivityUtil();
         setRecyclerView();
     }
@@ -54,40 +50,10 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         ActivityUtil.setToolbar(binding.toolbarSetFavoriteRoute, "즐겨찾는 경로 설정");
     }
 
-    private void getFavoriteRouteArr() {
-        firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            try {
-                                QuerySnapshot querySnapshot = task.getResult();
-                                if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-
-                                    favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
-
-                                    Log.d("MAKARTEST", "MAIN: favoriteRouteArr : " + favoriteRouteArr);
-                                    binding.emptyListText.setVisibility(View.GONE);
-                                }
-                            } catch (Exception e) {
-                                Log.e("MAKAR", "getFavoriteRouteArr 오류: " + e.getMessage());
-                                binding.emptyListText.setVisibility(View.VISIBLE);
-                            }
-                        } else {
-                            Log.e("MAKAR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
-                            binding.emptyListText.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-    }
-
     private void setRecyclerView() {
         recyclerView = binding.setFavoriteStationRecyclerView;
-        if (user.getFavoriteRouteArr() != null) {
-            adapter = new RouteListAdapter(this, user.getFavoriteRouteArr());
+        if (favoriteRoutes != null) {
+            adapter = new RouteListAdapter(this, favoriteRoutes);
             binding.emptyListText.setVisibility(View.GONE);
         } else {
             binding.emptyListText.setVisibility(View.VISIBLE);
