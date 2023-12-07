@@ -1,6 +1,8 @@
 package com.example.makar.route;
 
 
+import android.util.Log;
+
 import com.example.makar.data.BriefStation;
 import com.example.makar.data.Route;
 import com.example.makar.data.RouteSearchResponse;
@@ -170,7 +172,9 @@ public class RouteManager {
 
     //막차시간 구하기
     private void setMakarTimeInRoutes(List<Route> routes) throws IOException, ExecutionException, InterruptedException {
-        for (Route route : routes) {
+        for (int i = 0; i < routes.size(); i++) {
+            Log.d("makar", i + 1 + "번째 경로 막차 계산");
+            Route route = routes.get(i);
             Calendar calendar = Calendar.getInstance();
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
