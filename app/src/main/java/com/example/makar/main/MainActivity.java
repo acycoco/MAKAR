@@ -506,10 +506,11 @@ public class MainActivity extends AppCompatActivity {
         RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRoutes);
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
+        recentRouteRecyclerView.setNestedScrollingEnabled(false);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
             public void onListRouteClick(Route route) {
-                Log.d("MAKAR", route.toString());
+                Log.d("MAKAR_MAIN_TEST", "clicked recent route" + route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
                 //최근 경로 수정
@@ -538,6 +539,7 @@ public class MainActivity extends AppCompatActivity {
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
         favoriteRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         favoriteRouteRecyclerView.setAdapter(favoriteRouteListAdapter);
+        favoriteRouteRecyclerView.setNestedScrollingEnabled(false);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
             public void onListRouteClick(Route route) {

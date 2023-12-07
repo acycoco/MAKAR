@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -10,10 +10,10 @@
         android:id="@+id/toolbar_main"
         layout="@layout/custom_toolbar" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
+        android:fillViewport="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:descendantFocusability="beforeDescendants">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,8 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingLeft="20dp"
-                android:paddingRight="20dp"
+                android:paddingHorizontal="20dp"
                 android:paddingBottom="15dp">
 
                 <LinearLayout
@@ -152,10 +151,10 @@
                     android:background="@color/light_gray2" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="17dp"
-                    android:paddingHorizontal="15dp"
+                    android:paddingHorizontal="20dp"
                     android:text="즐겨찾는 경로"
                     android:textStyle="bold" />
 
@@ -185,10 +184,10 @@
                     android:background="@color/light_gray2" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="17dp"
-                    android:paddingHorizontal="15dp"
+                    android:paddingHorizontal="20dp"
                     android:text="최근 경로"
                     android:textStyle="bold" />
 
@@ -198,12 +197,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="15dp"
                     android:paddingHorizontal="5dp"
-                    android:scrollbarAlwaysDrawVerticalTrack="false"
+                    android:layout_marginBottom="10dp"
                     android:textSize="14sp"
                     android:visibility="visible"
                     tools:itemCount="3" />
             </LinearLayout>
-
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 </LinearLayout>
