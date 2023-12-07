@@ -14,6 +14,12 @@ public class User {
     int makarAlarmTime = 10;
     int getOffAlarmTime = 10;
     Route selectedRoute;
+    Route favoriteRoute1;
+    Route favoriteRoute2;
+    Route favoriteRoute3;
+    Route recentRoute1;
+    Route recentRoute2;
+    Route recentRoute3;
     List<Route> favoriteRouteArr = new ArrayList<>(3); //즐겨찾는 경로
     List<Route> recentRouteArr = new ArrayList<>(3); //최근경로
 
@@ -63,6 +69,7 @@ public class User {
         this.homeStation = homeStation;
         this.schoolStation = schoolStation;
     }
+
     public void addFavoriteRoute(Route route) {
         if (this.favoriteRouteArr.size() < 3) { // 즐겨찾기 리스트 크기가 3 미만일 때만 추가
             this.favoriteRouteArr.add(route);
@@ -70,6 +77,7 @@ public class User {
             System.out.println("즐겨찾기 리스트가 꽉 찼습니다. 더 이상 추가할 수 없습니다.");
         }
     }
+
     public void setRouteStation(Station sourceStation, Station destinationStation) {
         this.sourceStation = sourceStation;
         this.destinationStation = destinationStation;
@@ -97,6 +105,54 @@ public class User {
 
     public void setGetOffAlarmTime(int getOffAlarmTime) {
         this.getOffAlarmTime = getOffAlarmTime;
+    }
+
+    public void setFavoriteRoute1(Route favoriteRoute1) {
+        this.favoriteRoute1 = favoriteRoute1;
+    }
+
+    public void setFavoriteRoute2(Route favoriteRoute2) {
+        this.favoriteRoute2 = favoriteRoute2;
+    }
+
+    public void setFavoriteRoute3(Route favoriteRoute3) {
+        this.favoriteRoute3 = favoriteRoute3;
+    }
+
+    public void setRecentRoute1(Route recentRoute1) {
+        this.recentRoute1 = recentRoute1;
+    }
+
+    public void setRecentRoute2(Route recentRoute2) {
+        this.recentRoute2 = recentRoute2;
+    }
+
+    public void setRecentRoute3(Route recentRoute3) {
+        this.recentRoute3 = recentRoute3;
+    }
+
+    public Route getFavoriteRoute1() {
+        return favoriteRoute1;
+    }
+
+    public Route getFavoriteRoute2() {
+        return favoriteRoute2;
+    }
+
+    public Route getFavoriteRoute3() {
+        return favoriteRoute3;
+    }
+
+    public Route getRecentRoute1() {
+        return recentRoute1;
+    }
+
+    public Route getRecentRoute2() {
+        return recentRoute2;
+    }
+
+    public Route getRecentRoute3() {
+        return recentRoute3;
     }
 
     public void setFavoriteRouteArr(List<Route> favoriteRouteArr) {

@@ -182,6 +182,22 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getSourceStation());
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: destinationStation : " + user.getDestinationStation());
 
+                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRoute
+                                Route favoriteRoute1 = documentSnapshot.get("favoriteRoute1", Route.class);
+                                user.setFavoriteRoute1(favoriteRoute1);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute1());
+
+                                Route favoriteRoute2 = documentSnapshot.get("favoriteRoute1", Route.class);
+                                user.setFavoriteRoute2(favoriteRoute2);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute2());
+
+                                Route favoriteRoute3 = documentSnapshot.get("favoriteRoute3", Route.class);
+                                user.setFavoriteRoute3(favoriteRoute3);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute3 : " + user.getFavoriteRoute3());
+
                                 // TODO: 즐겨찾는 경로 불러오기 에러
                                 // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRouteArr
                                 try {
