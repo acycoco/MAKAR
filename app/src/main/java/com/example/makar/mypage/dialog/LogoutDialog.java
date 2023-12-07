@@ -29,8 +29,9 @@ public class LogoutDialog extends Dialog {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setBackgroundDrawableResource(R.drawable.custom_dialog_background);
-        setContentView(R.layout.dialog_logout);
+        //getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
+        setContentView(R.layout.dialog_logout);
 
         logoutBtn = findViewById(R.id.logout_btn);
         negativeBtn = findViewById(R.id.cancel_btn);

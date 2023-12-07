@@ -294,7 +294,8 @@ public class MainActivity extends AppCompatActivity {
         if (favoriteRoutes.size() == 0) {
             binding.favoriteRouteLinearLayout.setVisibility(View.GONE);
         }
-        setRecyclerView();
+
+        setFavoriteRecyclerView();
     }
 
     private void createRecentRoutes() {
@@ -313,7 +314,8 @@ public class MainActivity extends AppCompatActivity {
         if (recentRoutes.size() == 0) {
             binding.recentRouteLinearLayout.setVisibility(View.GONE);
         }
-        setRecyclerView();
+        setRecentRecyclerView();
+
     }
 
     private void updateRecentRoutes() {
@@ -321,7 +323,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        setRecyclerView();
+        setRecentRecyclerView();
     }
 
     // MARK: 최초 로그인시에만 자주 가는 역 설정 다이얼로그
@@ -349,6 +351,8 @@ public class MainActivity extends AppCompatActivity {
         //초기화 버튼을 누를 시 경로 초기화 실행
         setRouteUnset();
         isGetOffSet = false;
+        notiflag = false;
+        makarnotiflag = false;
 
         //user 객체 초기화
         user.setSelectedRoute(null);
@@ -480,13 +484,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setRecyclerView() {
+    private void setRecentRecyclerView() {
         // MARK: 최근 경로
         RecyclerView recentRouteRecyclerView = binding.recentRouteRecyclerView;
         RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRoutes);
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
-        recentRouteRecyclerView.setNestedScrollingEnabled(false);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
             public void onRouteListClick(Route route) {
@@ -527,7 +530,9 @@ public class MainActivity extends AppCompatActivity {
                 });
             }
         });
+    }
 
+    private void setFavoriteRecyclerView(){
         // MARK: 즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
