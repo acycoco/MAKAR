@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setRecyclerView();
+        setFavoriteRecyclerView();
     }
 
     private void createRecentRoutes() {
@@ -338,7 +338,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        setRecyclerView();
+        setRecentRecyclerView();
     }
 
     // MARK: 최초 로그인시에만 자주 가는 역 설정 다이얼로그
@@ -366,6 +366,8 @@ public class MainActivity extends AppCompatActivity {
         //초기화 버튼을 누를 시 경로 초기화 실행
         setRouteUnset();
         isGetOffSet = false;
+        notiflag = false;
+        makarnotiflag = false;
 
         //user 객체 초기화
         user.setSelectedRoute(null);
@@ -500,7 +502,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void setRecyclerView() {
+    private void setRecentRecyclerView(){
         // MARK: 최근 경로
         RecyclerView recentRouteRecyclerView = binding.recentRouteRecyclerView;
         RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRoutes);
@@ -509,7 +511,7 @@ public class MainActivity extends AppCompatActivity {
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
             public void onListRouteClick(Route route) {
-                Log.d("MAKAR", route.toString());
+                Log.d("MAKAR", "RecentRoute : "+route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
                 //최근 경로 수정
@@ -526,13 +528,17 @@ public class MainActivity extends AppCompatActivity {
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
                             reference.update("selectedRoute", route);
-                            reference.update("recentRouteArr", user.getRecentRouteArr());
+                           // reference.update("recentRouteArr", user.getRecentRouteArr());
+                            updateUI(MainActivity.class);
+                            finish();
                         }
                     }
                 });
             }
         });
+    }
 
+    private void setFavoriteRecyclerView(){
         // MARK: 즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
@@ -566,6 +572,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
 
     public static void addRouteToList(List<Route> list, Route route) {
         int size = list.size();

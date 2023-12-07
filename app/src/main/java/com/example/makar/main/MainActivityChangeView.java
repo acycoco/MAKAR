@@ -17,6 +17,8 @@ public class MainActivityChangeView {
             mainBinding.setRouteBtn.setVisibility(View.GONE);
             mainBinding.favoriteRouteLinearLayout.setVisibility(View.GONE);
             mainBinding.recentRouteLinearLayout.setVisibility(View.GONE);
+            mainBinding.favoriteRouteLinearLayout.setVisibility(View.GONE);
+            mainBinding.recentRouteLinearLayout.setVisibility(View.GONE);
         } else {
             //route 미설정 화면
             mainBinding.resetRouteBtn.setVisibility(View.GONE);
@@ -28,6 +30,8 @@ public class MainActivityChangeView {
             mainBinding.setRouteBtn.setVisibility(View.VISIBLE);
             mainBinding.favoriteRouteRecyclerView.setVisibility(View.VISIBLE);
             mainBinding.recentRouteRecyclerView.setVisibility(View.VISIBLE);
+            mainBinding.favoriteRouteLinearLayout.setVisibility(View.VISIBLE);
+            mainBinding.recentRouteLinearLayout.setVisibility(View.VISIBLE);
             //false를 리턴해 MainActivity에서 setFavoriteStation() 실행
         }
     }
