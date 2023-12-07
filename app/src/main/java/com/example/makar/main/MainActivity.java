@@ -51,6 +51,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
+    private static boolean notiflag = false; //비동기 진행 유무에 대한 플래그
+    private static boolean makarnotiflag = false; //막차 알림 noti 유무에 대한 플래그
     private int leftTime; //막차까지 남은 시간
     private Date makarTime; //임시 막차 시간
     private Date getOffTime; //임시 하차 시간
@@ -65,8 +67,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-
-        Log.d("makar main login teset", "useruid = "+LoginActivity.userUId);
 
         setActivityUtil();
         setButtonListener();
@@ -234,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
                                 user.setGetOffAlarmTime(getoffAlarmTime);
                                 Log.d("MAKAR_MAIN_TEST", "MakarAlarmTime : " + user.getMakarAlarmTime());
                                 Log.d("MAKAR_MAIN_TEST", "GetOffAlarmTime : " + user.getGetOffAlarmTime());
+                                Log.d("MAKAR_MAIN_TEST", "NotiFlag : "+notiflag);
+                                Log.d("MAKAR_MAIN_TEST", "MakarNotiFlag : "+makarnotiflag);
 
                                 if (user.getSourceStation() == null || user.getDestinationStation() == null) {
                                     isRouteSet = false;
@@ -257,8 +259,12 @@ public class MainActivity extends AppCompatActivity {
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
-                                    startNotification();
                                     leftTime = 10;
+                                    if(!notiflag) {
+                                        notiflag = true;
+                                        startNotification();
+                                    }
+
 
                                     //막차, 하차 시간 설정
                                     makarTime = selectedRoute.getMakarTime();
@@ -282,7 +288,6 @@ public class MainActivity extends AppCompatActivity {
                                                 user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
                                                 user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                         Log.d("MAKAR", "route is Set");
-                                        showNotification("TEST", "TEST", MainActivity.this);
                                     }
                                 }
                             }
@@ -358,15 +363,21 @@ public class MainActivity extends AppCompatActivity {
                         //막차 시간 달성
                         setRouteUnset();
                         Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
+                        notiflag = false;
+                        makarnotiflag = false;
+                        updateUI(MainActivity.class);
+                        finish();
+                        Toast.makeText(MainActivity.this, "MAKAR: 막차 시간이 되었습니다", Toast.LENGTH_SHORT).show();
                     } else {
                         //남은 시간 계산
                         int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
                         Log.d("MAKAR", "LeftTime : " + timeDifferenceMinutes);
 
                         //경로는 설정되어있으나 시간 미달
-                        if (timeDifferenceMinutes == user.getMakarAlarmTime()) {
+                        if (timeDifferenceMinutes == user.getMakarAlarmTime() && !makarnotiflag) {
                             //막차까지 남은 시간이 지정한 알림 시간이면 notification show
                             showNotification("MAKAR 막차 알림", "막차까지 " + timeDifferenceMinutes + "분 남았습니다", MainActivity.this);
+                            makarnotiflag = true;
                         }
                         //title text 변경
                         changeMainTitleText(timeDifferenceMinutes);

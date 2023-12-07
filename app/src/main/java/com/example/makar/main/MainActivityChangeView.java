@@ -10,7 +10,7 @@ public class MainActivityChangeView {
             //route 설정된 메인화면
             mainBinding.resetRouteBtn.setVisibility(View.VISIBLE);
             mainBinding.mainRouteView.setText(source + "  ->  " + destination); //출발지, 도착지
-            mainBinding.mainTitleText.setText("막차까지 " + leftTime + "분 남았습니다"); //막차까지 남은 시간
+            mainBinding.mainTitleText.setText("막차까지 " + leftTime + "분 남았어요!"); //막차까지 남은 시간
             mainBinding.mainDestinationText.setText(source); //도착지 이름
             mainBinding.changeRouteBtn.setVisibility(View.VISIBLE);
             mainBinding.setAlarmBtn.setVisibility(View.VISIBLE);
