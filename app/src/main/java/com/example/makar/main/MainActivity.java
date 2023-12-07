@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public static User user = new User();
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<Route> favoriteRoutes = new ArrayList<>();
+    public static List<Route> recentRoutes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getSourceStation());
                                 Log.d("MAKAR_MAIN_TEST", "MAIN: destinationStation : " + user.getDestinationStation());
 
-                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRoute
+                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRoutes
                                 Route favoriteRoute1 = documentSnapshot.get("favoriteRoute1", Route.class);
                                 user.setFavoriteRoute1(favoriteRoute1);
                                 // 설정한 경로 local에 잘 저장됐는지 확인
@@ -200,18 +201,23 @@ public class MainActivity extends AppCompatActivity {
 
                                 createFavoriteRoutes();
 
-                                // TODO: 즐겨찾는 경로 불러오기 에러
-                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRouteArr
-                                try {
-                                    List<Route> favoriteRouteArr = new ArrayList<Route>();
-                                    favoriteRouteArr = documentSnapshot.get("favoriteRouteArr", List.class);
-                                    Log.d("MAKAR_MAIN_SUCCESS", "favoriteRouteArr : " + favoriteRouteArr);
-                                    user.setFavoriteRouteArr(favoriteRouteArr);
-                                    // 즐겨찾는 경로 local에 잘 저장됐는지 확인
-                                    Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getFavoriteRouteArr());
-                                } catch (Exception e) {
-                                    Log.e("MAKAR_MAIN_ERROR", "favoriteRouteArr 가져오는 중 오류 발생: " + e.getMessage());
-                                }
+                                // MARK: 최근 경로 불러와서 저장 - recentRoutes
+                                Route recentRoute1 = documentSnapshot.get("recentRoute1", Route.class);
+                                user.setRecentRoute1(recentRoute1);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute1 : " + user.getRecentRoute1());
+
+                                Route recentRoute2 = documentSnapshot.get("recentRoute2", Route.class);
+                                user.setRecentRoute2(recentRoute2);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute2 : " + user.getRecentRoute2());
+
+                                Route recentRoute3 = documentSnapshot.get("recentRoute3", Route.class);
+                                user.setRecentRoute3(recentRoute3);
+                                // 설정한 경로 local에 잘 저장됐는지 확인
+                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute3 : " + user.getRecentRoute3());
+
+                                createRecentRoutes();
 
                                 // TODO: 최근 경로 불러오기 에러
                                 // MARK: 최근 경로 불러와서 저장 - recentRouteArr
@@ -302,7 +308,23 @@ public class MainActivity extends AppCompatActivity {
                 if (user.getFavoriteRoute2() != null) {
                     favoriteRoutes.add((user.getFavoriteRoute2()));
                     if (user.getFavoriteRoute3() != null) {
-                        favoriteRoutes.add(user.getSelectedRoute());
+                        favoriteRoutes.add(user.getFavoriteRoute3());
+                    }
+                }
+            }
+        }
+
+        setRecyclerView();
+    }
+
+    private void createRecentRoutes() {
+        if (recentRoutes.size() < 3) {
+            if (user.getRecentRoute1() != null) {
+                recentRoutes.add(user.getRecentRoute1());
+                if (user.getRecentRoute2() != null) {
+                    recentRoutes.add((user.getRecentRoute2()));
+                    if (user.getRecentRoute3() != null) {
+                        recentRoutes.add(user.getRecentRoute3());
                     }
                 }
             }
@@ -470,10 +492,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setRecyclerView() {
-        //최근경로
+        // MARK: 최근 경로
         RecyclerView recentRouteRecyclerView = binding.recentRouteRecyclerView;
-        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, user.getRecentRouteArr());
-        Log.d("MAKAR", "onRecyclerView : userRecent : " + user.getRecentRouteArr());
+        RouteListAdapter recentRouteListAdapter = new RouteListAdapter(this, recentRoutes);
         recentRouteRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         recentRouteRecyclerView.setAdapter(recentRouteListAdapter);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
