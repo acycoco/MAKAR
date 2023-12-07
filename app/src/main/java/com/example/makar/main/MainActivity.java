@@ -234,6 +234,9 @@ public class MainActivity extends AppCompatActivity {
                                     getOffTime = makarTime;
                                     //경로 초기화
                                     //setRouteUnset();
+                                    if(selectedRoute != null){
+                                        Toast.makeText(MainActivity.this, "경로 설정 중 오류가 발생했습니다\n다시 시도해주세요", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
                                     isRouteSet = true;
                                     isGetOffSet = true;
@@ -249,14 +252,21 @@ public class MainActivity extends AppCompatActivity {
                                     Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
                                     Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
 
-
-                                    MainActivityChangeView.changeView(
-                                            binding,
-                                            isRouteSet,
-                                            leftTime,
-                                            user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
-                                            user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
-                                    Log.d("MAKAR", "route is Set");
+                                    if(alarmTime < 10){
+                                        //탑승시간보다 하차 알림 시간이 이전일 경우 경로 초기화
+                                        Toast.makeText(MainActivity.this, "열차 탑승 시간이 하차 알림 시간보다 짧습니다", Toast.LENGTH_SHORT).show();
+                                        setRouteUnset();
+                                        isGetOffSet = false;
+                                    }else{
+                                        MainActivityChangeView.changeView(
+                                                binding,
+                                                isRouteSet,
+                                                leftTime,
+                                                user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
+                                                user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
+                                        Log.d("MAKAR", "route is Set");
+                                        showNotification("TEST", "TEST", MainActivity.this);
+                                    }
                                 }
                             }
                         } else {
