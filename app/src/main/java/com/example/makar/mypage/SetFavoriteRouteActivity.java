@@ -18,7 +18,6 @@ import com.example.makar.databinding.ActivitySetFavoriteRouteBinding;
 import com.example.makar.main.MainActivity;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SetFavoriteRouteActivity extends AppCompatActivity {
@@ -26,7 +25,6 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
     private RouteListAdapter adapter;
     private User user = MainActivity.user;
     private List<Route> favoriteRoutes = MainActivity.favoriteRoutes;
-    private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     ActivitySetFavoriteRouteBinding binding;
 
     @Override

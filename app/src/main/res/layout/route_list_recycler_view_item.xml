@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/route_list_item"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:orientation="horizontal"
@@ -70,6 +71,7 @@
         android:layout_height="15dp"
         android:layout_gravity="center_vertical"
         android:layout_marginStart="7dp"
-        android:src="@drawable/ic_star_line_filled" />
+        android:src="@drawable/ic_star_line_filled"
+        android:visibility="gone" />
 
 </LinearLayout>

@@ -133,13 +133,11 @@ public class MainActivity extends AppCompatActivity {
                     // 해당 유저의 정보가 파이어베이스에 저장되어 있지 않은 경우
                     user.setUserUId(LoginActivity.userUId);
                     // User 객체를 파이어베이스에 저장
-                    userRef.set(user)
-                            .addOnSuccessListener(aVoid -> {
-                                Log.d("MAKAR_MAIN_TEST", "User 객체 저장 성공");
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("MAKAR_MAIN_TEST", "User 객체 저장 실패");
-                            });
+                    userRef.set(user).addOnSuccessListener(aVoid -> {
+                        Log.d("MAKAR_MAIN_TEST", "User 객체 저장 성공");
+                    }).addOnFailureListener(e -> {
+                        Log.e("MAKAR_MAIN_TEST", "User 객체 저장 실패");
+                    });
                 } else {
                     user.setUserUId(LoginActivity.userUId);
                 }
@@ -151,149 +149,136 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void getUserData() {
-        firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            QuerySnapshot querySnapshot = task.getResult();
-                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                                DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+        firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
 
-                                // MARK: 즐겨찾는 역 불러와서 user에 저장 - setFavoriteStation
-                                Station homeStation = documentSnapshot.get("homeStation", Station.class);
-                                Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
-                                user.setFavoriteStation(homeStation, schoolStation);
-                                // 설정한 즐겨찾는 역 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: Home : " + user.getHomeStation());
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: School : " + user.getSchoolStation());
+                        // MARK: 즐겨찾는 역 불러와서 user에 저장 - setFavoriteStation
+                        Station homeStation = documentSnapshot.get("homeStation", Station.class);
+                        Station schoolStation = documentSnapshot.get("schoolStation", Station.class);
+                        user.setFavoriteStation(homeStation, schoolStation);
+                        // 설정한 즐겨찾는 역 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: Home : " + user.getHomeStation());
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: School : " + user.getSchoolStation());
 
-                                // MARK: 설정한 경로 불러와서 user에 저장 - setSelectedRoute
-                                Route selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
-                                user.setSelectedRoute(selectedRoute);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: selectedRoute : " + user.getSelectedRoute());
+                        // MARK: 설정한 경로 불러와서 user에 저장 - setSelectedRoute
+                        Route selectedRoute = documentSnapshot.get("selectedRoute", Route.class);
+                        user.setSelectedRoute(selectedRoute);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: selectedRoute : " + user.getSelectedRoute());
 
-                                // MARK: 출발지, 도착지 불러와서 user에 저장
-                                Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
-                                Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
-                                user.setRouteStation(sourceStation, destinationStation);
-                                // 설정한 출발지, 도착지 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getSourceStation());
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: destinationStation : " + user.getDestinationStation());
+                        // MARK: 출발지, 도착지 불러와서 user에 저장
+                        Station sourceStation = documentSnapshot.get("sourceStation", Station.class);
+                        Station destinationStation = documentSnapshot.get("destinationStation", Station.class);
+                        user.setRouteStation(sourceStation, destinationStation);
+                        // 설정한 출발지, 도착지 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getSourceStation());
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: destinationStation : " + user.getDestinationStation());
 
-                                // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRoute
-                                Route favoriteRoute1 = documentSnapshot.get("favoriteRoute1", Route.class);
-                                user.setFavoriteRoute1(favoriteRoute1);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute1());
+                        // MARK: 즐겨찾는 경로 불러와서 저장 - favoriteRoute
+                        Route favoriteRoute1 = documentSnapshot.get("favoriteRoute1", Route.class);
+                        user.setFavoriteRoute1(favoriteRoute1);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute1());
 
-                                Route favoriteRoute2 = documentSnapshot.get("favoriteRoute1", Route.class);
-                                user.setFavoriteRoute2(favoriteRoute2);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute2());
+                        Route favoriteRoute2 = documentSnapshot.get("favoriteRoute1", Route.class);
+                        user.setFavoriteRoute2(favoriteRoute2);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute2 : " + user.getFavoriteRoute2());
 
-                                Route favoriteRoute3 = documentSnapshot.get("favoriteRoute3", Route.class);
-                                user.setFavoriteRoute3(favoriteRoute3);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute3 : " + user.getFavoriteRoute3());
+                        Route favoriteRoute3 = documentSnapshot.get("favoriteRoute3", Route.class);
+                        user.setFavoriteRoute3(favoriteRoute3);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: favoriteRoute3 : " + user.getFavoriteRoute3());
 
-                                createFavoriteRoutes();
+                        createFavoriteRoutes();
 
-                                // MARK: 최근 경로 불러와서 저장 - recentRoutes
-                                Route recentRoute1 = documentSnapshot.get("recentRoute1", Route.class);
-                                user.setRecentRoute1(recentRoute1);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute1 : " + user.getRecentRoute1());
+                        // MARK: 최근 경로 불러와서 저장 - recentRoutes
+                        Route recentRoute1 = documentSnapshot.get("recentRoute1", Route.class);
+                        user.setRecentRoute1(recentRoute1);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute1 : " + user.getRecentRoute1());
 
-                                Route recentRoute2 = documentSnapshot.get("recentRoute2", Route.class);
-                                user.setRecentRoute2(recentRoute2);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute2 : " + user.getRecentRoute2());
+                        Route recentRoute2 = documentSnapshot.get("recentRoute2", Route.class);
+                        user.setRecentRoute2(recentRoute2);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute2 : " + user.getRecentRoute2());
 
-                                Route recentRoute3 = documentSnapshot.get("recentRoute3", Route.class);
-                                user.setRecentRoute3(recentRoute3);
-                                // 설정한 경로 local에 잘 저장됐는지 확인
-                                Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute3 : " + user.getRecentRoute3());
+                        Route recentRoute3 = documentSnapshot.get("recentRoute3", Route.class);
+                        user.setRecentRoute3(recentRoute3);
+                        // 설정한 경로 local에 잘 저장됐는지 확인
+                        Log.d("MAKAR_MAIN_TEST", "MAIN: recentRoute3 : " + user.getRecentRoute3());
 
-                                createRecentRoutes();
+                        createRecentRoutes();
 
-                                // MARK: 막차, 하차 알림 불러와서 user에 저장
-                                int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
-                                int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
-                                if (makarAlarmTime <= 0) makarAlarmTime = 10;
-                                if (getoffAlarmTime <= 0) getoffAlarmTime = 10;
+                        // MARK: 막차, 하차 알림 불러와서 user에 저장
+                        int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
+                        int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
+                        if (makarAlarmTime <= 0) makarAlarmTime = 10;
+                        if (getoffAlarmTime <= 0) getoffAlarmTime = 10;
 
-                                user.setMakarAlarmTime(makarAlarmTime);
-                                user.setGetOffAlarmTime(getoffAlarmTime);
-                                Log.d("MAKAR_MAIN_TEST", "MakarAlarmTime : " + user.getMakarAlarmTime());
-                                Log.d("MAKAR_MAIN_TEST", "GetOffAlarmTime : " + user.getGetOffAlarmTime());
-                                Log.d("MAKAR_MAIN_TEST", "NotiFlag : "+notiflag);
-                                Log.d("MAKAR_MAIN_TEST", "MakarNotiFlag : "+makarnotiflag);
+                        user.setMakarAlarmTime(makarAlarmTime);
+                        user.setGetOffAlarmTime(getoffAlarmTime);
+                        Log.d("MAKAR_MAIN_TEST", "MakarAlarmTime : " + user.getMakarAlarmTime());
+                        Log.d("MAKAR_MAIN_TEST", "GetOffAlarmTime : " + user.getGetOffAlarmTime());
+                        Log.d("MAKAR_MAIN_TEST", "NotiFlag : " + notiflag);
+                        Log.d("MAKAR_MAIN_TEST", "MakarNotiFlag : " + makarnotiflag);
 
-                                if (user.getSourceStation() == null || user.getDestinationStation() == null) {
-                                    isRouteSet = false;
-                                    leftTime = 0;
-                                    MainActivityChangeView.changeView(
-                                            binding,
-                                            isRouteSet,
-                                            leftTime,
-                                            "",
-                                            "");
-                                    Log.d("MAKAR_MAIN", "route is UnSet");
+                        if (user.getSourceStation() == null || user.getDestinationStation() == null) {
+                            isRouteSet = false;
+                            leftTime = 0;
+                            MainActivityChangeView.changeView(binding, isRouteSet, leftTime, "", "");
+                            Log.d("MAKAR_MAIN", "route is UnSet");
 
-                                    //막차, 하차 시간 현재로 설정
-                                    makarTime = new Date();
-                                    getOffTime = makarTime;
-                                    //경로 초기화
-                                    //setRouteUnset();
-                                    if(selectedRoute != null){
-                                        Toast.makeText(MainActivity.this, "경로 설정 중 오류가 발생했습니다\n다시 시도해주세요", Toast.LENGTH_SHORT).show();
-                                    }
-                                } else {
-                                    isRouteSet = true;
-                                    isGetOffSet = true;
-                                    startNotification();
-                                    leftTime = 10;
-                                    if(!notiflag) {
-                                        notiflag = true;
-                                        startNotification();
-                                    }
-
-
-                                    //막차, 하차 시간 설정
-                                    makarTime = selectedRoute.getMakarTime();
-                                    int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
-                                    getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
-
-                                    Log.d("TIMETEST", "makarTime(Set) : " + makarTime);
-                                    Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
-                                    Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
-
-                                    if (alarmTime < 10) {
-                                        //탑승시간보다 하차 알림 시간이 이전일 경우 경로 초기화
-                                        Toast.makeText(MainActivity.this, "열차 탑승 시간이 하차 알림 시간보다 짧습니다", Toast.LENGTH_SHORT).show();
-                                        setRouteUnset();
-                                        isGetOffSet = false;
-                                    } else {
-                                        MainActivityChangeView.changeView(
-                                                binding,
-                                                isRouteSet,
-                                                leftTime,
-                                                user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(),
-                                                user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
-                                        Log.d("MAKAR", "route is Set");
-                                        showNotification("TEST", "TEST", MainActivity.this);
-                                    }
-                                }
+                            //막차, 하차 시간 현재로 설정
+                            makarTime = new Date();
+                            getOffTime = makarTime;
+                            //경로 초기화
+                            //setRouteUnset();
+                            if (selectedRoute != null) {
+                                Toast.makeText(MainActivity.this, "경로 설정 중 오류가 발생했습니다\n다시 시도해주세요", Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Log.e("MAKAR_MAIN_ERROR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+                            isRouteSet = true;
+                            isGetOffSet = true;
+                            startNotification();
+                            leftTime = 10;
+                            if (!notiflag) {
+                                notiflag = true;
+                                startNotification();
+                            }
+
+
+                            //막차, 하차 시간 설정
+                            makarTime = selectedRoute.getMakarTime();
+                            int alarmTime = user.getSelectedRoute().getTotalTime() - getoffAlarmTime;
+                            getOffTime = setAlarmTime(makarTime, alarmTime); //하차 알림 시간 설정  (makarTime + 차 탑승 시간 - getOffAlarmTime)
+
+                            Log.d("TIMETEST", "makarTime(Set) : " + makarTime);
+                            Log.d("TIMETEST", "getOffTime(Set) : " + getOffTime);
+                            Log.d("TIMETEST", "alarmTime(Set) : " + alarmTime);
+
+                            if (alarmTime < 10) {
+                                //탑승시간보다 하차 알림 시간이 이전일 경우 경로 초기화
+                                Toast.makeText(MainActivity.this, "열차 탑승 시간이 하차 알림 시간보다 짧습니다", Toast.LENGTH_SHORT).show();
+                                setRouteUnset();
+                                isGetOffSet = false;
+                            } else {
+                                MainActivityChangeView.changeView(binding, isRouteSet, leftTime, user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(), user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
+                                Log.d("MAKAR", "route is Set");
+                                showNotification("TEST", "TEST", MainActivity.this);
+                            }
                         }
                     }
-                });
+                } else {
+                    Log.e("MAKAR_MAIN_ERROR", "Firestore에서 userData 검색 중 오류 발생: " + task.getException().getMessage());
+                }
+            }
+        });
     }
 
     private void createFavoriteRoutes() {
@@ -366,8 +351,7 @@ public class MainActivity extends AppCompatActivity {
         user.setSelectedRoute(null);
         user.setRouteStation(null, null);
 
-        MainActivityChangeView.changeView(
-                binding, false, 0, "", "");
+        MainActivityChangeView.changeView(binding, false, 0, "", "");
         Toast.makeText(this, R.string.reset_route_toast, Toast.LENGTH_SHORT).show();
     }
 
@@ -380,8 +364,7 @@ public class MainActivity extends AppCompatActivity {
         SpannableString spannableString = new SpannableString(formattedText);
 
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(Color.RED);
-        spannableString.setSpan(foregroundColorSpan, 5,
-                5 + length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        spannableString.setSpan(foregroundColorSpan, 5, 5 + length, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         //string index 직접 접근해서 색 변경
         binding.mainTitleText.setText(spannableString);
     }
@@ -461,8 +444,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteStation(String path) {
-        Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users")
-                .whereEqualTo("userUId", LoginActivity.userUId).get();
+        Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
         usersCollection.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -504,7 +486,7 @@ public class MainActivity extends AppCompatActivity {
         recentRouteRecyclerView.setNestedScrollingEnabled(false);
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
-            public void onListRouteClick(Route route) {
+            public void onRouteListClick(Route route) {
                 Log.d("MAKAR_MAIN_TEST", "clicked recent route" + route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
@@ -551,7 +533,7 @@ public class MainActivity extends AppCompatActivity {
         favoriteRouteRecyclerView.setNestedScrollingEnabled(false);
         favoriteRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
-            public void onListRouteClick(Route route) {
+            public void onRouteListClick(Route route) {
                 Log.d("MAKAR", route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 

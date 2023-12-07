@@ -82,11 +82,11 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
         holder.binding.sourceStationTextView.setText(sourceStation.getStationName() + "역 >");
         holder.binding.destinationStationTextView.setText(destinationStation.getStationName() + "역");
 
-        holder.binding.sourceStationImageView.setOnClickListener(new View.OnClickListener() {
+        holder.binding.routeListItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //선택된 route 넘겨줌
-                listener.onListRouteClick(items.get(position));
+                listener.onRouteListClick(items.get(position));
             }
         });
     }
