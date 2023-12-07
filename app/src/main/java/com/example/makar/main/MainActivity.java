@@ -220,19 +220,6 @@ public class MainActivity extends AppCompatActivity {
 
                                 createRecentRoutes();
 
-                                // TODO: 최근 경로 불러오기 에러
-                                // MARK: 최근 경로 불러와서 저장 - recentRouteArr
-                                try {
-                                    List<Route> recentRouteArr = new ArrayList<Route>();
-                                    recentRouteArr = documentSnapshot.get("recentRouteArr", List.class);
-                                    Log.d("MAKAR_MAIN_SUCCESS", "recentRouteArr : " + recentRouteArr);
-                                    user.setRecentRouteArr(recentRouteArr);
-                                    // 최근 경로 local에 잘 저장됐는지 확인
-                                    Log.d("MAKAR_MAIN_TEST", "MAIN: sourceStation : " + user.getRecentRouteArr());
-                                } catch (Exception e) {
-                                    Log.e("MAKAR_MAIN_ERROR", "recentRouteArr 가져오는 중 오류 발생: " + e.getMessage());
-                                }
-
                                 // MARK: 막차, 하차 알림 불러와서 user에 저장
                                 int makarAlarmTime = documentSnapshot.get("makarAlarmTime", Integer.class);
                                 int getoffAlarmTime = documentSnapshot.get("getOffAlarmTime", Integer.class);
@@ -336,6 +323,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+        }
+
+        setRecyclerView();
+    }
+
+    private void updateRecentRoutes() {
+        if (recentRoutes.size() == 2) {
+
         }
 
         setRecyclerView();
@@ -527,7 +522,21 @@ public class MainActivity extends AppCompatActivity {
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
                             reference.update("selectedRoute", route);
-                            reference.update("recentRouteArr", user.getRecentRouteArr());
+
+                            //최근 경로에 해당 즐겨찾는 경로 추가
+                            if (user.getRecentRoute1() == null) {
+                                user.setRecentRoute1(route);
+                            } else if (user.getRecentRoute2() == null) {
+                                user.setRecentRoute2(route);
+                            } else if (user.getRecentRoute3() == null) {
+                                user.setRecentRoute3(route);
+                            } else {
+                                user.setRecentRoute1(user.getRecentRoute2());
+                                user.setRecentRoute2(user.getRecentRoute3());
+                                user.setRecentRoute3(route);
+                            }
+
+                            getUserData();
                         }
                     }
                 });
@@ -557,11 +566,21 @@ public class MainActivity extends AppCompatActivity {
                             //Route에 출발지, 도착지만 따로 Station type으로 저장
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
-                            reference.update("favoriteRouteArr", user.getFavoriteRouteArr());
 
                             //최근 경로에 해당 즐겨찾는 경로 추가
-                            addRouteToList(user.getRecentRouteArr(), route);
-                            reference.update("recentRouteArr", user.getRecentRouteArr());
+                            if (user.getRecentRoute1() == null) {
+                                user.setRecentRoute1(route);
+                            } else if (user.getRecentRoute2() == null) {
+                                user.setRecentRoute2(route);
+                            } else if (user.getRecentRoute3() == null) {
+                                user.setRecentRoute3(route);
+                            } else {
+                                user.setRecentRoute1(user.getRecentRoute2());
+                                user.setRecentRoute2(user.getRecentRoute3());
+                                user.setRecentRoute3(route);
+                            }
+
+                            getUserData();
                         }
                     }
                 });
