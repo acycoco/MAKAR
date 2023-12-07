@@ -75,15 +75,12 @@ public class MainActivity extends AppCompatActivity {
         setFavoriteStationDialog();
         createUser();
         Log.d("MAKAR_MAIN", user.toString());
-
-        //setRecyclerView(); //경로 관련 recyclerView set
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         getUserData();
-        //setRecyclerView(); //경로 관련 recyclerView set
     }
 
     // MARK: setActivityUtil()
@@ -294,6 +291,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if (favoriteRoutes.size() == 0) {
+            binding.favoriteRouteLinearLayout.setVisibility(View.GONE);
+        }
         setRecyclerView();
     }
 
@@ -310,6 +310,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
+        if (recentRoutes.size() == 0) {
+            binding.recentRouteLinearLayout.setVisibility(View.GONE);
+        }
         setRecyclerView();
     }
 

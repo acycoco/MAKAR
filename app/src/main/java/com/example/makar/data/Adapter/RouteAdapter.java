@@ -23,7 +23,6 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
 
     private OnRouteClickListener listener;
     private OnBookmarkClickListener bookmarkClickListener;
-
     private List<Route> items;
     private Context context;
     private Route route;
@@ -32,7 +31,6 @@ public class RouteAdapter extends RecyclerView.Adapter<RouteAdapter.ViewHolder> 
     private BriefStation sourceStation;
     private BriefStation destinationStation;
     private BriefStation transferStation;
-
 
     public RouteAdapter(Context context, List<Route> items) {
         this.context = context;

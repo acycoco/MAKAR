@@ -587,6 +587,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             user.setFavoriteRoute1(finalFavoriteRoute);
                                             if (task.isSuccessful()) {
+                                                Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "MAIN: 사용자 favoriteRoute1 : " + user.getFavoriteRoute1());
                                             } else {
@@ -604,6 +605,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     user.setFavoriteRoute1(finalFavoriteRoute);
+                                                    Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -640,6 +642,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             user.setFavoriteRoute2(finalFavoriteRoute2);
                                             if (task.isSuccessful()) {
+                                                Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "MAIN: 사용자 favoriteRoute1 : " + user.getFavoriteRoute2());
                                             } else {
@@ -657,6 +660,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     user.setFavoriteRoute2(finalFavoriteRoute2);
+                                                    Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {
@@ -693,6 +697,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<Void> task) {
                                             user.setFavoriteRoute3(finalFavoriteRoute3);
                                             if (task.isSuccessful()) {
+                                                Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentSnapshot.getId());
                                                 Log.d("MAKAR_SET_ROUTE_TEST", "MAIN: 사용자 favoriteRoute3 : " + user.getFavoriteRoute3());
                                             } else {
@@ -710,6 +715,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                 @Override
                                                 public void onComplete(@NonNull Task<Void> task) {
                                                     user.setFavoriteRoute3(finalFavoriteRoute3);
+                                                    Toast.makeText(SetRouteActivity.this, "경로를 즐겨찾기에 추가하였습니다.", Toast.LENGTH_SHORT).show();
                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                 }
                                             }).addOnFailureListener(new OnFailureListener() {

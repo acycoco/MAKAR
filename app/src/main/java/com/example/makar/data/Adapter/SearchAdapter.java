@@ -52,7 +52,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.ViewHolder
         }
 
         holder.binding.lineTextView.setText(station.getFullName());
-        holder.binding.lineTextView.setOnClickListener(new View.OnClickListener() {
+        holder.binding.searchList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(items.get(position));
