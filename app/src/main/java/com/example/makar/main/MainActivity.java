@@ -12,6 +12,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -395,6 +396,8 @@ public class MainActivity extends AppCompatActivity {
         //선택된 루트, 출발역, 도착역 초기화
         deleteStation("sourceStation");
         deleteStation("destinationStation");
+
+        binding.resetRouteBtn.setVisibility(View.GONE);
     }
 
     private void deleteStation(String path) {

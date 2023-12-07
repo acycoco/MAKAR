@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.util.Log;
 import android.view.MenuItem;
 
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,12 +38,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-
 
 
 public class SetRouteActivity extends AppCompatActivity {
@@ -157,21 +158,35 @@ public class SetRouteActivity extends AppCompatActivity {
     }
 
     private void executeSearchRoute() {
-        Log.d("dhdh", sourceStation.getStationName());
-        Log.d("dhdh", destinationStation.getStationName());
+        Log.d("MAKAR_SET_ROUTE", "sourceStation : " + sourceStation.getStationName());
+        Log.d("MAKAR_SET_ROUTE", "destinationStation : " + destinationStation.getStationName());
         new Thread(() -> {
             try {
                 resultList = routeManager.getRoutes(sourceStation, destinationStation);
-                Log.d("dhdhdh", resultList.toString());
-
+                Log.d("MAKAR_SET_ROUTE", "resultList : " + resultList.toString());
+                if (resultList == null || resultList.size() == 0) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.routeRecyclerView.setVisibility(View.GONE);
+                            binding.nonRouteText.setVisibility(View.VISIBLE);
+                            Toast.makeText(SetRouteActivity.this, "검색된 경로가 없습니다.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            binding.routeRecyclerView.setVisibility(View.VISIBLE);
+                            binding.nonRouteText.setVisibility(View.GONE);
+                        }
+                    });
+                }
                 new Handler(Looper.getMainLooper()).post(() -> {
                     setRecyclerView();
                 });
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (ExecutionException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
+            } catch (IOException | ExecutionException | InterruptedException e) {
+                Log.e("MAKAR_SET_ROUTE", e.getMessage());
                 throw new RuntimeException(e);
             }
         }).start();
@@ -210,8 +225,8 @@ public class SetRouteActivity extends AppCompatActivity {
 
                 String targetSourceStationName = route.getBriefRoute().get(0).getStationName();
                 String targetSourceLineNum = route.getBriefRoute().get(0).getLineNumToString();
-                Log.d("zz: B SourceStationName", targetSourceStationName);
-                Log.d("zz: B SourceLineNum", targetSourceLineNum);
+                Log.d("MAKAR_SET_ROUTE: B SourceStationName", targetSourceStationName);
+                Log.d("MAKAR_SET_ROUTE: B SourceLineNum", targetSourceLineNum);
 
                 FirebaseFirestore db = FirebaseFirestore.getInstance();
                 db.collection("stations")
@@ -223,9 +238,9 @@ public class SetRouteActivity extends AppCompatActivity {
                             public void onSuccess(QuerySnapshot querySnapshot) {
                                 for (DocumentSnapshot documentSnapshot : querySnapshot.getDocuments()) {
                                     Station station = documentSnapshot.toObject(Station.class);
-                                    Log.d("zz: BTS", station.toString());
+                                    Log.d("MAKAR_SET_ROUTE: BTS", station.toString());
                                     briefToSourceStation = station;
-                                    Log.d("zz: BTS", String.valueOf(briefToSourceStation));
+                                    Log.d("MAKAR_SET_ROUTE: BTS", String.valueOf(briefToSourceStation));
                                 }
                             }
                         })
@@ -234,12 +249,12 @@ public class SetRouteActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                             }
                         });
-                Log.d("zz: briefToSourceStation", String.valueOf(briefToSourceStation));
+                Log.d("MAKAR_SET_ROUTE: briefToSourceStation", String.valueOf(briefToSourceStation));
 
                 String targetDestinationStationName = route.getBriefRoute().get(briefRouteSize - 1).getStationName();
                 String targetDestinationLineNum = route.getBriefRoute().get(briefRouteSize - 1).getLineNumToString();
-                Log.d("zz: B DestinationStationName", targetDestinationStationName);
-                Log.d("zz: B DestinationLineNum", targetDestinationLineNum);
+                Log.d("MAKAR_SET_ROUTE: B DestinationStationName", targetDestinationStationName);
+                Log.d("MAKAR_SET_ROUTE: B DestinationLineNum", targetDestinationLineNum);
 
                 db.collection("stations")
                         .whereEqualTo("odsayStationName", targetDestinationStationName)
@@ -252,7 +267,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                     Station station = documentSnapshot.toObject(Station.class);
                                     Log.d("RouteClick: BTS", station.toString());
                                     briefToDestinationStation = station;
-                                    Log.d("zz: BTS", String.valueOf(briefToDestinationStation));
+                                    Log.d("MAKAR_SET_ROUTE: BTS", String.valueOf(briefToDestinationStation));
                                 }
                             }
                         })
