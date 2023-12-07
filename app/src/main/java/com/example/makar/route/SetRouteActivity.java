@@ -135,14 +135,14 @@ public class SetRouteActivity extends AppCompatActivity {
         //경로 찾기 버튼 클릭 리스너
         binding.searchRouteBtn.setOnClickListener(view -> {
             // 클릭 이벤트 발생 시 새로운 스레드에서 searchRoute 메서드를 실행
-            if (sourceStation != null && destinationStation != null && !Objects.equals(sourceStation.getStationName(), destinationStation.getOdsayStationName())) {
+            if (sourceStation != null && destinationStation != null && !Objects.equals(sourceStation.getOdsayStationName(), destinationStation.getOdsayStationName())) {
                 resultList.clear();
                 executeSearchRoute();
             } else if (sourceStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_1, Toast.LENGTH_SHORT).show();
             } else if (destinationStation == null) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_2, Toast.LENGTH_SHORT).show();
-            } else if (Objects.equals(sourceStation.getStationName(), destinationStation.getStationName())) {
+            } else if (Objects.equals(sourceStation.getOdsayStationName(), destinationStation.getOdsayStationName())) {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_3, Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(SetRouteActivity.this, R.string.set_route_error_toast_4, Toast.LENGTH_SHORT).show();
