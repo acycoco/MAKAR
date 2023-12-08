@@ -108,7 +108,7 @@ public class SetRouteActivity extends AppCompatActivity {
 ////                databaseConverter.saveNewLine(1, "1", "2", "1신창");
 ////                databaseConverter.saveReverseTransferInfo();
 ////                databaseConverter.validateTransferInfo();
-//                databaseConverter.validateLineSequences2();
+////                databaseConverter.validateLineSequences2();
 ////                databaseConverter.validateLineSequences33("1신창");
 //            }
 //        }).start();
@@ -462,7 +462,7 @@ public class SetRouteActivity extends AppCompatActivity {
                                                                     user.setFavoriteRoute2(finalFavoriteRoute2);
                                                                     Log.d("MAKAR", "사용자 데이터가 Firestore에 수정되었습니다. ID: " + documentReference.getId());
                                                                 }
-                                                            }).addOnFailureListener(new OnFailureListener() {
+                                                          }).addOnFailureListener(new OnFailureListener() {
                                                                 @Override
                                                                 public void onFailure(@NonNull Exception e) {
                                                                     Log.e("MAKAR", "Firestore에 사용자 데이터 수정 중 오류 발생: " + e.getMessage());

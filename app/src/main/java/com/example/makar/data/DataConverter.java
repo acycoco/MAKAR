@@ -686,10 +686,16 @@ public class DataConverter {
 
                         if (sourceValue instanceof List) {
                             List<LineStationInfo> sourceList = (List<LineStationInfo>) sourceValue;
-                            Collections.reverse(sourceList);
+//                            Collections.reverse(sourceList);
+                            List<LineStationInfo> newList = new ArrayList<>();
+
+                            // Iterate over indices 0 to 5 and add corresponding elements to the new list
+                            for (int i = 0; i < 6; i++) {
+                                newList.add(sourceList.get(i));
+                            }
                             // 대상 필드에 복사
                             Map<String, Object> data = new HashMap<>();
-                            data.put(destinationField, sourceList);
+                            data.put(destinationField, newList);
 
                             docRef.update(data)
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
