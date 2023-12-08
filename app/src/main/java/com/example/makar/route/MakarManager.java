@@ -117,17 +117,19 @@ public class MakarManager {
                                         }
 
                                         int odsayStationID = ((Long) stationList.get(k).get("odsayLaneType")).intValue();
-                                        if (odsayStationID == startStationID) {
+                                        if (odsayStationID == startStationID && startIndex == -1) {
                                             startIndex = k;
                                         }
 
+                                        //순환 경로인 경우 도착역은 뒤의 인덱스로 바뀌게
                                         if (odsayStationID == endStationID) {
                                             endIndex = k;
                                         }
                                     }
 
+
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
-                                    if (startIndex < endIndex && endIndex < terminalIndex) {
+                                    if (startIndex < endIndex && endIndex <= terminalIndex) {
 
                                         Log.d("makar", timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
                                         canGoInSubway.set(true);
@@ -250,24 +252,25 @@ public class MakarManager {
                                         }
 
                                         int odsayStationID = ((Long) stationList.get(k).get("odsayLaneType")).intValue();
-                                        if (odsayStationID == startStationID) {
+                                        if (odsayStationID == startStationID && startIndex == -1) {
                                             startIndex = k;
                                         }
 
+                                        //순환 경로인 경우 도착역은 뒤의 인덱스로 바뀌게
                                         if (odsayStationID == endStationID) {
                                             endIndex = k;
                                         }
                                     }
 
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
-                                    if (startIndex < endIndex && endIndex < terminalIndex) {
+                                    if (startIndex < endIndex && endIndex <= terminalIndex) {
 
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
                                         return;
                                     }
-                                }
+                              }
                             }
                             task.complete(null);
                         });
@@ -318,7 +321,6 @@ public class MakarManager {
         return null;
     }
 
-
     //요일에 맞는 시간표 가져오기
     private SubwaySchedule.OrdList getOrdListByDayOfWeek(int dayOfWeek, SubwaySchedule subwaySchedule) {
         if (dayOfWeek == Calendar.SATURDAY) {
@@ -329,6 +331,7 @@ public class MakarManager {
             return subwaySchedule.getOrdList();
         }
     }
+
 
     //지하철 방면에 맞는 시간표 가져오기
     private List<SubwaySchedule.OrdList.TimeDirection.TimeData> getTimeByWayCode(int wayCode, SubwaySchedule.OrdList ordList) {

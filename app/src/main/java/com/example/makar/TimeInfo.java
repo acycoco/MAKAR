@@ -21,7 +21,18 @@ public class TimeInfo {
         while (tokenizer.hasMoreTokens()) {
             String token = tokenizer.nextToken();
             String[] parts = token.split("\\(");
-            String terminalStation = parts[1].replace(")", "");
+            String stationInfo = parts[1].replace(")", "");
+
+            //보통 시간(종착역)으로 종착역을 표시함
+            //6호선의 경우 시간(종착역-다음 정차역)으로 종착역을 표시하는 경우를 위한 처리
+            String[] stationParts = stationInfo.split("-");
+            String terminalStation;
+            if (stationParts.length > 1) {
+                terminalStation = stationParts[0];
+            } else {
+                terminalStation = stationInfo;
+            }
+
             int minute = Integer.parseInt(parts[0]);
 
             TimeInfo timeInfo = new TimeInfo(terminalStation, minute);
