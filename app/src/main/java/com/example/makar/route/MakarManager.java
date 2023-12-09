@@ -58,11 +58,11 @@ public class MakarManager {
                 takingTime = computeTransferMakarTime(takingTime, dayOfWeek, subwaySchedule, lastSubRoute.getLineNum(), lastSubRoute.getWayCode(), lastSubRoute.getStartStationCode(), lastSubRoute.getEndStationCode());
 
             }
-            Log.d("makar", "막차시간 계산 : " + lastSubRoute.getStartStationName() + "->" + lastSubRoute.getEndStationName()
+            Log.d("MAKAR", "막차시간 계산 : " + lastSubRoute.getStartStationName() + "->" + lastSubRoute.getEndStationName()
                     + " " + lastSubRoute.getWayCode() + "방면 막차 " + takingTime.getTime());
             makarTimes.add(0, takingTime.getTime());
         }
-        Log.d("makar", "막차시간 리스트 : " + makarTimes);
+        Log.d("MAKAR", "막차시간 리스트 : " + makarTimes);
 
         return takingTime;
     }
@@ -106,7 +106,7 @@ public class MakarManager {
                                     } else if (wayCode == DOWNTOWN) {
                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
                                     } else {
-                                        Log.e("makar", "waycode invalid error");
+                                        Log.e("MAKAR", "waycode invalid error");
                                     }
 
                                     //순회하면서 출발역, 도착역, 종착역의 index구하기
@@ -131,7 +131,7 @@ public class MakarManager {
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
                                     if (startIndex < endIndex && endIndex <= terminalIndex) {
 
-                                        Log.d("makar", timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
+                                        Log.d("MAKAR", timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
@@ -241,7 +241,7 @@ public class MakarManager {
                                     } else if (wayCode == DOWNTOWN) {
                                         stationList = (List<Map<String, Object>>) document.get(String.valueOf(DOWNTOWN));
                                     } else {
-                                        Log.e("makar", "waycode invalid error");
+                                        Log.e("MAKAR", "waycode invalid error");
                                     }
 
                                     //순회하면서 출발역, 도착역, 종착역의 index구하기

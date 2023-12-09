@@ -379,7 +379,7 @@ public class DataConverter {
                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                     List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                                     if (documents.size() != 1) {
-                                        Log.e("makar", finalStationName + from + "없음 에러");
+                                        Log.e("MAKAR", finalStationName + from + "없음 에러");
                                     }
                                     Station fromStation = documents.get(0).toObject(Station.class);
                                     db.collection("stations")
@@ -390,7 +390,7 @@ public class DataConverter {
                                                 public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                                                     List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
                                                     if (documents.size() != 1) {
-                                                        Log.e("makar", finalStationName + to + "없음 에러");
+                                                        Log.e("MAKAR", finalStationName + to + "없음 에러");
                                                     }
                                                     Station toStation = documents.get(0).toObject(Station.class);
 
@@ -484,7 +484,7 @@ public class DataConverter {
                                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                     List<Station> station = task.getResult().toObjects(Station.class);
                                     if (station.size() != 1) {
-                                        Log.d("makar", "에러");
+                                        Log.d("MAKAR", "에러");
                                     }
 
                                     stationsMap.put(finalIndex, station.get(0).getOdsayStationName());
@@ -595,7 +595,7 @@ public class DataConverter {
                                                         if (task.isSuccessful()) {
                                                             // "odsayStationName"과 일치하는 문서를 찾았을 때
                                                             if (task.getResult().size() != 1) {
-                                                                Log.e("makar", "size에러 " + stationName);
+                                                                Log.e("MAKAR", "size에러 " + stationName);
 
                                                             }
 
@@ -809,7 +809,7 @@ public class DataConverter {
             String lineNum = mapOdsayStationTypeToLineNum(stationType);
 
             if (lineNum == null) {
-                Log.e("makar", "변환 에러: " + stationName + " " + stationType + "호선");
+                Log.e("MAKAR", "변환 에러: " + stationName + " " + stationType + "호선");
                 continue;
             }
 
@@ -822,7 +822,7 @@ public class DataConverter {
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
                         if (task.getResult().size() != 1) {
-                            Log.e("makar", "데이터개수 오류 " + stationName + " " + stationType + "호선");
+                            Log.e("MAKAR", "데이터개수 오류 " + stationName + " " + stationType + "호선");
                         }
 
                         for (QueryDocumentSnapshot document : task.getResult()) {
@@ -860,16 +860,16 @@ public class DataConverter {
                                                         docRef.update("x", odsayStation.getX());
                                                         docRef.update("y", odsayStation.getY());
                                                         docRef.update("odsayLaneType", odsayStation.getType());
-                                                        Log.d("makar", document.getId() + "success");
+                                                        Log.d("MAKAR", document.getId() + "success");
                                                     }
                                                 } else {
-                                                    Log.d("makar", "Error getting sub-collection documents: ", task.getException());
+                                                    Log.d("MAKAR", "Error getting sub-collection documents: ", task.getException());
                                                 }
                                             }
                                         });
                             }
                         } else {
-                            Log.d("makar", "Error getting documents: ", task.getException());
+                            Log.d("MAKAR", "Error getting documents: ", task.getException());
                         }
                     }
                 });
@@ -889,14 +889,14 @@ public class DataConverter {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Log.d("makar", "Document successfully updated!");
+                                        Log.d("MAKAR", "Document successfully updated!");
                                     } else {
-                                        Log.d("makar", "Error updating document", task.getException());
+                                        Log.d("MAKAR", "Error updating document", task.getException());
                                     }
                                 }
                             });
                         } else {
-                            Log.d("makar", "Error getting documents: ", task.getException());
+                            Log.d("MAKAR", "Error getting documents: ", task.getException());
                         }
                     }
                 });

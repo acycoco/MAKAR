@@ -267,7 +267,6 @@ public class MainActivity extends AppCompatActivity {
                             } else {
                                 MainActivityChangeView.changeView(binding, isRouteSet, leftTime, user.getSourceStation().getStationName() + "역 " + user.getSourceStation().getLineNum(), user.getDestinationStation().getStationName() + "역 " + user.getDestinationStation().getLineNum());
                                 Log.d("MAKAR", "route is Set");
-                                showNotification("TEST", "TEST", MainActivity.this);
                             }
                         }
                     }
@@ -578,20 +577,4 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public static void addRouteToList(List<Route> list, Route route) {
-        int size = list.size();
-        if (size >= 3) {
-            list.set(1, list.get(0));
-            list.set(2, list.get(1));
-            list.set(0, route);
-            for (int i = 3; i < size; i++) {
-                list.remove(i);
-            }
-        } else {
-            list.add(route);
-        }
-        for (int i = 0; i < list.size(); i++) {
-            Log.d("MAKAR", "routeList :" + list.get(i));
-        }
-    }
 }
