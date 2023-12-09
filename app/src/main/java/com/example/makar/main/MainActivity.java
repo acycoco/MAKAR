@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.SpannableString;
@@ -25,6 +26,7 @@ import com.example.makar.data.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
+import com.example.makar.data.dialog.ProgressDialog;
 import com.example.makar.main.dialog.ResetRouteDialog;
 import com.example.makar.main.dialog.SetMakarAlarmDialog;
 import com.example.makar.main.dialog.SetFavoriteStationDialog;
@@ -63,12 +65,16 @@ public class MainActivity extends AppCompatActivity {
     private final FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
     public static List<Route> favoriteRoutes = new ArrayList<>();
     public static List<Route> recentRoutes = new ArrayList<>();
+    private ProgressDialog customProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        customProgressDialog = new ProgressDialog(this);
+        customProgressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
         setActivityUtil();
         setButtonListener();
@@ -115,7 +121,8 @@ public class MainActivity extends AppCompatActivity {
         /**==경로 미설정 Main==**/
         //경로 설정 버튼 클릭 리스너
         binding.setRouteBtn.setOnClickListener(view -> {
-            updateUI(SetRouteActivity.class);
+            customProgressDialog.show();
+//            updateUI(SetRouteActivity.class);
         });
     }
 
@@ -493,6 +500,8 @@ public class MainActivity extends AppCompatActivity {
         recentRouteListAdapter.setOnRouteClickListener(new OnRouteListClickListener() {
             @Override
             public void onRouteListClick(Route route) {
+//                customProgressDialog.show();
+
                 Log.d("MAKAR_MAIN_TEST", "clicked recent route" + route.toString());
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
@@ -525,6 +534,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             getUserData();
+//                            customProgressDialog.dismiss();
                         }
                     }
                 });
@@ -532,7 +542,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void setFavoriteRecyclerView(){
+    private void setFavoriteRecyclerView() {
         // MARK: 즐겨찾는 경로
         RecyclerView favoriteRouteRecyclerView = binding.favoriteRouteRecyclerView;
         RouteListAdapter favoriteRouteListAdapter = new RouteListAdapter(this, favoriteRoutes);
@@ -543,6 +553,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRouteListClick(Route route) {
                 Log.d("MAKAR", route.toString());
+                customProgressDialog.show();
                 Task<QuerySnapshot> usersCollection = firebaseFirestore.collection("users").whereEqualTo("userUId", LoginActivity.userUId).get();
 
                 //TODO: collection 추가 수정 필요
@@ -571,6 +582,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             getUserData();
+                            customProgressDialog.dismiss();
                         }
                     }
                 });
