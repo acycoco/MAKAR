@@ -23,23 +23,24 @@
         android:layout_marginBottom="14dp">
 
         <Button
-            android:id="@+id/logout_btn"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="15dp"
-            android:background="@drawable/custom_button_main"
-            android:text="@string/confirm_button"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            android:textStyle="bold" />
-
-        <Button
             android:id="@+id/cancel_btn"
             android:layout_width="110dp"
             android:layout_height="wrap_content"
             android:background="@drawable/custom_button_white"
             android:text="@string/cancel_button"
             android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginEnd="15dp"
+            />
+
+        <Button
+            android:id="@+id/logout_btn"
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_button_main"
+            android:text="@string/confirm_button"
+            android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold" />
     </LinearLayout>
