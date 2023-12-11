@@ -183,4 +183,13 @@ public class RouteManager {
         }
     }
 
+    public void setMakarTimeInRoute(Route route) throws IOException, ExecutionException, InterruptedException {
+        Log.d("MAKAR", "선택한 경로 막차 계산");
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        Calendar takingTime = makarManager.computeMakarTime(route, dayOfWeek);
+        route.setMakarTime(takingTime.getTime());
+    }
+
 }

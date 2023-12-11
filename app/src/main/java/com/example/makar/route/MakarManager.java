@@ -131,7 +131,7 @@ public class MakarManager {
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
                                     if (startIndex < endIndex && endIndex <= terminalIndex) {
 
-                                        Log.d("MAKAR", timeInfo.getMinute() + "분에" + startIndex + "에서 시작해서 " + endIndex + "로끝나고 종착은 " + terminalIndex);
+                                        Log.d("MAKAR", "노선도 인덱스 확인: " + timeInfo.getMinute() + "분에 출발역(" + startIndex + ") 도착역(" + endIndex + ") 종착역(" + terminalIndex + ")");
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
@@ -264,7 +264,7 @@ public class MakarManager {
 
                                     //index가 출발역, 도착역, 종착역순이면 해당 열차를 탈 수 있다.
                                     if (startIndex < endIndex && endIndex <= terminalIndex) {
-
+                                        Log.d("MAKAR", "노선도 인덱스 확인: " + timeInfo.getMinute() + "분에 출발역(" + startIndex + ") 도착역(" + endIndex + ") 종착역(" + terminalIndex + ")");
                                         canGoInSubway.set(true);
                                         result.set(timeInfo);
                                         task.complete(null);
