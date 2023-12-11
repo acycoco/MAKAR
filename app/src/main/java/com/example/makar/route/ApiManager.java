@@ -25,7 +25,7 @@ public class ApiManager {
         this.objectMapper = objectMapper;
         this.apiKey = BuildConfig.ODSAY_API_KEY;
         if (apiKey == null) {
-            Log.e("MAKAR", "api key null");
+            Log.e("MAKAR-API", "api key null");
         }
     }
 
@@ -40,7 +40,7 @@ public class ApiManager {
         params.put("SearchPathType", "1");
 
         String routeSearchResponse = makeApiRequest(endpoint, params);
-        Log.d("makar-api", "경로 조회 api결과 : " + routeSearchResponse);
+        Log.d("MAKAR-API", "경로 조회 api결과 : " + routeSearchResponse);
         return parseRouteSearchResponse(routeSearchResponse);
     }
 
@@ -54,7 +54,7 @@ public class ApiManager {
         params.put("sepExpressTime", "1");
 
         String subwayScheduleResponse = makeApiRequest(endpoint, params);
-        Log.d("makar-api", "시간표 api결과 : " + subwayScheduleResponse);
+        Log.d("MAKAR-API", "시간표 api결과 : " + subwayScheduleResponse);
         return parseSubwayScheduleResponse(subwayScheduleResponse);
     }
 

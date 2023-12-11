@@ -173,7 +173,7 @@ public class RouteManager {
     //막차시간 구하기
     private void setMakarTimeInRoutes(List<Route> routes) throws IOException, ExecutionException, InterruptedException {
         for (int i = 0; i < routes.size(); i++) {
-            Log.d("makar", i + 1 + "번째 경로 막차 계산");
+            Log.d("MAKAR", i + 1 + "번째 경로 막차 계산");
             Route route = routes.get(i);
             Calendar calendar = Calendar.getInstance();
             int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
@@ -184,7 +184,7 @@ public class RouteManager {
     }
 
     public void setMakarTimeInRoute(Route route) throws IOException, ExecutionException, InterruptedException {
-        Log.d("makar", "선택한 경로 막차 계산");
+        Log.d("MAKAR", "선택한 경로 막차 계산");
         Calendar calendar = Calendar.getInstance();
         int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
 
