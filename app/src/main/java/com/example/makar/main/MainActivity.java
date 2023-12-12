@@ -560,6 +560,7 @@ public class MainActivity extends AppCompatActivity {
                             //Route에 출발지, 도착지만 따로 Station type으로 저장
                             reference.update("sourceStation", route.getSourceStation());
                             reference.update("destinationStation", route.getDestinationStation());
+                            reference.update("selectedRoute", route);
 
                             //최근 경로에 해당 즐겨찾는 경로 추가
                             if (user.getRecentRoute1() == null) {
