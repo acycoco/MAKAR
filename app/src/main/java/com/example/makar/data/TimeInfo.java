@@ -1,4 +1,4 @@
-package com.example.makar;
+package com.example.makar.data;
 
 import java.util.ArrayList;
 import java.util.List;

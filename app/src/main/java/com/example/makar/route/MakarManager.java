@@ -2,11 +2,11 @@ package com.example.makar.route;
 
 import android.util.Log;
 
-import com.example.makar.TimeInfo;
-import com.example.makar.data.Route;
-import com.example.makar.data.SubRoute;
-import com.example.makar.data.SubRouteItem;
-import com.example.makar.data.SubwaySchedule;
+import com.example.makar.data.TimeInfo;
+import com.example.makar.data.route.Route;
+import com.example.makar.data.route.SubRoute;
+import com.example.makar.data.route.SubRouteItem;
+import com.example.makar.data.response.SubwaySchedule;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 

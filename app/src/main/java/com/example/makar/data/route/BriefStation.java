@@ -1,4 +1,4 @@
-package com.example.makar.data;
+package com.example.makar.data.route;
 
 public class BriefStation {
     private String stationName;

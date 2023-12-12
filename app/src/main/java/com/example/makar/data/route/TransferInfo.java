@@ -1,4 +1,4 @@
-package com.example.makar.data;
+package com.example.makar.data.route;
 
 public class TransferInfo {
     //환승 시에 필요한 정보

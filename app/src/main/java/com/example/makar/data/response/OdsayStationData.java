@@ -1,4 +1,4 @@
-package com.example.makar.data;
+package com.example.makar.data.response;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
