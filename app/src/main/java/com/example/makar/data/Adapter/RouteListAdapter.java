@@ -27,6 +27,7 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
     private BriefStation sourceStation;
     private BriefStation destinationStation;
     private BriefStation transferStation;
+
     public RouteListAdapter(Context context, List<Route> routeList) {
         this.context = context;
         this.items = routeList;
@@ -93,7 +94,11 @@ public class RouteListAdapter extends RecyclerView.Adapter<RouteListAdapter.View
 
     @Override
     public int getItemCount() {
-        return items.size();
+        if (items.size() == 0) {
+            return 0;
+        } else {
+            return 1;
+        }
     }
 
 

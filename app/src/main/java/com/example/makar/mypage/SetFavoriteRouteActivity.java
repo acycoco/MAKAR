@@ -33,11 +33,11 @@ public class SetFavoriteRouteActivity extends AppCompatActivity {
         binding = ActivitySetFavoriteRouteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute1" + user.getFavoriteRoute1().toString());
-        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute2" + user.getFavoriteRoute2().toString());
-        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute3" + user.getFavoriteRoute3().toString());
-
-        Log.d("MAKAR_SET_FAVORITE_ROUTE", "arr" + favoriteRoutes.toString());
+//        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute1" + user.getFavoriteRoute1().toString());
+//        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute2" + user.getFavoriteRoute2().toString());
+//        Log.d("MAKAR_SET_FAVORITE_ROUTE", "favoriteRoute3" + user.getFavoriteRoute3().toString());
+//
+//        Log.d("MAKAR_SET_FAVORITE_ROUTE", "arr" + favoriteRoutes.toString());
         setActivityUtil();
         setRecyclerView();
     }
