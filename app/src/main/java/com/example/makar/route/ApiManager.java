@@ -3,8 +3,8 @@ package com.example.makar.route;
 import android.util.Log;
 
 import com.example.makar.BuildConfig;
-import com.example.makar.data.RouteSearchResponse;
-import com.example.makar.data.SubwaySchedule;
+import com.example.makar.data.response.RouteSearchResponse;
+import com.example.makar.data.response.SubwaySchedule;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

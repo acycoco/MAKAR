@@ -1,4 +1,6 @@
-package com.example.makar.data;
+package com.example.makar.data.route;
+
+import com.example.makar.data.Station;
 
 import java.util.Date;
 import java.util.List;

@@ -3,13 +3,13 @@ package com.example.makar.route;
 
 import android.util.Log;
 
-import com.example.makar.data.BriefStation;
-import com.example.makar.data.Route;
-import com.example.makar.data.RouteSearchResponse;
+import com.example.makar.data.route.BriefStation;
+import com.example.makar.data.route.Route;
+import com.example.makar.data.response.RouteSearchResponse;
 import com.example.makar.data.Station;
-import com.example.makar.data.SubRoute;
-import com.example.makar.data.SubRouteItem;
-import com.example.makar.data.TransferInfo;
+import com.example.makar.data.route.SubRoute;
+import com.example.makar.data.route.SubRouteItem;
+import com.example.makar.data.route.TransferInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;

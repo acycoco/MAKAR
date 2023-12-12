@@ -18,9 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.makar.R;
 import com.example.makar.data.ActivityUtil;
 import com.example.makar.data.Adapter.RouteAdapter;
-import com.example.makar.data.DataConverter;
 import com.example.makar.data.Station;
-import com.example.makar.data.Route;
+import com.example.makar.data.route.Route;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetRouteBinding;
 import com.example.makar.databinding.RouteRecyclerViewItemBinding;
@@ -35,7 +34,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 

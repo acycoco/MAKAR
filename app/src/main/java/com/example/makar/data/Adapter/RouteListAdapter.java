@@ -9,9 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.R;
-import com.example.makar.data.BriefStation;
+import com.example.makar.data.route.BriefStation;
 import com.example.makar.data.LineNumImage;
-import com.example.makar.data.Route;
+import com.example.makar.data.route.Route;
 import com.example.makar.databinding.RouteListRecyclerViewItemBinding;
 import com.example.makar.route.listener.OnRouteListClickListener;
 

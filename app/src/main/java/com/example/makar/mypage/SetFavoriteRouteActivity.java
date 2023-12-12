@@ -5,18 +5,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.example.makar.data.ActivityUtil;
 
 import com.example.makar.data.Adapter.RouteListAdapter;
-import com.example.makar.data.Route;
+import com.example.makar.data.route.Route;
 import com.example.makar.data.User;
 import com.example.makar.databinding.ActivitySetFavoriteRouteBinding;
 import com.example.makar.main.MainActivity;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 

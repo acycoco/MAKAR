@@ -2,8 +2,8 @@ package com.example.makar.route;
 
 import android.util.Log;
 
-import com.example.makar.data.SubRoute;
-import com.example.makar.data.TransferInfo;
+import com.example.makar.data.route.SubRoute;
+import com.example.makar.data.route.TransferInfo;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
