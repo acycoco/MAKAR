@@ -390,6 +390,11 @@ public class MainActivity extends AppCompatActivity {
                         //막차 시간 달성
                         setRouteUnset();
                         Log.d("MAKAR", "MAKAR: 막차 시간이 되었습니다");
+                        notiflag = false;
+                        makarnotiflag = false;
+                        updateUI(MainActivity.class);
+                        finish();
+                        Toast.makeText(MainActivity.this, "MAKAR: 막차 시간이 되었습니다", Toast.LENGTH_SHORT).show();
                     } else {
                         //남은 시간 계산
                         int timeDifferenceMinutes = (int) TimeUnit.MILLISECONDS.toMinutes(leftTime);
