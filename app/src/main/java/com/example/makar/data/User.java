@@ -1,5 +1,7 @@
 package com.example.makar.data;
 
+import com.example.makar.data.route.Route;
+
 public class User {
     String userUId;
     Station homeStation;

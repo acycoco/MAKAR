@@ -2,9 +2,7 @@ package com.example.makar.main;
 
 import static com.example.makar.NotificationHelper.showNotification;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.makar.data.ActivityUtil;
-import com.example.makar.data.Route;
+import com.example.makar.data.route.Route;
 import com.example.makar.data.Adapter.RouteListAdapter;
 import com.example.makar.data.Station;
 import com.example.makar.data.User;
@@ -36,13 +34,11 @@ import com.example.makar.databinding.ActivityMainBinding;
 import com.example.makar.mypage.MyPageActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
